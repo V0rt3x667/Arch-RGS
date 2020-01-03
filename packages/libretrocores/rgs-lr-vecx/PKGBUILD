@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-vecx
+pkgver=102.7de2187
+pkgrel=1
+pkgdesc="Libretro implementation of Vecx (Vectrex)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-vecx"
+license=('GPL2')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-vecx.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./vecx_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  cp ./bios/*.bin "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

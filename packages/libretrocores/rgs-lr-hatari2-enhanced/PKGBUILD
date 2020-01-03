@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-hatari2-enhanced
+pkgver=6470.5bf52cd4
+pkgrel=1
+pkgdesc="Libretro implementation of Hatari v2.0. (Atari ST/STE/TT/Falcon)"
+arch=('x86_64')
+url="https://github.com/r-type/hatari2"
+license=('GPL2')
+depends=('zlib' 'glibc' 'sdl2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/r-type/hatari2.git"
+	      '01_libcapsimage.diff')
+sha256sums=('SKIP'
+	          '8f01bedd44f82c659be32904c4e729cd526ca4d5bd4f6723fb9da4b48d0add5c')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  patch < ../01_libcapsimage.diff
+  make -f Makefile.libretro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./hatari2_enhanced_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

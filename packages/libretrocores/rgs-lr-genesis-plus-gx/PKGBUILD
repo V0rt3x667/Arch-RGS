@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-genesis-plus-gx
+pkgver=1580
+pkgrel=1
+pkgdesc="Libretro implementation of Genesis-Plus-GX. (Sega MS/GG/MD/CD)"
+arch=('x86_64')
+url='https://github.com/libretro/Genesis-Plus-GX'
+license=('BSD LGPL2.1')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/Genesis-Plus-GX.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./genesis_plus_gx_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname"
+  install -Dm644 ./LICENSE.txt -t "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}

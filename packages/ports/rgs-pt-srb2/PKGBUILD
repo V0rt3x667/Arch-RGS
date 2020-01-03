@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-srb2
+pkgver=2.2.0
+pkgrel=1
+pkgdesc='A 3D Sonic fan game based off of Doom Legacy (aka "Sonic Robo Blast 2")'
+arch=('x86_64')
+license=('GPL')
+url='http://www.srb2.org'
+depends=('sdl2' 'sdl2_mixer' 'libpng' 'libgme' 'zlib')
+makedepends=('mesa' 'glu')
+source=("$pkgname::git+https://github.com/STJr/SRB2#tag=SRB2_release_$pkgver"
+        "https://github.com/STJr/SRB2/releases/download/SRB2_release_$pkgver/SRB2-v${pkgver//./}-x64-Installer.exe")
+sha256sums=('SKIP'
+            '5a086883cfcb5df93629259c9e8b5a4462cb7a6b47426ce64ce8366d6db2a0b7')
+
+prepare() {
+  cd $pkgname
+  
+  if [[ -d ./assets/installer ]]; then
+    rm -rf ./assets/installer
+  fi
+  mkdir ./assets/installer
+  
+  cp ../{*.dta,*.pk3,*.txt} ./assets/installer
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd $pkgname/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname \
+    -DCMAKE_BUILD_TYPE=None \
+    -DSRB2_CONFIG_HAVE_OPENMPT=OFF \
+    -DSRB2_ASSET_HASHED="srb2.pk3;player.dta;music.dta;zones.pk3"
+  make	
+}
+
+package() {
+  cd $pkgname/build
+
+  make DESTDIR="$pkgdir" install
+}

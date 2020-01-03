@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-o2em
+pkgver=105.8cc06ce
+pkgrel=1
+pkgdesc="Libretro implementation of O2EM. (Odyssey 2/VideoPac)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-o2em"
+license=('GPL3')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-o2em.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./o2em_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

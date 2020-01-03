@@ -1,0 +1,40 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-simcoupe
+pkgver=20200528
+pkgrel=1
+pkgdesc="A SAM Coupé Emulator"
+arch=('x86_64')
+url="http://www.simcoupe.org"
+license=('GPL2')
+depends=(
+  'sdl2' 
+  'zlib'
+)
+makedepends=('cmake')
+source=("https://github.com/simonowen/simcoupe/archive/$pkgver.tar.gz")
+sha256sums=('36bde6564098667ca0536dd2a572282834991c402a6b27c372d97616880375cf')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "simcoupe-$pkgver"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "simcoupe-$pkgver/build"
+  
+  cmake .. \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DCMAKE_INSTALL_PREFIX="$_installdir"
+  make
+}
+
+package() {
+  cd "simcoupe-$pkgver/build"
+  
+  make DESTDIR="$pkgdir" install
+}

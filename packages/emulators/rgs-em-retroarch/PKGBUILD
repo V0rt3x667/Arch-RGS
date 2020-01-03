@@ -1,0 +1,87 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-retroarch
+pkgver=1.8.8
+pkgrel=1
+pkgdesc="Frontend for the Libretro API"
+arch=('x86_64')
+url="http://www.libretro.com"
+license=('GPL')
+depends=(
+  'ffmpeg'
+  'libass' 
+  'libxinerama' 
+  'libxrandr'
+  'openal'
+  'python' 
+  'qt5-base'
+)
+makedepends=(
+  'git' 
+  'libx11' 
+  'libxcb' 
+  'libxext' 
+  'libxkbcommon' 
+  'libxv' 
+  'libxxf86vm' 
+  'vulkan-headers' 
+  'vulkan-icd-loader' 
+  'wayland' 
+  'wayland-protocols'
+)
+source=(
+  "$pkgname::git+https://github.com/libretro/RetroArch.git#tag=v$pkgver"
+  "$pkgname-core-info::git+https://github.com/libretro/libretro-core-info.git#tag=v$pkgver"
+  '01_hotkey_hack.patch'
+  '02_disable_search.patch'
+  '03_shader_path_config_enable.patch'
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  '0c6ae5b47c1e718274ca20a1e812485c677d9298514453ed7a675411c9b2a6d2'
+  '90ea69b875bf365701fc65aea59f5883ff245109ca7607739301439d67c8ccc6'
+  '1d0d9132958ca5b5ed013d6d80938d14d81cb8903819078f05cf04488c862fb8'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np1 -i ../01_hotkey_hack.patch
+  patch -Np1 -i ../02_disable_search.patch
+  patch -Np1 -i ../03_shader_path_config_enable.patch
+}
+
+build() {
+  cd "$pkgname"
+
+  ./configure \
+    --prefix="$_installdir" \
+    --disable-builtinflac \
+    --disable-builtinmbedtls \
+    --disable-builtinminiupnpc \
+    --disable-builtinzlib \
+    --disable-cg \
+    --disable-jack \
+    --disable-oss \
+    --disable-sdl \
+    --enable-dbus
+  make
+  make -C ./libretro-common/audio/dsp_filters
+  make -C ./gfx/video_filters
+}
+
+package() {
+    cd "$pkgname"
+    
+    make DESTDIR="$pkgdir" install
+
+    install -dm755 "$pkgdir/$_installdir"/{filters/{,audio,video},info}
+
+    cp --no-preserve=ownership ./libretro-common/audio/dsp_filters/*.{dsp,so} "$pkgdir/$_installdir/filters/audio/"
+    cp --no-preserve=ownership ./gfx/video_filters/*.{filt,so} "$pkgdir/$_installdir/filters/video/"
+
+    cd ../"$pkgname"-core-info
+
+    cp --no-preserve=ownership ./*.info "$pkgdir/$_installdir/info/"
+}

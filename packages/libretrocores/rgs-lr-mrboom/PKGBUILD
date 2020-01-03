@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-mrboom
+pkgver=309
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Mr.Boom is a 8 players Bomberman clone for RetroArch/Libretro"
+url="https://github.com/libretro/mrboom-libretro"
+license=('MIT')
+depends=('zlib' 'glibc')
+makedepends=('git' 'python2')
+source=("$pkgname::git+https://github.com/libretro/mrboom-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./mrboom_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  install -Dm644 ./LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}

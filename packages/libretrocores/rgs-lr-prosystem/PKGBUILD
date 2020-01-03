@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-prosystem
+pkgver=177
+pkgrel=1
+pkgdesc="Libretro Atari 7800 Core"
+arch=('x86_64')
+url="https://github.com/libretro/prosystem-libretro"
+license=('GPL2')
+depends=(
+  'glibc'
+  'zlib'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/prosystem-libretro")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./prosystem_libretro.so -t "${pkgdir}${_installdir%/}"
+}

@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-ionfury
+_pkgdate=20200103
+_pkgrev=8533
+pkgver=$_pkgdate.r$_pkgrev
+pkgrel=1
+pkgdesc="A commercial FPS game based on eduke32 source port"
+arch=('x86_64')
+url="http://eduke32.com/"
+license=('GPL2')
+depends=('sdl2_mixer' 'libgl' 'libvpx' 'flac' 'gtk2')
+makedepends=('mesa' 'glu')
+source=("http://dukeworld.com/eduke32/synthesis/$_pkgdate-$_pkgrev/eduke32_src_$_pkgdate-$_pkgrev.tar.xz")
+sha256sums=('bec0ffa64e6936a24c8a0ce6edb38a233b308a121a70fe30122ac6cde562a548')
+
+build() {
+  cd eduke32_$_pkgdate-$_pkgrev
+
+  make \
+    FURY=1
+    PREFIX=/opt/archrgs/ports/$pkgname \
+    PACKAGE_REPOSITORY=1 \
+    VC_REV=$_pkgrev
+}
+
+package() {
+  cd eduke32_$_pkgdate-$_pkgrev
+
+  install -d "$pkgdir/opt/archrgs/ports/$pkgname/bin"
+  install -m755 ./{fury,mapster32} "$pkgdir/opt/archrgs/ports/$pkgname/bin"
+}

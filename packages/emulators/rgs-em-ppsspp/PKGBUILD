@@ -1,0 +1,83 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-ppsspp
+pkgver=v1.9.3.r1033.414b0e00e
+pkgrel=1
+pkgdesc="A Sony PSP Emulator"
+arch=('x86_64')
+url="https://www.ppsspp.org"
+license=('GPL2')
+depends=(
+  'glew'
+  'libzip'
+  'sdl2'
+  'snappy'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'libglvnd'
+  'python'
+  'qt5-tools'
+)
+source=("$pkgname::git+https://github.com/hrydgard/ppsspp")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  git submodule init
+  git submodule update --init --recursive
+
+  # for submodule in assets/lang ext/glslang ffmpeg; do
+  #   git submodule init ${submodule}
+  #   git config submodule.${submodule}.url ../ppsspp-${submodule#*/}
+  #   git submodule update ${submodule}
+  # done
+
+  # for submodule in ext/{armips,discord-rpc,rapidjson,SPIRV-Cross}; do
+  #   git submodule init ${submodule}
+  #   git config submodule.${submodule}.url ../${submodule#*/}
+  #   git submodule update ${submodule}
+  # done
+
+  # cd ext/armips
+
+  # for submodule in ext/tinyformat; do
+  #   git submodule init ${submodule}
+  #   git config submodule.${submodule}.url ../../../armips-${submodule#*/}
+  #   git submodule update ${submodule}
+  # done
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DCMAKE_SKIP_RPATH='ON' \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DUSE_SYSTEM_LIBZIP='ON' \
+    -DOpenGL_GL_PREFERENCE='GLVND' \
+    -DUSE_SYSTEM_SNAPPY='ON'
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm 755 ./PPSSPPSDL -t "$pkgdir/$_installdir/bin"
+
+  cp -dr --no-preserve=ownership ./assets "$pkgdir/$_installdir/assets"
+}

@@ -1,0 +1,29 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-supertux
+pkgver=0.6.1.1
+pkgrel=1
+pkgdesc="A classic 2D jump'n'run sidescroller game in a style similar to the original SuperMario games"
+arch=('x86_64')
+url="https://supertux.org"
+license=('GPL3')
+depends=('sdl2_image' 'curl' 'physfs' 'openal' 'libvorbis' 'glew' 'freetype2')
+makedepends=('cmake' 'boost' 'mesa' 'optipng')
+source=("https://github.com/SuperTux/supertux/releases/download/v$pkgver/SuperTux-v$pkgver-Source.tar.gz")
+sha256sums=('2e8df0637b6e17534f7d7c2bd9b4f0f99aaf92389afc1abb9eb44d2a79c76658')
+
+build() {
+  cd $srcdir/SuperTux-v$pkgver-Source
+  
+  cmake . \
+      -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname \
+      -DINSTALL_SUBDIR_BIN=bin \
+      -DUSE_SYSTEM_PHYSFS=ON
+  make
+}
+
+package() {
+  cd $srcdir/SuperTux-v$pkgver-Source
+  
+  make DESTDIR="${pkgdir}" install
+}

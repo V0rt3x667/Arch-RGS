@@ -1,0 +1,10 @@
+[Unit]
+Description=steamcontroller-xbox
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /opt/archrgs/supplementary/steamcontroller/bin/sc-xbox.py start
+
+[Install]
+WantedBy=multi-user.target

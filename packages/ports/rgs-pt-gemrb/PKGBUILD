@@ -1,0 +1,47 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-gemrb
+pkgver=0.8.6
+pkgrel=1
+pkgdesc="Port of Bioware's Infinity Engine"
+arch=('x86_64')
+url="http://www.gemrb.org/"
+license=('GPL2')
+depends=(
+  'python2' 
+  'sdl2_mixer' 
+  'openal' 
+  'hicolor-icon-theme' 
+  'libpng' 
+  'freetype2'
+)
+makedepends=('cmake')
+source=("$pkgname::git+https://github.com/gemrb/gemrb.git#tag=v$pkgver")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2/ \
+    -DSDL_BACKEND=SDL2 \
+    -DUSE_SDLMIXER=OFF
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+  
+  make DESTDIR="$pkgdir" install
+}

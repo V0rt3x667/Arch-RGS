@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dosbox
+pkgver=r4356
+pkgrel=1
+pkgdesc="A DOS Emulator"
+arch=('x86_64')
+url="http://dosbox.sourceforge.net"
+license=('GPL')
+depends=(
+  'alsa-lib'
+  'fluidsynth'
+  'gcc-libs' 
+  'glu'
+  'libgl'
+  'libpng'
+  'sdl_net'
+  'sdl_sound'
+  'zlib'
+)
+makedepends=(
+  'mesa-libgl' 
+  'patch'
+  'subversion'
+)
+source=("$pkgname::svn+https://svn.code.sf.net/p/dosbox/code-0/dosbox/trunk")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd $pkgname || exit
+  
+  printf "r%s" "$(svnversion | tr -d 'A-z')"
+}
+
+build() {
+  cd "$pkgname" || exit
+
+  ./autogen.sh
+  ./configure \
+    --prefix="$_installdir"
+  make
+}
+
+package() {
+  cd "$pkgname" || exit
+
+  make DESTDIR="$pkgdir" install
+}

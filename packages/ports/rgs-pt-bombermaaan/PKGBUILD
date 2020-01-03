@@ -1,0 +1,39 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-bombermaaan
+pkgver=1.9.6.2074.r20.gb2094ba
+pkgrel=1
+pkgdesc="Clone of the classic Bomberman game."
+arch=('x86_64')
+url="https://github.com/bjaraujo/Bombermaaan.git/"
+license=('GPL3')
+depends=('sdl' 'sdl_mixer')
+makedepends=('cmake' 'git')
+source=("$pkgname::git+https://github.com/bjaraujo/Bombermaaan.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    git describe --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+build() {
+    cd $pkgname/trunk
+    
+    cmake . \
+      -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname \
+      -DLOAD_RESOURCES_FROM_FILES:BOOL=ON
+    make
+}
+
+package() {
+    cd $pkgname/trunk
+
+    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname
+    
+    mv ./bin/Bombermaaan $pkgdir/opt/archrgs/ports/$pkgname/bombermaaan
+    cp ./config/config.xml $pkgdir/opt/archrgs/ports/$pkgname
+    cp -r ./levels $pkgdir/opt/archrgs/ports/$pkgname
+    cp -r ./res/{images,sounds} $pkgdir/opt/archrgs/ports/$pkgname
+}

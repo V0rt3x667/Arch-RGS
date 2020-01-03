@@ -1,0 +1,80 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-pcsxr
+pkgver=r1731.62467b86
+pkgrel=1
+pkgdesc='A Sony PlayStation Emulator'
+arch=('x86_64')
+url="https://github.com/iCatButler/pcsxr.git"
+license=('GPL')
+depends=(
+  'ffmpeg' 
+  'gdk-pixbuf2' 
+  'glib2' 
+  'glibc' 
+  'gtk3'
+  'libarchive' 
+  'libcdio'
+  'libgl' 
+  'libpulse' 
+  'libx11' 
+  'libxext' 
+  'libxtst' 
+  'libxv' 
+  'libxxf86vm'
+  'sdl2' 
+  'zlib'
+)
+makedepends=(
+  'cmake' 
+  'gcc8'
+  'git' 
+  'intltool' 
+  'mesa'
+)
+source=("$pkgname::git+https://github.com/iCatButler/pcsxr.git")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  sed -i '/include_directories(${CMAKE_SOURCE_DIR})/a include_directories(/usr/include/harfbuzz)' \
+    CMakeLists.txt
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  export CC="cc-8"
+  export CXX="c++-8"
+  cmake .. \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DMAKE_INSTALL_PREFIX="$_installdir" \
+    -DMAKE_INSTALL_BINDIR="$_installdir/bin" \
+    -DMAKE_INSTALL_DATAROOTDIR="$_installdir/share" \
+    -DCMAKE_INSTALL_LIBDIR="$_installdir/lib" \
+    -DSND_BACKEND='pulse' \
+    -DENABLE_CCDDA='ON' \
+    -DUSE_LIBARCHIVE='ON' \
+    -DUSE_LIBCDIO='ON'
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./gui/pcsxr "${pkgdir}${_installdir%/}/bin/pcsxr"
+  install -Dm644 ./plugins/*/*.so -t "${pkgdir}${_installdir%/}/lib/"
+  install -dm644 "${pkgdir}${_installdir%/}/lib/cfg"
+}

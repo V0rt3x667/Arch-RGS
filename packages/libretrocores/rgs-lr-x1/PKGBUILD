@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-x1
+pkgver=198
+pkgrel=1
+pkgdesc="Libretro implementation of X Millennium. (Sharp X1)"
+arch=('x86_64')
+url='https://github.com/r-type/xmil-libretro'
+license=('unknown')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/r-type/xmil-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/libretro
+
+  make
+}
+
+package() {
+  cd $pkgname/libretro
+
+  install -Dm644 ./x1_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

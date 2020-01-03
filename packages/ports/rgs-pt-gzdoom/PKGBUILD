@@ -1,0 +1,61 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-gzdoom
+pkgver=4.2.4
+pkgrel=1
+pkgdesc="Advanced Doom source port with OpenGL support"
+arch=('x86_64')
+url="http://www.zdoom.org/"
+license=('BSD' 'GPL3' 'LGPL3')
+depends=('hicolor-icon-theme'
+         'libgl'
+         'libjpeg'
+         'sdl2')
+makedepends=('cmake'
+             'desktop-file-utils'
+             'fluidsynth>=2'
+             'git'
+             'gtk3')
+optdepends=('blasphemer-wad: Blasphemer (free Heretic) game data'
+            'chexquest3-wad: Chex Quest 3 game data'
+            'freedm: FreeDM game data'
+            'gxmessage: crash dialog (GNOME)'
+            'hacx-wad: HacX game data'
+            'harmony-wad: Harmony game data'
+            'heretic1-wad: Heretic shareware game data'
+            'hexen1-wad: Hexen demo game data'
+            'kdialog: crash dialog (KDE)'
+            'libsndfile: WAV/FLAC/OGG audio support'
+            'mpg123: MP3 audio support'
+            'openal: in-game sound'
+            'soundfont-fluid: FluidR3 soundfont for FluidSynth'
+            'strife0-wad: Strife shareware game data'
+            'square1-wad: The Adventures of Square, Episode 1 game data'
+            'urbanbrawl-wad: Urban Brawl: Action Doom 2 game data'
+            'xorg-xmessage: crash dialog (other)'
+            'vulkan-driver: Vulkan renderer'
+            'vulkan-icd-loader: Vulkan renderer')
+source=("$pkgname::git+https://github.com/coelckers/gzdoom.git#tag=g$pkgver")
+sha256sums=('SKIP')
+
+build() {
+    cd $pkgname
+
+    cmake . \
+      -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname \
+      -DINSTALL_PATH=/opt/archrgs/ports/$pkgname/bin \
+      -DINSTALL_PK3_PATH=/opt/archrgs/ports/$pkgname/bin \
+      -DINSTALL_DOCS_PATH=docs
+    make
+}
+
+package() {
+    cd $pkgname
+
+    make DESTDIR="$pkgdir" install
+    
+    mkdir $pkgdir/opt/archrgs/ports/$pkgname/{soundfonts,fm_banks}
+    
+    cp ./soundfonts/gzdoom.sf2 $pkgdir/opt/archrgs/ports/$pkgname/soundfonts/
+    cp ./fm_banks/{*.wopl,*.wopn} $pkgdir/opt/archrgs/ports/$pkgname/fm_banks/
+}

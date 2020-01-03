@@ -1,0 +1,46 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-srb2kart
+pkgver=1.1
+pkgrel=1
+pkgdesc='A kart racing mod based on the 3D Sonic the Hedgehog fangame Sonic Robo Blast 2, based on a modified version of Doom Legacy.'
+arch=('x86_64')
+license=('GPL2')
+url="https://mb.srb2.org/showthread.php?t=43708"
+depends=('sdl2' 'sdl2_mixer' 'libpng' 'libgme')
+makedepends=('mesa' 'glu' 'git')
+source=(
+    "$pkgname::git+https://github.com/STJr/Kart-Public.git#tag=v$pkgver"
+    "https://github.com/STJr/Kart-Public/releases/download/v$pkgver/srb2kart-v${pkgver//./}-Installer.exe"
+)
+sha256sums=(
+    'SKIP'
+    '3af7d005082c2d08a0494a5bb9137b335009ff311cb5bfec215ed07d8ab2185b'
+)
+
+prepare() {
+  cd $pkgname
+
+  mkdir -p ./assets/installer
+  
+  cp ../{*.kart,*.srb} ./assets/installer
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd $pkgname/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname
+  make	
+}
+
+package() {
+  cd $pkgname/build
+
+  make DESTDIR="$pkgdir" install
+}

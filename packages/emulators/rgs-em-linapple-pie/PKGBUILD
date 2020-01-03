@@ -1,0 +1,37 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-linapple-pie
+pkgver=r54.c22ba0c
+pkgrel=1
+pkgdesc="An Apple 2 and 2e Emulator"
+arch=('x86_64')
+url="https://github.com/dabonetn/linapple-pie"
+license=('GPL')
+depends=(
+  'libzip' 
+  'sdl_image'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/dabonetn/linapple-pie.git")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname/src"
+  
+  make INSTDIR="$_installdir"
+}
+
+package() {
+  cd "$pkgname/src"
+  
+  install -dm755 "$pkgdir/$_installdir/bin"
+  
+  install ./linapple "$pkgdir/$_installdir/bin"
+  install ../{linapple.conf,Master.dsk,README,README-linapple-pie,CHANGELOG,INSTALL,LICENSE} "$pkgdir/$_installdir"
+}

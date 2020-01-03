@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-puae
+pkgver=478.0846a51
+pkgrel=1
+pkgdesc="Libretro implementation of PUAE. (Commodore Amiga) (WIP)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-uae"
+license=('GPL3')
+depends=('zlib')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-uae.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -j$(nproc)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./puae_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

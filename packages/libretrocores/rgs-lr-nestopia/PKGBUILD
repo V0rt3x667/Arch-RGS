@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-nestopia
+pkgver=958
+pkgrel=1
+pkgdesc="Libretro implementation of Nestopia. (Nintendo Entertainment System)"
+arch=('x86_64')
+url='https://github.com/libretro/nestopia'
+license=('GPL2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/nestopia.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/libretro
+
+  make
+}
+
+package() {
+  cd $pkgname/libretro
+
+  install -Dm644 ./{nestopia_libretro.so, NstDatabase.xml} -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-snes9x
+pkgver=1751
+pkgrel=1
+pkgdesc="Libretro implementation of Snes9x. (Super Nintendo Entertainment System)"
+arch=('x86_64')
+url='https://github.com/libretro/snes9x'
+license=('custom:GPL2 LGPL2.1')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/snes9x.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/libretro
+
+  make -j$(nproc)
+}
+
+package() {
+  cd $pkgname/libretro
+
+  install -Dm644 ./snes9x_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  install -Dm644 ../LICENSE -t "${pkgdir}/usr/share/licenses/$pkgname/"
+}

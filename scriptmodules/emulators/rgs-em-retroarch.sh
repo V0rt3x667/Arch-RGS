@@ -1,0 +1,303 @@
+#!/usr/bin/env bash
+
+# This file is part of the Arch-RGS project.
+#
+# Please see the LICENSE file at the top-level directory of this distribution.
+
+archrgs_module_id="rgs-em-retroarch"
+archrgs_module_desc="RetroArch - frontend to the libretro emulator cores - required by all rgs-lr-* emulators"
+archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/RetroArch/master/COPYING"
+archrgs_module_section="core"
+
+function install_bin_rgs-em-retroarch() {
+    pacmanPkg rgs-em-retroarch
+}
+
+function remove_rgs-em-retroarch() {
+    pacmanRemove rgs-em-retroarch
+}
+
+function update_shaders_glsl_rgs-em-retroarch() {
+    local dir="$configdir/all/retroarch/shaders/glsl_shaders"
+    # remove if not git repository for fresh checkout
+    [[ ! -d "$dir/.git" ]] && rm -rf "$dir"
+    gitPullOrClone "$dir" https://github.com/libretro/glsl-shaders.git
+    chown -R $user:$user "$configdir/all/retroarch/shaders"
+}
+
+function update_shaders_slang_rgs-em-retroarch() {
+    local dir="$configdir/all/retroarch/shaders/slang_shaders"
+    # remove if not git repository for fresh checkout
+    [[ ! -d "$dir/.git" ]] && rm -rf "$dir"
+    gitPullOrClone "$dir" https://github.com/libretro/slang-shaders.git
+    chown -R $user:$user "$configdir/all/retroarch/shaders"
+}
+
+function update_overlay_rgs-em-retroarch() {
+    local dir="$configdir/all/retroarch/overlay"
+    # remove if not a git repository for fresh checkout
+    [[ ! -d "$dir/.git" ]] && rm -rf "$dir"
+    gitPullOrClone "$configdir/all/retroarch/overlay" https://github.com/libretro/common-overlays.git
+    chown -R $user:$user "$dir"
+}
+
+function update_assets_rgs-em-retroarch() {
+    local dir="$configdir/all/retroarch/assets"
+    # remove if not a git repository for fresh checkout
+    [[ ! -d "$dir/.git" ]] && rm -rf "$dir"
+    gitPullOrClone "$dir" https://github.com/libretro/retroarch-assets.git
+    chown -R $user:$user "$dir"
+}
+
+function configure_rgs-em-retroarch() {
+    [[ "$md_mode" == "remove" ]] && return
+
+    addUdevInputRules
+
+    # move / symlink the retroarch configuration
+    moveConfigDir "$home/.config/retroarch" "$configdir/all/retroarch"
+
+    # move / symlink retroarch-joypads folder
+    moveConfigDir "$configdir/all/retroarch-joypads" "$configdir/all/retroarch/autoconfig"
+
+    # move / symlink old assets / overlays and shader folder
+    moveConfigDir "$md_inst/assets" "$configdir/all/retroarch/assets"
+    moveConfigDir "$md_inst/overlays" "$configdir/all/retroarch/overlay"
+    moveConfigDir "$md_inst/shader" "$configdir/all/retroarch/shaders"
+
+    local config="$(mktemp)"
+
+    cp "$md_inst/etc/retroarch.cfg" "$config"
+
+    # query ES A/B key swap configuration
+    local es_swap="false"
+    getAutoConf "es_swap_a_b" && es_swap="true"
+
+    # configure default options
+    iniConfig " = " '"' "$config"
+    iniSet "cache_directory" "/tmp/retroarch"
+    iniSet "system_directory" "$biosdir"
+    iniSet "config_save_on_exit" "false"
+    iniSet "video_aspect_ratio_auto" "true"
+    iniSet "rgui_show_start_screen" "false"
+    iniSet "rgui_browser_directory" "$romdir"
+    iniSet "video_threaded" "false"
+    iniSet "video_font_size" "24"
+    iniSet "core_options_path" "$configdir/all/retroarch-core-options.cfg"
+	iniSet "global_core_options" "true"
+    iniSet "video_fullscreen" "true"
+
+    # enable hotkey ("select" button)
+    iniSet "input_enable_hotkey" "nul"
+    iniSet "input_exit_emulator" "escape"
+	
+    # configure default directories
+    iniSet "video_filter_dir" "$md_inst/filters/video"
+    iniSet "audio_filter_dir" "$md_inst/filters/audio"
+    iniSet "libretro_info_path" "$md_inst/info"
+    iniSet "video_shader_dir" "$configdir/all/retroarch/shaders"
+    iniSet "overlay_directory" "$configdir/all/retroarch/overlay"
+    iniSet "assets_directory" "$configdir/all/retroarch/assets"
+
+    # enable and configure rewind feature
+    iniSet "rewind_enable" "false"
+    iniSet "rewind_buffer_size" "10"
+    iniSet "rewind_granularity" "2"
+    iniSet "input_rewind" "r"
+
+    # enable gpu screenshots
+    iniSet "video_gpu_screenshot" "true"
+
+    # enable and configure shaders
+    iniSet "input_shader_next" "m"
+    iniSet "input_shader_prev" "n"
+
+    # configure keyboard mappings
+    iniSet "input_player1_a" "x"
+    iniSet "input_player1_b" "z"
+    iniSet "input_player1_y" "a"
+    iniSet "input_player1_x" "s"
+    iniSet "input_player1_start" "enter"
+    iniSet "input_player1_select" "rshift"
+    iniSet "input_player1_l" "q"
+    iniSet "input_player1_r" "w"
+    iniSet "input_player1_left" "left"
+    iniSet "input_player1_right" "right"
+    iniSet "input_player1_up" "up"
+    iniSet "input_player1_down" "down"
+
+    # input settings
+    iniSet "input_autodetect_enable" "true"
+    iniSet "auto_remaps_enable" "true"
+    iniSet "input_joypad_driver" "udev"
+    iniSet "all_users_control_menu" "true"
+
+    # hide online updater menu options and the restart option
+    iniSet "menu_show_core_updater" "false"
+    iniSet "menu_show_online_updater" "false"
+    iniSet "menu_show_restart_retroarch" "false"
+
+    # disable unnecessary xmb menu tabs
+    iniSet "xmb_show_add" "false"
+    iniSet "xmb_show_history" "false"
+    iniSet "xmb_show_images" "false"
+    iniSet "xmb_show_music" "false"
+
+    # swap A/B buttons based on ES configuration
+    iniSet "menu_swap_ok_cancel_buttons" "$es_swap"
+
+    # enable menu_unified_controls by default (see below for more info)
+    iniSet "menu_unified_controls" "true"
+
+    # disable 'press twice to quit'
+    iniSet "quit_press_twice" "false"
+
+    # enable video shaders
+    iniSet "video_shader_enable" "true"
+
+    copyDefaultConfig "$config" "$configdir/all/retroarch.cfg"
+    rm "$config"
+
+    # if no menu_unified_controls is set, force it on so that keyboard player 1 can control
+    # the Ozone menu which is important for arcade sticks etc that map to keyboard inputs
+    _set_config_option_rgs-em-retroarch "menu_unified_controls" "true"
+
+    # disable `quit_press_twice` on existing configs
+    _set_config_option_rgs-em-retroarch "quit_press_twice" "false"
+
+    # enable video shaders on existing configs
+    _set_config_option_rgs-em-retroarch "video_shader_enable" "true"
+
+    # (compat) keep all core options in a single file
+    _set_config_option_rgs-em-retroarch "global_core_options" "true"
+
+    # remapping hack for old 8bitdo firmware
+    addAutoConf "8bitdo_hack" 0
+}
+
+function keyboard_rgs-em-retroarch() {
+    if [[ ! -f "$configdir/all/retroarch.cfg" ]]; then
+        printMsgs "dialog" "No RetroArch configuration file found at $configdir/all/retroarch.cfg"
+        return
+    fi
+    local input
+    local options
+    local i=1
+    local key=()
+    while read input; do
+        local parts=($input)
+        key+=("${parts[0]}")
+        options+=("${parts[0]}" $i 2 "${parts[*]:2}" $i 26 16 0)
+        ((i++))
+    done < <(grep "^[[:space:]]*input_player[0-9]_[a-z]*" "$configdir/all/retroarch.cfg")
+    local cmd=(dialog --backtitle "$__backtitle" --form "RetroArch keyboard configuration" 22 48 16)
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        local value
+        local values
+        readarray -t values <<<"$choice"
+        iniConfig " = " "" "$configdir/all/retroarch.cfg"
+        i=0
+        for value in "${values[@]}"; do
+            iniSet "${key[$i]}" "$value" >/dev/null
+            ((i++))
+        done
+    fi
+}
+
+function hotkey_rgs-em-retroarch() {
+    iniConfig " = " '"' "$configdir/all/retroarch.cfg"
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose the desired hotkey behaviour." 22 76 16)
+    local options=(1 "Hotkeys enabled. (default)"
+             2 "Press ALT to enable hotkeys."
+             3 "Hotkeys disabled. Press ESCAPE to open XMB.")
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    if [[ -n "$choice" ]]; then
+        case "$choice" in
+            1)
+                iniSet "input_enable_hotkey" "nul"
+                iniSet "input_exit_emulator" "escape"
+                iniSet "input_menu_toggle" "F1"
+                ;;
+            2)
+                iniSet "input_enable_hotkey" "alt"
+                iniSet "input_exit_emulator" "escape"
+                iniSet "input_menu_toggle" "F1"
+                ;;
+            3)
+                iniSet "input_enable_hotkey" "escape"
+                iniSet "input_exit_emulator" "nul"
+                iniSet "input_menu_toggle" "escape"
+                ;;
+        esac
+    fi
+}
+
+function gui_rgs-em-retroarch() {
+    while true; do
+        local names=(shaders_glsl shaders_slang overlay assets)
+        local dirs=(shaders/glsl_shaders shaders/slang_shaders overlay assets)
+        local options=()
+        local name
+        local dir
+        local i=1
+        for name in "${names[@]}"; do
+            if [[ -d "$configdir/all/retroarch/${dirs[i-1]}/.git" ]]; then
+                options+=("$i" "Manage $name (installed)")
+            else
+                options+=("$i" "Manage $name (not installed)")
+            fi
+            ((i++))
+        done
+        options+=(
+            5 "Configure keyboard for use with RetroArch"
+            6 "Configure keyboard hotkey behaviour for RetroArch"
+        )
+        local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option" 22 76 16)
+        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+        case "$choice" in
+            1|2|3|4)
+                name="${names[choice-1]}"
+                dir="${dirs[choice-1]}"
+                options=(1 "Install/Update $name" 2 "Uninstall $name" )
+                cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for $dir" 12 40 06)
+                choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+
+                case "$choice" in
+                    1)
+                        "update_${name}_rgs-em-retroarch"
+                        ;;
+                    2)
+                        rm -rf "$configdir/all/retroarch/$dir"
+                        ;;
+                    *)
+                        continue
+                        ;;
+
+                esac
+                ;;
+            5)
+                keyboard_rgs-em-retroarch
+                ;;
+            6)
+                hotkey_rgs-em-retroarch
+                ;;
+            *)
+                break
+                ;;
+        esac
+
+    done
+}
+
+# adds a retroarch global config option in `$configdir/all/retroarch.cfg`, if not already set
+function _set_config_option_rgs-em-retroarch()
+{
+    local option="$1"
+    local value="$2"
+    iniConfig " = " "\"" "$configdir/all/retroarch.cfg"
+    iniGet "$option"
+    if [[ -z "$ini_value" ]]; then
+        iniSet "$option" "$value"
+    fi
+}

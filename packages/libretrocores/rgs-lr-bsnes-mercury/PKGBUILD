@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-bsnes-mercury
+pkgver=318
+pkgrel=1
+pkgdesc="Libretro implementation of BSNES Mercury. (Super Nintendo Entertainment System)"
+arch=('x86_64')
+url="https://github.com/libretro/bsnes-mercury"
+license=('GPL3')
+depends=('gcc-libs' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/bsnes-mercury")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    git rev-list --count HEAD
+}
+
+build() {
+    cd $pkgname
+    for i in accuracy balanced performance; do
+        make profile=${i} -j$(nproc)
+    done
+}
+
+package() {
+    cd $pkgname
+
+    for i in accuracy balanced performance; do
+        install -Dm644 ./out/bsnes_mercury_${i}_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/bsnes_mercury_${i}_libretro.so"
+    done
+}

@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-mgba
+pkgver=6762
+pkgrel=1
+pkgdesc="Libretro Nintendo Game Boy, Game Boy Advance & Game Boy Color Core"
+arch=('x86_64')
+url='https://github.com/libretro/mgba'
+license=('custom:MPL2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/mgba")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./mgba_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./LICENSE -t "${pkgdir}${_licencedir%/}"
+}

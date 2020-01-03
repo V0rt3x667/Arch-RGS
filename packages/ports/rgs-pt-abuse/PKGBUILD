@@ -1,0 +1,53 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-abuse
+pkgver=r50.42b6acd
+pkgrel=1
+pkgdesc="SDL port originally from Crack-Dot-Com and released into the public domain."
+arch=('x86_64')
+url="https://github.com/Xenoveritas/abuse/"
+license=('custom:Abuse')
+depends=('sdl2' 'sdl2_mixer')
+makedepends=('git' 'cmake')
+source=("$pkgname::git+https://github.com/Xenoveritas/abuse.git"
+        "abuse_assets.tar.gz")
+sha256sums=('SKIP'
+            'bc6d58c5244790953ed5a000d1a080643df015a5c3a693ae0c5022557202a628')
+
+pkgver() {
+    cd $pkgname
+  
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+    cd $pkgname
+  
+    if [[ -d build ]]; then
+      rm -rf build
+    fi
+    mkdir build
+    
+    cd ..
+    
+    cp -r ./data/* ./$pkgname/data
+}
+
+build() {
+    cd $pkgname/build
+    
+    cmake .. \
+      -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname
+    make
+}
+
+package() {
+    cd $pkgname/build
+  
+    make DESTDIR="$pkgdir" install
+    
+    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname/data
+    
+    cp -r $pkgdir/opt/archrgs/ports/$pkgname/share/games/abuse/* $pkgdir/opt/archrgs/ports/$pkgname/data
+    rm -rf $pkgdir/opt/archrgs/ports/$pkgname/share
+}

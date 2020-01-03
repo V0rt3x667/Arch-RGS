@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-bsnes2014
+pkgver=566
+pkgrel=1
+pkgdesc="Libretro implementation of BSNES. (Super Nintendo Entertainment System)"
+arch=('x86_64')
+url='https://github.com/libretro/bsnes-libretro'
+license=('GPL3')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/bsnes-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    git rev-list --count HEAD
+}
+
+build() {
+    cd $pkgname
+
+    for p in accuracy balanced performance; do
+      make profile=${p}
+    done
+}
+
+package() {
+    cd $pkgname
+
+    for p in accuracy balanced performance; do
+      install -Dm644 ./out/bsnes2014_${p}_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname"
+    done
+}

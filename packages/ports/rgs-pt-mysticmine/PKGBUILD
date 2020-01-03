@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-mysticmine
+pkgver=r53.2fc0a5e
+pkgrel=1
+pkgdesc="A customizable, cross platform, open-source falling block game, packed with a bunch of features."
+arch=('x86_64')
+url="http://www.mysticmine.com"
+license=('MIT')
+depends=('python2' 'python2-pygame' 'pyrex' 'python2-numpy')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/dewitters/MysticMine.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+  
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd $pkgname
+  
+  make
+}
+
+package() {
+  cd $pkgname
+
+  python2 setup.py install --prefix="$pkgdir/opt/archrgs/ports/$pkgname" --optimize=1
+}

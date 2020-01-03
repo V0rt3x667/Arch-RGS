@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-sameboy
+pkgver=1
+pkgrel=1
+pkgdesc="Libretro implementation of SameBoy. (Nintendo Game Boy/Game Boy Color)"
+arch=('x86_64')
+url="https://github.com/libretro/SameBoy"
+license=('MIT')
+makedepends=('git' 'clang' 'sdl2' 'rgbds')
+source=("$pkgname::git+https://github.com/libretro/SameBoy.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  CC=clang make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./sameboy_libretro.so -t "$pkgdir/opt/archrgs/libretrocores/$pkgname"
+}

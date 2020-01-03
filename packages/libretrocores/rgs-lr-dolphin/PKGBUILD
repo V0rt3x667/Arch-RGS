@@ -1,0 +1,42 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-dolphin
+pkgver=29758
+pkgrel=1
+pkgdesc="Libretro implementation of Dolphin. (Nintendo GC/Wii)"
+arch=('x86_64')
+url="https://github.com/libretro/dolphin"
+license=('GPL2')
+depends=('systemd-libs' 'libx11' 'libxi' 'libxrandr' 'zlib')
+makedepends=('cmake' 'git' 'mesa')
+source=("$pkgname::git+https://github.com/libretro/dolphin.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+ if [[ -d _build ]]; then
+    rm -rf _build
+ fi
+
+  mkdir ./build && cd ./build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DCMAKE_INSTALL_PREFIX='/opt/archrgs/emulators/dolphin' \
+    -DLIBRETRO='ON' \
+    -DLIBRETRO_STATIC='1'
+  make -j$(nproc)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./build/dolphin_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

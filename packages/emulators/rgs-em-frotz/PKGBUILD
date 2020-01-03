@@ -1,0 +1,42 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-frotz
+pkgver=2.52
+pkgrel=1
+pkgdesc="Interpreter for Infocom and Z-Machine Games"
+arch=('x86_64')
+url='https://661.org/proj/if/frotz/'
+license=('GPL2')
+depends=(
+  'freetype2'
+  'libao'
+  'libjpeg6-turbo'
+  'libmodplug'
+  'libpng'
+  'libsamplerate'
+  'libsndfile'
+  'libvorbis'
+  'ncurses'
+  'pkgconf'
+  'sdl2'
+  'sdl2_mixer'
+  'setconf'
+  'zlib'
+)
+source=("https://gitlab.com/DavidGriffith/frotz/-/archive/$pkgver/frotz-$pkgver.tar.gz")
+sha256sums=('SKIP')
+_installdir=/opt/archrgs/emulators/$pkgname
+
+build() {
+  cd "frotz-$pkgver" || exit
+
+  make \
+    PREFIX="$_installdir" \
+    SYSCONFDIR="$HOME/.config/frotzrc" \
+  sdl
+}
+
+package() {
+  cd "frotz-$pkgver" || exit
+
+  make DESTDIR="${pkgdir}" PREFIX="$_installdir" install_sdl
+}

@@ -1,0 +1,33 @@
+# Maintainer V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-xroar
+pkgver=0.36.1
+pkgrel=1
+pkgdesc="A Dragon and Tandy CoCo Emulator"
+arch=('x86_64')
+license=('GPL2')
+url="https://www.6809.org.uk/xroar"
+depends=(
+  'gtk2' 
+  'gtkglext'
+  'libgl' 
+  'libsndfile'
+  'sdl2'
+  'texlive-core'
+)
+source=("$url/dl/xroar-$pkgver.tar.gz")
+sha256sums=('041cb25d261daf4a7a0f3ea299e117cb2dbbdfd4ff881a78e1324ce1acfca9d2')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+build() {
+  cd "xroar-$pkgver"
+
+  ./configure \
+    --prefix="$_installdir"
+  make
+}
+
+package() {
+  cd "xroar-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}

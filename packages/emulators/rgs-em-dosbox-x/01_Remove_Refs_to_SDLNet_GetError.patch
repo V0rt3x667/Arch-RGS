@@ -1,0 +1,340 @@
+Left base folder: dosbox-x-dosbox-x-v0.83.3-A
+Right base folder: dosbox-x-dosbox-x-v0.83.3-B
+--- vs2015/sdlnet/chat.cpp	2020-07-01 00:09:17.000000000 
++++ vs2015/sdlnet/chat.cpp	2020-07-02 19:39:04.000000000 
+@@ -404,13 +404,13 @@
+                 exit(1);
+ 	}
+ 
+ 	/* Initialize the network */
+ 	if ( SDLNet_Init() < 0 ) {
+ 		fprintf(stderr, "Couldn't initialize net: %s\n",
+-						SDLNet_GetError());
++						SDL_GetError());
+ 		SDL_Quit();
+ 		exit(1);
+ 	}
+ 
+ 	/* Get ready to initialize all of our data */
+ 
+@@ -464,13 +464,13 @@
+ 	}
+ 
+ 	/* Allocate the socket set for polling the network */
+ 	socketset = SDLNet_AllocSocketSet(2);
+ 	if ( socketset == NULL ) {
+ 		fprintf(stderr, "Couldn't create socket set: %s\n",
+-						SDLNet_GetError());
++						SDL_GetError());
+ 		cleanup(2);
+ 	}
+ 	SDLNet_TCP_AddSocket(socketset, tcpsock);
+ 	SDLNet_UDP_AddSocket(socketset, udpsock);
+ 
+ 	/* Run the GUI, handling network data */
+--- vs2015/sdlnet/chatd.c	2020-07-01 00:09:17.000000000 
++++ vs2015/sdlnet/chatd.c	2020-07-02 19:39:04.000000000 
+@@ -201,13 +201,13 @@
+                 exit(1);
+ 	}
+ 
+ 	/* Initialize the network */
+ 	if ( SDLNet_Init() < 0 ) {
+ 		fprintf(stderr, "Couldn't initialize net: %s\n",
+-						SDLNet_GetError());
++						SDL_GetError());
+ 		SDL_Quit();
+ 		exit(1);
+ 	}
+ 
+ 	/* Initialize the channels */
+ 	for ( i=0; i<CHAT_MAXPEOPLE; ++i ) {
+@@ -216,23 +216,23 @@
+ 	}
+ 
+ 	/* Allocate the socket set */
+ 	socketset = SDLNet_AllocSocketSet(CHAT_MAXPEOPLE+1);
+ 	if ( socketset == NULL ) {
+ 		fprintf(stderr, "Couldn't create socket set: %s\n",
+-						SDLNet_GetError());
++						SDL_GetError());
+ 		cleanup(2);
+ 	}
+ 		
+ 	/* Create the server socket */
+ 	SDLNet_ResolveHost(&serverIP, NULL, CHAT_PORT);
+ printf("Server IP: %x, %d\n", serverIP.host, serverIP.port);
+ 	servsock = SDLNet_TCP_Open(&serverIP);
+ 	if ( servsock == NULL ) {
+ 		fprintf(stderr, "Couldn't create server socket: %s\n",
+-						SDLNet_GetError());
++						SDL_GetError());
+ 		cleanup(2);
+ 	}
+ 	SDLNet_TCP_AddSocket(socketset, servsock);
+ 
+ 	/* Loop, waiting for network events */
+ 	for ( ; ; ) {
+--- src/hardware/ipx.cpp	2020-07-01 00:09:17.000000000 
++++ src/hardware/ipx.cpp	2020-07-02 19:39:04.000000000 
+@@ -556,13 +556,13 @@
+ 	regPacket.len = sizeof(regHeader);
+ 	regPacket.maxlen = sizeof(regHeader);
+ 	regPacket.channel = UDPChannel;
+ 	
+ 	result = SDLNet_UDP_Send(ipxClientSocket, regPacket.channel, &regPacket);
+ 	if(!result) {
+-		LOG_MSG("IPX: SDLNet_UDP_Send: %s\n", SDLNet_GetError());
++		LOG_MSG("IPX: SDLNet_UDP_Send: %s\n", SDL_GetError());
+ 	}
+ }
+ 
+ static void receivePacket(Bit8u *buffer, Bit16s bufSize) {
+ 	ECBClass *useECB;
+ 	ECBClass *nextECB;
+@@ -707,13 +707,13 @@
+ 		outPacket.len = packetsize;
+ 		outPacket.maxlen = packetsize;
+ 		// Since we're using a channel, we won't send the IP address again
+ 		result = SDLNet_UDP_Send(ipxClientSocket, UDPChannel, &outPacket);
+ 		
+ 		if(result == 0) {
+-			LOG_MSG("IPX: Could not send packet: %s", SDLNet_GetError());
++			LOG_MSG("IPX: Could not send packet: %s", SDL_GetError());
+ 			sendecb->setCompletionFlag(COMP_HARDWAREERROR);
+ 			sendecb->NotifyESR();
+ 			DisconnectFromServer(true);
+ 			return;
+ 		} else {
+ 			sendecb->setCompletionFlag(COMP_SUCCESS);
+@@ -786,13 +786,13 @@
+ 			regPacket.channel = UDPChannel;
+ 			// Send registration string to server.  If server doesn't get
+ 			// this, client will not be registered
+ 			numsent = SDLNet_UDP_Send(ipxClientSocket, regPacket.channel, &regPacket);
+ 			
+ 			if(!numsent) {
+-				LOG_MSG("IPX: Unable to connect to server: %s", SDLNet_GetError());
++				LOG_MSG("IPX: Unable to connect to server: %s", SDL_GetError());
+ 				SDLNet_UDP_Close(ipxClientSocket);
+ 				return false;
+ 			} else {
+ 				// Wait for return packet from server.
+ 				// This will contain our IPX address and port num
+ 				Bits result;
+@@ -1098,13 +1098,13 @@
+ 	IPX(Section* configuration):Module_base(configuration) {
+ 		Section_prop * section = static_cast<Section_prop *>(configuration);
+ 		ipx_init = false;
+ 		if(!section->Get_bool("ipx")) return;
+ 		if(!SDLNetInited) {
+ 			if(SDLNet_Init() == -1){
+-				LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++				LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 				return;
+ 			}
+ 			SDLNetInited = true;
+ 		}
+ 
+ 		ECBList = NULL;
+--- src/hardware/ipxserver.cpp	2020-07-01 00:09:17.000000000 
++++ src/hardware/ipxserver.cpp	2020-07-02 19:39:04.000000000 
+@@ -87,26 +87,26 @@
+ 		// Broadcast
+ 		for(i=0;i<SOCKETTABLESIZE;i++) {
+ 			if(connBuffer[i].connected && ((ipconn[i].host != srchost)||(ipconn[i].port!=srcport))) {
+ 				outPacket.address = ipconn[i];
+ 				result = SDLNet_UDP_Send(ipxServerSocket,-1,&outPacket);
+ 				if(result == 0) {
+-					LOG_MSG("IPXSERVER: %s", SDLNet_GetError());
++					LOG_MSG("IPXSERVER: %s", SDL_GetError());
+ 					continue;
+ 				}
+ 				//LOG_MSG("IPXSERVER: Packet of %d bytes sent from %d.%d.%d.%d to %d.%d.%d.%d (BROADCAST) (%x CRC)", bufSize, CONVIP(srchost), CONVIP(ipconn[i].host), packetCRC(&buffer[30], bufSize-30));
+ 			}
+ 		}
+ 	} else {
+ 		// Specific address
+ 		for(i=0;i<SOCKETTABLESIZE;i++) {
+ 			if((connBuffer[i].connected) && (ipconn[i].host == desthost) && (ipconn[i].port == destport)) {
+ 				outPacket.address = ipconn[i];
+ 				result = SDLNet_UDP_Send(ipxServerSocket,-1,&outPacket);
+ 				if(result == 0) {
+-					LOG_MSG("IPXSERVER: %s", SDLNet_GetError());
++					LOG_MSG("IPXSERVER: %s", SDL_GetError());
+ 					continue;
+ 				}
+ 				//LOG_MSG("IPXSERVER: Packet sent from %d.%d.%d.%d to %d.%d.%d.%d", CONVIP(srchost), CONVIP(desthost));
+ 			}
+ 		}
+ 	}
+--- src/gui/midi_timidity.h	2020-07-01 00:09:17.000000000 
++++ src/gui/midi_timidity.h	2020-07-02 19:39:04.000000000 
+@@ -39,13 +39,13 @@
+ class MidiHandler_timidity: public MidiHandler {
+ public:
+         MidiHandler_timidity() : MidiHandler(),_isOpen(false),_device_num(0),
+ 				 _controlbuffer_count(0), _controlbuffer_size(0) {
+ 		if(!SDLNetInited) {
+ 			if (SDLNet_Init() == -1) {
+-				LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++				LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 				return;
+ 			}
+ 			SDLNetInited = true;
+ 		}
+ 	};
+ 
+@@ -213,19 +213,19 @@
+ bool MidiHandler_timidity::connect_to_server(const char* hostname, int tcp_port,
+ 					     TCPsocket * sd) {
+ 	IPaddress ip;
+ 
+ 	if (SDLNet_ResolveHost(&ip, hostname, tcp_port) < 0)
+ 	{
+-		LOG_MSG("SDLNet_ResolveHost: %s\n", SDLNet_GetError());
++		LOG_MSG("SDLNet_ResolveHost: %s\n", SDL_GetError());
+ 		return false;
+ 	}
+ 
+ 	if (!(*sd = SDLNet_TCP_Open(&ip)))
+ 	{
+-		LOG_MSG("SDLNet_TCP_Open: %s\n", SDLNet_GetError());
++		LOG_MSG("SDLNet_TCP_Open: %s\n", SDL_GetError());
+ 		return false;
+ 	}
+ 
+ 	return true;
+ }
+ 
+@@ -246,13 +246,13 @@
+ 		/* add newline if needed */
+ 		if (buff[len-1] != '\n')
+ 			buff[len++] = '\n';
+ 
+ 		/* write command to control socket */
+ 		if (SDLNet_TCP_Send(control_socket, buff, len) < len) {
+-			LOG_MSG("SDLNet_TCP_Send: %s\n", SDLNet_GetError());
++			LOG_MSG("SDLNet_TCP_Send: %s\n", SDL_GetError());
+ 		}
+  	}
+ 
+ 	while (1) {
+ 		/* read reply */
+ 		if (fdgets(buff, BUFSIZ) <= 0) {
+@@ -320,13 +320,13 @@
+ 	timidity_meta_seq(0x00, 0x00, 0); /* End of playing */
+ 	return timidity_sync(0);
+ }
+ 
+ void MidiHandler_timidity::timidity_write_data(const void *buf, int nbytes) {
+ 	if (SDLNet_TCP_Send(data_socket, buf, nbytes) < nbytes) {
+-		LOG_MSG("TiMidity: DATA WRITE FAILED (%s), DISABLING MUSIC OUTPUT", SDLNet_GetError());
++		LOG_MSG("TiMidity: DATA WRITE FAILED (%s), DISABLING MUSIC OUTPUT", SDL_GetError());
+ 		close_all();
+ 	}
+ }
+ 
+ int MidiHandler_timidity::fdgets(char *buff, size_t buff_size) {
+ 	int n, count, size;
+--- src/hardware/serialport/misc_util.cpp	2020-07-01 00:09:17.000000000 
++++ src/hardware/serialport/misc_util.cpp	2020-07-02 19:39:04.000000000 
+@@ -51,13 +51,13 @@
+ 	nativetcpstruct = new Bit8u[sizeof(struct _TCPsocketX)];
+ 	
+ 	mysock = (TCPsocket)nativetcpstruct;
+ 	isopen = false;
+ 	if(!SDLNetInited) {
+         if(SDLNet_Init()==-1) {
+-			LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++			LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 			return;
+ 		}
+ 		SDLNetInited = true;
+ 	}
+ 	// fill the SDL socket manually
+ 	((struct _TCPsocketX*)nativetcpstruct)->ready=0;
+@@ -108,13 +108,13 @@
+ 	nativetcpstruct=0;
+ #endif
+ 	sendbuffer=0;
+ 	isopen = false;
+ 	if(!SDLNetInited) {
+         if(SDLNet_Init()==-1) {
+-			LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++			LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 			return;
+ 		}
+ 		SDLNetInited = true;
+ 	}	
+ 	
+ 	mysock=0;
+@@ -133,13 +133,13 @@
+ 	nativetcpstruct=0;
+ #endif
+ 	sendbuffer=0;
+ 	isopen = false;
+ 	if(!SDLNetInited) {
+         if(SDLNet_Init()==-1) {
+-			LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++			LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 			return;
+ 		}
+ 		SDLNetInited = true;
+ 	}	
+ 	mysock=0;
+ 	listensocketset=0;
+@@ -292,13 +292,13 @@
+ TCPServerSocket::TCPServerSocket(Bit16u port)
+ {
+ 	isopen = false;
+ 	mysock = 0;
+ 	if(!SDLNetInited) {
+         if(SDLNet_Init()==-1) {
+-			LOG_MSG("SDLNet_Init failed: %s\n", SDLNet_GetError());
++			LOG_MSG("SDLNet_Init failed: %s\n", SDL_GetError());
+ 			return;
+ 		}
+ 		SDLNetInited = true;
+ 	}
+ 	if (port) {
+ 		IPaddress listen_ip;
+@@ -317,13 +317,13 @@
+ TCPClientSocket* TCPServerSocket::Accept() {
+ 
+ 	TCPsocket new_tcpsock;
+ 
+ 	new_tcpsock=SDLNet_TCP_Accept(mysock);
+ 	if(!new_tcpsock) {
+-		//printf("SDLNet_TCP_Accept: %s\n", SDLNet_GetError());
++		//printf("SDLNet_TCP_Accept: %s\n", SDL_GetError());
+ 		return 0;
+ 	}
+ 	
+ 	return new TCPClientSocket(new_tcpsock);
+ }
+ #endif // #if C_MODEM
+--- vs2015/sdlnet/SDL_net.h	2020-07-01 00:09:17.000000000 
++++ vs2015/sdlnet/SDL_net.h	2020-07-02 19:39:04.000000000 
+@@ -338,19 +338,19 @@
+ /***********************************************************************/
+ /* Error reporting functions                                           */
+ /***********************************************************************/
+ 
+ /* We'll use SDL's functions for error reporting */
+ #define SDLNet_SetError	SDL_SetError
+-#define SDLNet_GetError	SDL_GetError
++#define SDL_GetError	SDL_GetError
+ 
+ /* I'm eventually going to try to disentangle SDL_net from SDL, thus making
+    SDL_net an independent X-platform networking toolkit.  Not today though....
+ 
+ extern no_parse_DECLSPEC void SDLCALL SDLNet_SetError(const char *fmt, ...);
+-extern no_parse_DECLSPEC char * SDLCALL SDLNet_GetError(void);
++extern no_parse_DECLSPEC char * SDLCALL SDL_GetError(void);
+ */
+ 
+ 
+ /* Inline macro functions to read/write network data */
+ 
+ /* Warning, some systems have data access alignment restrictions */

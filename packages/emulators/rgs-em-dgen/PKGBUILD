@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dgen
+pkgver=1.33
+pkgrel=1
+pkgdesc="A Sega Genesis and Mega Drive Emulator"
+arch=('x86_64')
+url="https://dgen.sourceforge.net"
+license=('BSD')
+depends=(
+  'libarchive'
+  'libgl'
+  'sdl'
+)
+source=("https://sourceforge.net/projects/dgen/files/dgen/$pkgver/dgen-sdl-$pkgver.tar.gz")
+sha256sums=('99e2c06017c22873c77f88186ebcc09867244eb6e042c763bb094b02b8def61e')
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+build() {
+  cd dgen-sdl-$pkgver
+
+  ./configure \
+    --prefix="$_installdir"
+  make
+}
+
+package() {
+  cd dgen-sdl-$pkgver
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm644 ./{sample.dgenrc,AUTHORS,BUGS,NEWS,README} -t "${pkgdir}${_installdir%/}/share/docs/"
+  install -Dm644 ./COPYING "${pkgdir}${_licencedir%/}/LICENSE"
+}

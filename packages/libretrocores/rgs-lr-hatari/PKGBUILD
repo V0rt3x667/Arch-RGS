@@ -1,0 +1,39 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-hatari
+pkgver=5462.3fdaff4d
+pkgrel=1
+pkgdesc="Libretro implementation of Hatari v1.8. (Atari ST/STE/TT/Falcon)"
+arch=('x86_64')
+url="https://github.com/libretro/hatari"
+license=('GPL2')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/hatari.git"
+        '01_libcapsimage.diff')
+sha256sums=('SKIP'
+            '3a30bdf992929f2ae26cf7727bfcd00f5492cbc5c92cc9bbc862c111b471386f')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd $pkgname
+
+  patch ../01_libcapsimage.diff
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile.libretro EXTERNAL_ZLIB=1
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./hatari_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

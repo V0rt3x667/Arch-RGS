@@ -1,0 +1,55 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-yquake2
+pkgver=7.43.r0.gd08cf04d
+pkgrel=1
+pkgdesc="Enhanced Quake II Engine"
+url="http://www.yamagi.org/quake2"
+arch=('x86_64')
+license=('GPL2')
+depends=(
+  'curl'
+  'openal'
+  'sdl2'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/yquake2/yquake2#tag=QUAKE2_7_43")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git describe --long --tags | sed 's/^QUAKE2_//;s/_/./;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DSYSTEMWIDE_SUPPORT=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./release/{quake2,q2ded,*.so} -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 ./release/baseq2/game.so -t "${pkgdir}${_installdir%/}/bin/baseq2/"
+  install -Dm644 ../stuff/yq2.cfg -t "${pkgdir}${_installdir%/}/share/doc/"
+  install -Dm644 ../doc/*.md -t "${pkgdir}${_installdir%/}/share/doc/"
+  install -Dm644 ../stuff/icon/Quake2.* -t "${pkgdir}${_installdir%/}/share/pixmaps/"
+}

@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-higan
+pkgver=106
+pkgrel=1
+pkgdesc="Libretro implementation of Higan."
+arch=('x86_64')
+url='https://byuu.org/emulation/higan'
+license=('GPL3')
+depends=('alsa-lib' 'cairo' 'gcc-libs' 'gdk-pixbuf2' 'glib2' 'glibc' 'gtk2'
+         'gtksourceview2' 'libao' 'libgl' 'libpulse' 'libx11' 'libxext' 'libxv'
+         'openal' 'pango' 'sdl' 'libudev')
+makedepends=('mesa')
+source=("$pkgname::git+https://gitlab.com/higan/higan.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -C higan target=libretro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm755 higan/out/higan_sfc_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

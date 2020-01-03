@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-openblok
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="A customizable, cross platform, open-source falling block game, packed with a bunch of features."
+arch=('x86_64')
+url="https://github.com/mmatyas/openblok.git"
+license=('GPL3')
+depends=('sdl2' 'sdl2_image' 'sdl2_mixer' 'sdl2_ttf')
+makedepends=('cmake' 'git')
+source=("$pkgname::git+https://github.com/mmatyas/openblok.git#tag=v$pkgver"
+        "git+https://github.com/mmatyas/libSDL2pp.git"
+        "git+https://github.com/mmatyas/unittest-cpp.git")
+md5sums=('SKIP'
+         'SKIP'
+         'SKIP')
+
+prepare() {
+    cd $pkgname
+  
+    if [[ -d build ]]; then
+      rm -rf build
+    fi
+    mkdir build
+    
+    git submodule init
+    git config submodule.libSDL2pp.url $srcdir/libSDL2pp
+    git submodule update
+    
+    git submodule init
+    git config submodule.unittest.url $srcdir/unittest-cpp
+    git submodule update
+}
+
+build() {
+    cd "$pkgname/build"
+    
+    cmake .. \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DINSTALL_PORTABLE=ON \
+      -DCMAKE_INSTALL_PREFIX="/opt/archrgs/ports/$pkgname/" \
+      -DBUILD_TEST=OFF
+    make
+}
+
+package() {
+    cd "$pkgname/build"
+    
+    make DESTDIR="$pkgdir" install
+}

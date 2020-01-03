@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-freechaf
+pkgver=14
+pkgrel=1
+pkgdesc="Libretro implementation of Freechaf. (Fairchild ChannelF)"
+arch=('x86_64')
+url="https://github.com/libretro/FreeChaF.git"
+license=('GPL3')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/FreeChaF.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./freechaf_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-mame2010
+pkgver=380.c87309d
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Libretro implementation of MAME 2010. (Arcade)"
+url="https://github.com/libretro/mame2010-libretro"
+license=('custom:MAME License')
+makedepends=('git' 'python2')
+source=("$pkgname::git+https://github.com/libretro/mame2010-libretro.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile buildtools PTR64=1 -j$(nproc)
+  make -f Makefile PTR64=1 -j$(nproc)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./mame2010_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  install -Dm644 ./docs/license.txt -t "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-caprice32
+pkgver=254
+pkgrel=1
+pkgdesc="Libretro implementation of Caprice32. (Amstrad CPC)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-cap32"
+license=('GPL')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-cap32.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./cap32_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

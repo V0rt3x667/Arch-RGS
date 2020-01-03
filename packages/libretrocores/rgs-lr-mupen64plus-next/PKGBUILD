@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-mupen64plus-next
+pkgver=157
+pkgrel=1
+pkgdesc="Libretro implementation of Mupen64plus-next. (Nintendo 64)"
+arch=('x86_64')
+url='http://www.libretro.com'
+license=('GPL3')
+makedepends=('bison' 'flex' 'git' 'glew' 'glu' 'libpng' 'nasm')
+source=("$pkgname::git+https://github.com/libretro/mupen64plus-libretro-nx.git#branch=develop")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make CORE_NAME='mupen64plus-next' -j$(nproc)
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./mupen64plus_next_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

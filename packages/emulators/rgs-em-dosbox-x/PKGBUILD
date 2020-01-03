@@ -1,0 +1,59 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dosbox-x
+pkgver=r11149.7e4e681ee
+pkgrel=1
+pkgdesc="A DOS Emulator, Includes Additional Patches and Features"
+arch=('x86_64')
+url="http://dosbox-x.com"
+license=('GPL')
+depends=(
+  'ffmpeg'
+  'fluidsynth'
+  'glu'
+  'libpng'
+  'libxkbfile'
+  'mesa'
+  'sdl2_mixer'
+  'sdl2_net'
+)
+makedepends=('git')
+source=(
+  "$pkgname::git+https://github.com/joncampbell123/dosbox-x#tag=dosbox-x-v0.83.3"
+  "01_Remove_Refs_to_SDLNet_GetError.patch" 
+)
+sha256sums=(
+  'SKIP'
+  '7850a2f22d77ddbf14cb13ec63e289e96033e6fcaf56aa5354260f9ed8014db2'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+  
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -p0 -i ../01_Remove_Refs_to_SDLNet_GetError.patch
+}
+
+build() {
+  cd "$pkgname"
+
+  ./autogen.sh
+  ./configure \
+    --prefix="$_installdir" \
+    --enable-sdl2 \
+    --enable-core-inline \
+    --disable-debug \
+    --enable-avcodec
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="$pkgdir" install
+}

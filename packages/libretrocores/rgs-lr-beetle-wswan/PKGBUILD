@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-beetle-wswan
+pkgver=745
+pkgrel=1
+pkgdesc="Libretro implementation of WonderSwan."
+arch=('x86_64')
+url='https://github.com/libretro/beetle-wswan-libretro'
+license=('GPL2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/beetle-wswan-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./mednafen_wswan_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

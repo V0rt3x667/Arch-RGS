@@ -1,0 +1,39 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-superflappybirds
+pkgver=29
+pkgrel=1
+pkgdesc='A multiplayer Flappy Bird clone designed for the libretro framework.'
+arch=('x86_64')
+url='https://github.com/IgniparousTempest/libretro-superflappybirds.git'
+license=('GPL')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/IgniparousTempest/libretro-superflappybirds.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+
+  mkdir build && cd build
+
+  cmake ..
+  
+  make
+}
+
+package() {
+  cd $pkgname/build
+
+  install -Dm644 ./superflappybirds_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  cp -r ../resources "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

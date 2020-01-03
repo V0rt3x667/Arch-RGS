@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-redream
+pkgver=1083
+pkgrel=1
+pkgdesc="Libretro implementation of Redream. (Sega Dreamcast)"
+arch=('x86_64')
+url='https://github.com/libretro/redream'
+license=('GPL2')
+depends=('libgl')
+makedepends=('git' 'mesa')
+source=("$pkgname::git+https://github.com/libretro/redream.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/deps/libretro
+
+  make -j$(nproc)
+}
+
+package() {
+  cd $pkgname/deps/libretro
+
+  install -Dm644 ./redream_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

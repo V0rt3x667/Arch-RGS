@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-micropolis
+pkgver=r97.cc31822
+pkgrel=1
+pkgdesc="Open Source City Building Game"
+arch=('x86_64')
+url="https://git.zerfleddert.de/cgi-bin/gitweb.cgi/micropolis"
+license=('GPL')
+depends=('sdl_mixer' 'libxpm')
+makedepends=('git')
+source=("$pkgname::git+https://git.zerfleddert.de/git/micropolis")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+  
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd $pkgname
+
+  make -j1 \
+    PREFIX=/opt/archrgs/ports/$pkgname
+}
+
+package() {
+  cd $pkgname
+
+  sed -i -e 's|export SIMHOME=`pwd`|export SIMHOME="/opt/archrgs/ports/$pkgname"|' Micropolis
+  make PREFIX=/opt/archrgs/ports/$pkgname DESTDIR="$pkgdir" LIBEXECDIR="/opt/archrgs/ports/$pkgname" install
+}

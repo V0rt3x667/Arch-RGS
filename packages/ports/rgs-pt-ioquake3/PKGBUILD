@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-ioquake3
+pkgver=r3325.daae32dd
+pkgrel=1
+pkgdesc="Quake 3 source port"
+arch=('x86_64')
+url="https://www.ioquake3.org/"
+license=('GPL2')
+depends=('curl' 'freetype2' 'libjpeg' 'libvorbis' 'openal' 'opus' 'opusfile' 'sdl2' 'zlib')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/ioquake/ioq3.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd $pkgname
+
+    make
+}
+
+package() {
+    cd $pkgname
+    
+    make COPYDIR="$pkgdir/opt/archrgs/ports/$pkgname" copyfiles
+}

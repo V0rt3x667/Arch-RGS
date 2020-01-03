@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-yabause
+pkgver=2975
+pkgrel=1
+pkgdesc="Libretro implementation of YABAUSE. (Sega Saturn)"
+arch=('x86_64')
+url='https://github.com/libretro/yabause'
+license=('GPL2')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/yabause.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/src/libretro
+
+  make
+}
+
+package() {
+  cd $pkgname/src/libretro
+
+  install -Dm644 ./yabause_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

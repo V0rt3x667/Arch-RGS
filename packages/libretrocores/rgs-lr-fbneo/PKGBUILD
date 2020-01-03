@@ -1,0 +1,44 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-fbneo
+pkgver=9026
+pkgrel=1
+pkgdesc="Libretro FBNeo Core"
+arch=('x86_64')
+url='https://github.com/libretro/FBNeo'
+license=('custom:Non-commercial')
+depends=(
+  'glibc'
+  'nasm'
+  'sdl2_image'
+  'zlib'
+)
+makedepends=(
+  'git' 
+  'perl'
+)
+source=("$pkgname::git+https://github.com/libretro/FBNeo")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname/src/burner/libretro"
+
+  make USE_X64_DRC=1
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./src/burner/libretro/{fbneo_libretro.so,README.md} -t "$pkgdir/${_installdir%/}"
+  install -Dm644 ./metadata/hiscore.dat -t "$pkgdir/${_installdir%/}/data/"
+  install -Dm644 ./{fba.chm,gamelist.txt,whatsnew.html,preset-example.zip} -t "$pkgdir/${_installdir%/}/data/"
+  install -Dm644 ./src/license.txt "$pkgdir/${_licencedir%/}/LICENSE"
+  cp -r ./dats "$pkgdir/${_installdir%/}"
+}

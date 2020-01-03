@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-darkplaces
+pkgver=r11706.324a5329
+pkgrel=1
+pkgdesc="Quake 1 - DarkPlaces Quake Engine."
+arch=('x86_64')
+url="https://gitlab.com/xonotic/darkplaces/"
+license=('GPL2')
+depends=('sdl2' 'libjpeg')
+makedepends=('git')
+source=("$pkgname::git+https://gitlab.com/xonotic/darkplaces.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd $pkgname
+
+    make PREFIX=/opt/archrgs/ports/$pkgname release
+}
+
+package() {
+    cd $pkgname
+    
+    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname/bin
+    
+    cp darkplaces-{dedicated,glx,sdl} $pkgdir/opt/archrgs/ports/$pkgname/bin
+}

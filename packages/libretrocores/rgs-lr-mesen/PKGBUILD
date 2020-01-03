@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-mesen
+pkgver=0.9.7.r227.gefe55a91
+pkgrel=1
+pkgdesc="Libretro implementation of Mesen. (NES/Famicom)"
+arch=('x86_64')
+url="https://www.mesen.ca"
+license=('GPL3')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/SourMesen/Mesen.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/Libretro
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 Libretro/mesen_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

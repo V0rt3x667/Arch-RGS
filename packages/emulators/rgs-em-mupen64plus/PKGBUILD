@@ -1,0 +1,137 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-mupen64plus
+pkgver=2.5.9.r75.b7b56fea
+pkgrel=1
+pkgdesc="A Nintendo 64 Emulator"
+arch=('x86_64')
+url="https://mupen64plus.org"
+license=('GPL')
+depends=('speexdsp' 'minizip' 'sdl2' 'glu' 'libsamplerate' 'libpng'
+         'freetype2' 'boost-libs' 'hicolor-icon-theme' 'desktop-file-utils')
+makedepends=('git' 'nasm' 'mesa' 'boost')
+source=(
+  "git+https://github.com/mupen64plus/mupen64plus-core"
+  "git+https://github.com/mupen64plus/mupen64plus-rsp-hle"
+  "git+https://github.com/mupen64plus/mupen64plus-rsp-cxd4"
+  "git+https://github.com/mupen64plus/mupen64plus-video-z64"
+  "git+https://github.com/mupen64plus/mupen64plus-rsp-z64"
+  "git+https://github.com/mupen64plus/mupen64plus-video-arachnoid"
+  "video-gliden64::git+https://github.com/gonetz/GLideN64.git"
+  "video-angrylion::git+https://github.com/ata4/angrylion-rdp-plus.git"
+  "git+https://github.com/mupen64plus/mupen64plus-video-rice"
+  "git+https://github.com/mupen64plus/mupen64plus-video-glide64mk2"
+  "git+https://github.com/mupen64plus/mupen64plus-audio-sdl"
+  "git+https://github.com/mupen64plus/mupen64plus-input-sdl"
+  "git+https://github.com/mupen64plus/mupen64plus-ui-console"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+_m64p_components=(
+  'core' 
+  'rsp-cxd4' 
+  'rsp-z64' 
+  'video-arachnoid' 
+  'video-z64' 
+  'rsp-hle' 
+  'video-rice' 
+  'video-glide64mk2' 
+  'audio-sdl' 
+  'input-sdl' 
+  'ui-console'
+)
+_3p_components=(
+  'video-angrylion'
+  'video-gliden64'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+_parameters=("PREFIX=$_installdir" "COREDIR=$_installdir/lib/" "PLUGINDIR=$_installdir/lib/mupen64plus/" "OSD=1" "PIE=1" "SSE=SSE2")
+
+pkgver() {
+  cd "$srcdir/mupen64plus-core"
+
+  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$srcdir"
+
+  for _component in "${_3p_components[@]}"
+  do
+    cd "$srcdir/${_component}"
+    if [[ -d build ]]; then
+        rm -rf build
+    fi
+    mkdir build
+  done
+
+  _config_version=$(grep -oP '(?<=CONFIG_VERSION_CURRENT ).+?(?=U)' "$srcdir"/video-gliden64/src/Config.h)
+  echo "$_config_version" > "$srcdir"/video-gliden64/GLideN64_config_version.ini
+}
+
+build() {
+  cd "$srcdir"
+
+  for _component in "${_m64p_components[@]}"
+  do
+    cd "$srcdir"
+    printf '%s\n' "  -> Building component 'mupen64plus-${_component}'..."
+    make -C "mupen64plus-${_component}/projects/unix" all "${_parameters[@]}" OPTFLAGS="${CFLAGS} -O3 -flto"
+  done
+
+  # Build Angrylion
+  cd "$srcdir"/video-angrylion/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="$_installdir"
+  make
+
+  # Build GLideN64
+  cd "$srcdir"/video-gliden64/build
+
+  "$srcdir"/video-gliden64/src/getRevision.sh
+
+  cmake ../src \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DMUPENPLUSAPI=ON \
+    -DVEC4_OPT=On \
+    -DX86_OPT=On \
+    -DUSE_SYSTEM_LIBS=On \
+    -DCRC_OPT=On \
+    -Wno-dev \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS} -fpermissive"
+  make
+}
+
+package() {
+cd "$srcdir"
+
+  for _component in ${_m64p_components[@]}
+  do
+      printf '%s\n' "  -> Installing component '${_component}'..."
+      make -C "mupen64plus-${_component}/projects/unix" DESTDIR="$pkgdir" "${_parameters[@]}" OPTFLAGS="${CFLAGS} -O3 -flto" install
+  done
+
+  # Install Angrylion
+  cd "$srcdir"/video-angrylion/build
+  install -Dm644 ./mupen64plus-video-angrylion-plus.so -t "${pkgdir%/}/${_installdir#/}/lib/mupen64plus"
+
+  # Install GLideN64
+  cd "$srcdir"/video-gliden64/build/plugin/Release
+
+  install -Dm644 ./mupen64plus-video-GLideN64.so -t "${pkgdir%/}/${_installdir#/}/lib/mupen64plus"
+  install -Dm755 ../../../ini/{GLideN64.ini,GLideN64.custom.ini} -t "${pkgdir%/}/${_installdir#/}/share/mupen64plus"
+  install -Dm755 ../../../GLideN64_config_version.ini -t "${pkgdir%/}/${_installdir#/}/share/mupen64plus"
+}

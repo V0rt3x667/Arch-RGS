@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-fmsx
+pkgver=155
+pkgrel=1
+pkgdesc="Libretro implementation of fMSX. (Microsoft MSX)"
+arch=('x86_64')
+url="https://github.com/libretro/fmsx-libretro"
+license=('custom')
+depends=('zlib')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/fmsx-libretro.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./fmsx_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  install -Dm644 ./fMSX/ROMs/{*.ROM,*.FNT,*.SHA} -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/ROMS/"
+  install -Dm644 ./LICENSE -t "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}

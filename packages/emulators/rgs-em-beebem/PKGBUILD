@@ -1,0 +1,59 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-beebem
+pkgver=0.0.13
+pkgrel=1
+pkgdesc="Acorn BBC Micro B, B+, Integra Board & Master 128 Emulator"
+arch=('x86_64')
+url="http://beebem-unix.bbcmicro.com"
+license=('custom')
+depends=(
+  'gtk2'
+  'sdl'
+)
+makedepends=('patch')
+source=(
+  "http://beebem-unix.bbcmicro.com/download/beebem-${pkgver}.tar.gz"
+  "http://beebem-unix.bbcmicro.com/download/beebem-${pkgver}_64bit.patch"
+  "http://beebem-unix.bbcmicro.com/download/beebem-${pkgver}-keys.patch"
+  "http://beebem-unix.bbcmicro.com/download/beebem-${pkgver}_menu_crash.patch"
+)
+sha256sums=(
+  '6fe7c2a15835454279d0f59f9f0779ed96652f55f73da9c54352b0c4dbf6efab'
+  'f72934e05daace70ae8156457664c95cbda16d9ace37307b0dba12ce818081e4'
+  '0741ec7d25022160505d79551dfec492ba56dd391bc5afd0051ab2b2d938e08c'
+  '3e1a119c7862b512e729c775d37f6848d5d4e0a5c8886efc997250575724cf30'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+prepare() {
+  cd beebem-$pkgver
+
+  patch -Np1 -i ../beebem-0.0.13_64bit.patch
+  patch -Np1 -i ../beebem-0.0.13-keys.patch
+  patch -Np1 -i ../beebem-0.0.13_menu_crash.patch
+}
+
+build() {
+  cd beebem-$pkgver
+
+  ./configure \
+    --prefix="$_installdir" \
+    --enable-econet
+  make
+}
+
+package() {
+  cd beebem-$pkgver
+
+  install -Dm755 ./src/beebem "${pkgdir}${_installdir%/}/bin/beebem"
+  install -Dm644 ./COPYING "${pkgdir}${_licencedir%/}/LICENSE"
+
+  _dir=(config media phroms resources roms state)
+  for dir in "${_dir[@]}"; do
+    install -dm755 "${pkgdir}${_installdir%/}/share/$pkgname/$dir"
+  done
+  for dir in "${_dir[@]}"; do
+    cp -r "./data/$dir" "${pkgdir}${_installdir%/}/share/$pkgname/"
+  done
+}

@@ -1,0 +1,25 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-giana
+pkgver=1.10
+pkgrel=1
+pkgdesc="'Giana's Return', unofficial sequel to the (in)famous Mario clone 'Great Giana Sisters'"
+arch=('x86_64')
+url="http://www.gianas-return.de"
+license=('custom:Freeware')
+depends=('sdl_mixer' 'zlib' 'glut' 'glu' 'libmodplug')
+source=("http://www.retroguru.com/gianas-return/gianas-return-v.latest-linux.tar.gz")
+sha256sums=('f0351b060689758a3fde813fc75288c1c565e1462b872a0e78de8847f3420f78')
+options=(!strip)
+
+package() {
+  cd giana
+
+  install -d $pkgdir/opt/archrgs/ports/$pkgname/{bin,data,docs}
+  install -d $pkgdir/usr/share/licenses/$pkgname
+  
+  install -m755 ./giana_linux64 "$pkgdir/opt/archrgs/ports/$pkgname/bin/"
+  install -m644 ./data/*.zda "$pkgdir/opt/archrgs/ports/$pkgname/data/"
+  install -m644 ./*.txt "$pkgdir/opt/archrgs/ports/$pkgname/docs/"
+  tail -n +44 ./readme.txt | head -n 8 > "$pkgdir/usr/share/licenses/$pkgname/FREEWARE"
+}

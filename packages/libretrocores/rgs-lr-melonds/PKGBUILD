@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-melonds
+pkgver=560
+pkgrel=1
+pkgdesc="Libretro implementation of Melonds. (Nintendo DS)"
+arch=('x86_64')
+url='https://github.com/libretro/melonDS'
+license=('GPL2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/melonDS.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  export LDFLAGS="$LDFLAGS -lpthread"
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./melonds_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

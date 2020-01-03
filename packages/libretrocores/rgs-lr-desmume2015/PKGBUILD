@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-desmume2015
+pkgver=5353
+pkgrel=1
+pkgdesc="Libretro implementation of Desmume 2015. (Nintendo DS)"
+arch=('x86_64')
+url='https://github.com/libretro/desmume2015.git'
+license=('GPL2')
+depends=('libgl')
+makedepends=('git' 'mesa')
+source=("$pkgname::git+https://github.com/libretro/desmume2015.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname/desmume
+
+  make -f Makefile.libretro -j$(nproc)
+}
+
+package() {
+  cd $pkgname/desmume
+
+  install -Dm644 ./desmume2015_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

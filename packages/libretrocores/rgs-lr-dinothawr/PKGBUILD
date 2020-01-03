@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-dinothawr
+pkgver=483
+pkgrel=1
+pkgdesc="Block pushing puzzle game on slippery surfaces."
+arch=('x86_64')
+url="https://github.com/libretro/Dinothawr"
+license=('custom')
+depends=('gcc-libs' 'zlib')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/Dinothawr.git")
+md5sums=('SKIP')
+
+pkgver() {
+  	cd $pkgname
+
+  	git rev-list --count HEAD
+}
+
+build() {
+  	cd $pkgname
+
+  	make
+}
+
+package() {
+	cd $pkgname
+
+	install -Dm644 ./dinothawr_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+  	install -Dm644 ./LICENSE -t "${pkgdir}/usr/share/licenses/${pkgname}/"
+  	cp -a ./dinothawr -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

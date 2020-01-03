@@ -1,0 +1,43 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-vvvvvv
+pkgver=r817.5052391
+pkgrel=1
+pkgdesc="A 2D Puzzle Game"
+arch=('x86_64')
+url="http://thelettervsixtim.es"
+license=('custom')
+depends=('sdl2_mixer')
+makedepends=( 
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/TerryCavanagh/VVVVVV")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname" || exit
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname" || exit
+  
+  #Default to Fullscreen
+  sed -i "s/fullscreen = false/fullscreen = true/" "./desktop_version/src/Game.cpp"
+}
+
+build() {
+  cd "$pkgname" || exit
+  
+  cmake desktop_version \
+    -DCMAKE_INSTALL_PREFIX="$_installdir"
+  make
+}
+
+package() {
+  cd "$pkgname" || exit
+  
+  install -Dm755 ./VVVVVV -t "${pkgdir}${_installdir%/}/bin/"
+}

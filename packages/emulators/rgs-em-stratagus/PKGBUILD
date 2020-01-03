@@ -1,0 +1,55 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-stratagus
+pkgver=2.4.3
+pkgrel=1
+pkgdesc="A Strategy Game Engine"
+arch=('x86_64')
+url="https://wargus.github.io/stratagus"
+license=('GPL2')
+depends=(
+  'bzip2'
+  'doxygen'
+  'fluidsynth'
+  'libmikmod'
+  'libmng'
+  'libogg'
+  'libpng12'
+  'libtheora'
+  'libvorbis' 
+  'lua51'
+  'sdl'
+  'sqlite'
+  'tolua++'
+)
+makedepends=(
+  'cmake' 
+  'glu'
+)
+source=("https://github.com/Wargus/stratagus/archive/v$pkgver.tar.gz")
+sha256sums=('754fb2ab1af8f5aa27d7bfb6c3aa3ff6f8503b412743abb92d0a16202e512459')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "stratagus-$pkgver"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "stratagus-$pkgver/build"
+  
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DLUA_INCLUDE_DIR=/usr/include/lua5.1
+  make
+}
+
+package() {
+  cd "stratagus-$pkgver/build"
+  
+  make DESTDIR="$pkgdir" install
+}

@@ -1,0 +1,59 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-snes9x
+pkgver=1.60
+pkgrel=1
+pkgdesc="A Super Nintendo Entertainment System Emulator"
+arch=('x86_64')
+url="http://www.snes9x.com"
+license=('custom')
+makedepends=(
+  'git'
+  'libpng' 
+  'libxext'
+  'libxinerama'
+  'libx11'
+  'libxv' 
+  'minizip' 
+  'zlib'
+)
+source=(
+  "$pkgname::git+https://github.com/snes9xgit/snes9x#tag=$pkgver"
+  "git+https://github.com/KhronosGroup/SPIRV-Cross.git"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="$pkgdir/usr/share/licenses/$pkgname"
+
+prepare() {
+  cd ${pkgname}
+  
+  for submodule in shaders/SPIRV-Cross; do
+    git submodule init ${submodule}
+    git config submodule.${submodule}.url ../${submodule#*/}
+    git submodule update ${submodule}
+  done
+}
+
+build() {
+  cd ${pkgname}/gtk
+
+  meson build \
+    --buildtype=release \
+    --prefix="$_installdir"
+  
+  cd $srcdir/${pkgname}/gtk/build
+  ninja
+}
+
+package() {
+  cd ${pkgname}/gtk/build
+
+  DESTDIR="$pkgdir" ninja install
+  
+  #install -Dm755 ./snes9x -t "$pkgdir/$_installdir/bin"
+  #install -Dm644 ../docs/{control-inputs.txt,controls.txt,snapshots.txt} -t "$pkgdir/$_installdir/docs"
+  #install -Dm644 $srcdir/docs/LICENSE "$pkgdir/$_licencedir/LICENSE"
+}

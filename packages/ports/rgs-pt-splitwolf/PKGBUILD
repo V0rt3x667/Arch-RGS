@@ -1,0 +1,61 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-splitwolf
+pkgver=r674.44d197d
+pkgrel=1
+pkgdesc="2-4 player split-screen Wolfenstein 3D / Spear of Destiny port"
+arch=('x86_64')
+url="https://bitbucket.org/linuxwolf6/splitwolf/wiki/Home"
+license=('GPL2')
+depends=('sdl' 'sdl_mixer')
+makedepends=('git')
+source=("$pkgname::git+https://bitbucket.org/linuxwolf6/splitwolf#branch=scrubbed"
+        "git+https://github.com/gabomdq/SDL_GameControllerDB")
+md5sums=('SKIP'
+         'SKIP')
+
+prepare() {
+    cd "$pkgname"
+    git submodule init
+    git config submodule.SDL_GameControllerDB.git.url ./SDL_GameControllerDB
+    git submodule update
+}
+
+pkgver() {
+    cd "$pkgname"
+
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+function _get_opts_rgs-pt-splitwolf() {
+    echo 'splitwolf-wolf3d VERSION_WOLF3D_SHAREWARE=y' # shareware v1.4
+    echo 'splitwolf-wolf3d_apogee VERSION_WOLF3D_APOGEE=y' # 3d realms / apogee v1.4 full
+    echo 'splitwolf-wolf3d_full VERSION_WOLF3D=y' # gt / id / activision v1.4 full
+    echo 'splitwolf-sod VERSION_SPEAR=y' # spear of destiny
+    echo 'splitwolf-sodmp VERSION_SPEAR_MP=y' # spear of destiny mission packs
+    echo 'splitwolf-spear_demo VERSION_SPEAR_DEMO=y' # spear of destiny
+}
+
+build() {
+    cd "$pkgname"
+    
+    mkdir "bin"
+    local opt
+    while read -r opt; do
+        local bin="${opt%% *}"
+        local defs="${opt#* }"
+        CFLAGS+=" -DUSE_GPL -Wno-narrowing" \
+        make $defs \
+          PREFIX=/opt/archrgs/ports/$pkgname/ \
+          DATADIR="$HOME/Arch-RGS/roms/ports/wolf3d/"
+        mv "$bin" "bin/$bin"
+    done < <(_get_opts_rgs-pt-splitwolf)
+}
+
+package() {
+    cd "$pkgname"
+    
+    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname/bin
+    
+    cp -r ./bin "$pkgdir/opt/archrgs/ports/$pkgname"
+}

@@ -1,0 +1,79 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dolphin
+pkgver=5.0.r12147.d6341c4117
+pkgrel=1
+pkgdesc="A Nintendo Gamecube, Wii and Triforce Emulator"
+arch=('x86_64')
+url="https://dolphin-emu.org"
+license=('GPL')
+depends=(
+  'alsa-lib'
+  'bluez-libs'
+  'enet'
+  'gcc-libs'
+  'glibc'
+  'hidapi'
+  'libavcodec.so'
+  'libavformat.so'
+  'libavutil.so'
+  'libcurl.so'
+  'libevdev'
+  'libgl'
+  'libminiupnpc.so'
+  'libpng'
+  'libpulse'
+  'libswscale.so'
+  'libudev.so'
+  'libusb-1.0.so'
+  'libx11'
+  'libxi'
+  'libxrandr'
+  'lzo'
+  'mbedtls'
+  'pugixml'
+  'qt5-base'
+  'sfml'
+  'zlib'
+)
+makedepends=(
+  'cmake' 
+  'git'
+  'python'
+)
+options=('!emptydirs')
+source=("$pkgname::git+https://github.com/dolphin-emu/dolphin.git")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd $pkgname
+
+  git describe | sed 's/-/.r/; s/-g/./'
+}
+
+prepare() {
+  cd $pkgname
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd $pkgname/build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DUSE_SHARED_ENET='ON'
+  make
+}
+
+package() {
+  cd $pkgname/build
+
+  make DESTDIR="$pkgdir" install
+  
+  install -Dm644 ../Data/51-usb-device.rules -t "$pkgdir/usr/lib/udev/rules.d/"
+}

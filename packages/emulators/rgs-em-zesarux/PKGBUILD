@@ -1,0 +1,76 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-zesarux
+pkgver=r6147.468d2129
+pkgrel=1
+pkgdesc="A Zx80, Zx81, Z88, Zx Spectrum 16, 48, 128, +2, +2A and ZX-Uno Emulator"
+arch=('x86_64')
+url="https://github.com/chernandezba/zesarux"
+license=('GPL3')
+depends=(
+  'openssl' 
+  'pulseaudio'
+  'sdl'
+)
+makedepends=(
+  'gcc8' 
+  'git'
+)
+source=("$pkgname::git+https://github.com/chernandezba/zesarux#tag=8.2-21052020")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+	cd "$pkgname"
+
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname/src"
+
+  ./configure \
+    --prefix="$_installdir" \
+    --disable-caca \
+    --disable-aa \
+    --enable-ssl \
+    --enable-sdl2
+  make CC="cc-8" CXX="c++-8"
+}
+
+package(){
+  cd "$pkgname/src"
+
+  _FILES=(
+    'ACKNOWLEDGEMENTS' 
+    'LICENSE' 
+    'LICENSES_info' 
+    'licenses' 
+    'Changelog' 
+    TODO*
+    'README' 
+    'HISTORY' 
+    'FEATURES'  
+    'ALTERNATEROMS' 
+    'INCLUDEDTAPES' 
+    'DONATE' 
+    'FAQ' 
+    *.odt 
+    'mantransfev3.bin' 
+    'zxuno.flash' 
+    'tbblue.mmc'  
+    'my_soft' 
+    'zesarux.mp3' 
+    'zesarux.xcf' 
+    'editionnamegame.tap' 
+    'editionnamegame.tap.config' 
+    'bin_sprite_to_c.sh'
+)
+
+  install -Dm755 ./zesarux -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm755 ./speech_filters/*.sh -t "${pkgdir}${_installdir%/}/share/$pkgname/speech_filters/"
+  install -Dm644 ./*.rom -t "${pkgdir}${_installdir%/}/share/$pkgname/roms/"
+
+  for file in "${_FILES[@]}"; do
+    cp -a "$file" "${pkgdir}${_installdir%/}/share/$pkgname/"
+  done
+}

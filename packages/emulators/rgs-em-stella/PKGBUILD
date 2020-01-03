@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-stella
+pkgver=6.1.1
+pkgrel=1
+pkgdesc="An Atari 2600 VCS Emulator"
+arch=('x86_64')
+url="https://stella-emu.github.io/"
+license=('GPL2')
+depends=(
+  'gtk-update-icon-cache'
+  'sdl2'
+)
+makedepends=('glu')
+source=("https://github.com/stella-emu/stella/releases/download/$pkgver/stella-$pkgver-src.tar.xz")
+sha256sums=('ddf53bb782c63c97c4e5d0fefa9eb256c62e0d5a328c78cc18f06eea45ba7369')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+build() {
+  cd stella-$pkgver
+
+  ./configure \
+    --prefix="$_installdir"
+  make
+}
+
+package() {
+  cd stella-$pkgver
+
+  make DESTDIR="$pkgdir" install
+}

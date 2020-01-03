@@ -1,0 +1,64 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-caprice32
+pkgver=r821.3ca7e53
+pkgrel=1
+pkgdesc="An Amstrad CPC 464, 664 and 6128 Emulator"
+arch=('x86_64')
+url="https://github.com/ColinPitrat/caprice32"
+license=('GPL2')
+depends=(
+  'freetype2'
+  'sdl'
+)
+source=(
+  "$pkgname::git+https://github.com/ColinPitrat/caprice32"
+  "http://softpres.org/_media/files:ipflib42_linux-x86_64.tar.gz"
+)
+sha256sums=(
+  'SKIP'
+  'ea139673e29a36dc3be7ba916628b5c8a03353bd68be4d346daed803d472ddf3'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  #Configure Default ROM and Resources Paths
+  sed -e "s|\prefix = /usr/local|prefix = $_installdir|g" -i ./makefile
+  sed -e "s|rom_path=.*|rom_path=$_installdir/share/caprice32/rom|g" -i ./cap32.cfg
+  sed -e "s|resources_path=.*|resources_path=$_installdir/share/caprice32/resources|g" -i ./cap32.cfg
+  #Enable Full Screen by Default
+  sed -e "s|scr_window=1|scr_window=0|g" -i ./cap32.cfg
+}
+
+build() {
+  cd "$srcdir/x86_64-linux-gnu-capsimage" || exit
+
+  #Copy CAPSImg Header Files
+  install -Dm644 ./include/caps/*.h -t "$srcdir/$pkgname/src/caps/"
+  
+  cd "$srcdir/$pkgname" || exit
+  
+  #Build Caprice32
+  make CFLAGS=-DNO_SDL_GLEXT \
+    ARCH=linux \
+    RELEASE=TRUE \
+    APP_PATH="$HOME/.config/caprice32" \
+    WITH_IPF=TRUE
+}
+
+package() {
+  cd "$pkgname" || exit
+
+  install -Dm755 ./cap32.cfg -t "${pkgdir}${_installdir%/}/share/caprice32/resources/"
+  install -Dm755 ./cap32 -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 "$srcdir/x86_64-linux-gnu-capsimage/libcapsimage.so.4.2" \
+    -t "${pkgdir}${_installdir%/}/bin/"
+  cp -r ./{resources,rom} "${pkgdir}${_installdir%/}/share/caprice32/"
+}

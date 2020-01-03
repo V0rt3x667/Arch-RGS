@@ -1,0 +1,39 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-tyrquake
+pkgver=0.66.r0.1afa470
+pkgrel=1
+pkgdesc="A conservative Quake port"
+arch=('x86_64')
+url="http://disenchant.net/tyrquake/"
+license=(GPL2)
+depends=(sdl2)
+makedepends=(git)
+source=("$pkgname::git://disenchant.net/tyrquake")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$pkgname"
+  
+  local version="$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+  printf %s "${version##v}"
+}
+
+build() {
+  cd "$pkgname"
+
+  make LOCALBASE=/opt/archrgs/ports/$pkgname \
+       QBASEDIR=$HOME/Arch-RGS/roms/ports/quake \
+       OPTIMIZED_CFLAGS=Y \
+       USE_SDL=Y \
+       STRIP=true
+}
+
+package() {
+  cd "$pkgname"
+  
+  install -d $pkgdir/opt/archrgs/ports/$pkgname/{bin,icons,man}
+  install ./bin/tyr-* "$pkgdir/opt/archrgs/ports/$pkgname/bin/"
+  install ./icons/*.png "$pkgdir/opt/archrgs/ports/$pkgname/icons/"
+  install ./man/*.6 "$pkgdir/opt/archrgs/ports/$pkgname/man/"
+}

@@ -1,0 +1,53 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-openttd
+pkgver=1.9.3
+pkgrel=1
+pkgdesc="A Game Engine for Transport Tycoon Deluxe"
+arch=('x86_64')
+url="https://www.openttd.org"
+license=('GPL2')
+depends=('libpng' 'sdl' 'icu' 'fontconfig' 'lzo' 'hicolor-icon-theme' 'desktop-file-utils' 'xz' 'fluidsynth')
+source=(
+  "$pkgname::git+https://github.com/OpenTTD/OpenTTD#tag=$pkgver"
+  "https://binaries.openttd.org/extra/opengfx/0.5.5/opengfx-0.5.5-all.zip"
+  "https://binaries.openttd.org/extra/opensfx/0.2.3/opensfx-0.2.3-all.zip"
+  "https://binaries.openttd.org/extra/openmsx/0.3.1/openmsx-0.3.1-all.zip"
+)
+sha256sums=(
+  'SKIP'
+  'c648d56c41641f04e48873d83f13f089135909cc55342a91ed27c5c1683f0dfe'
+  '6831b651b3dc8b494026f7277989a1d757961b67c17b75d3c2e097451f75af02'
+  '92e293ae89f13ad679f43185e83fb81fb8cad47fe63f4af3d3d9f955130460f5'
+)
+
+prepare() {
+  tar -xvf ./opengfx-0.5.5.tar && rm -f ./opengfx-0.5.5.tar
+}
+
+build() {
+  cd "$pkgname"
+
+ ./configure \
+    --prefix-dir=/opt/archrgs/ports/$pkgname/ \
+    --binary-name=openttd \
+    --binary-dir=bin \
+    --data-dir=data \
+    --install-dir="$pkgdir" \
+    --doc-dir=docs \
+    --with-fluidsynth \
+    --menu-name="OpenTTD"
+make
+}
+
+package() {
+  cd $pkgname
+  
+  make DESTDIR="$pkgdir" install
+  
+  local dirs
+  dirs=(opengfx-0.5.5 opensfx-0.2.3 openmsx-0.3.1)
+  
+  for dir in ${dirs[@]}; do
+    cd $srcdir/$dir && cp -r *.* "$pkgdir/opt/archrgs/ports/$pkgname/"
+  done
+}

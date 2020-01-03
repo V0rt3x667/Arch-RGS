@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-uhexen2
+pkgver=1.5.9
+pkgrel=1
+pkgdesc="Hexen II Source Port"
+arch=('x86_64')
+url="http://uhexen2.sourceforge.net/"
+license=('GPL2')
+depends=(
+  'bash' 
+  'libmad' 
+  'libvorbis' 
+  'sdl'
+)
+makedepends=(
+  'nasm'
+  'subversion'
+)
+source=("http://downloads.sourceforge.net/uhexen2/hexen2source-$pkgver.tgz")
+sha256sums=('2aa84c141a820f9087850aacf3684a5f71c434428bc57545899eda1b9a28c3e0')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+build() {
+  cd "hexen2source-$pkgver/engine/hexen2"
+
+  ./build_all.sh
+}
+
+package() {
+  cd "hexen2source-$pkgver/engine/hexen2"
+
+  install -Dm755 ./{hexen2,glhexen2} -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 ../../docs/* -t "${pkgdir}${_installdir%/}/share/docs/"
+}

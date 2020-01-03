@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-px68k
+pkgver=257.8520b91
+pkgrel=1
+pkgdesc="Libretro implementation of PX68K. (SHARP X68000)"
+arch=('x86_64')
+url="https://github.com/libretro/px68k-libretro"
+license=('GPL3')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/px68k-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./px68k_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

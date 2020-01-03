@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-fuse
+pkgver=217
+pkgrel=1
+pkgdesc="Libretro implementation of FUSE. (Sinclair ZX Spectrum) (WIP)"
+arch=('x86_64')
+url="https://github.com/libretro/fuse-libretro.git"
+license=('GPL3')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/fuse-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./fuse_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

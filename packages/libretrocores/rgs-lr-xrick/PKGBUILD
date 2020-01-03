@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-xrick
+pkgver=130
+pkgrel=1
+pkgdesc="Libretro implementation of Xrick."
+arch=('x86_64')
+url="https://github.com/libretro/xrick-libretro"
+license=('GPL')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/xrick-libretro.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+
+  make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./xrick_libretro.so -t "$pkgdir/opt/archrgs/libretrocores/$pkgname/"
+  install -Dm644 ./data.zip -t "$pkgdir/opt/archrgs/libretrocores/$pkgname/data"
+}

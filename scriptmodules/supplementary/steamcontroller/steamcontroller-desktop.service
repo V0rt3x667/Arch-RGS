@@ -1,0 +1,10 @@
+[Unit]
+Description=steamcontroller-desktop
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /opt/archrgs/supplementary/steamcontroller/bin/sc-desktop.py start
+
+[Install]
+WantedBy=multi-user.target

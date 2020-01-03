@@ -1,0 +1,53 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-scummvm
+pkgver=r98334.0af83d3faa
+pkgrel=1
+pkgdesc="A Virtual Machine for Graphical Point-and-Click Adventure Games"
+arch=('x86_64')
+license=('GPL')
+url="http://www.scummvm.org"
+depends=(
+  'a52dec'
+  'curl'
+  'faad2'
+  'flac'
+  'freetype2'
+  'fluidsynth'
+  'glu'
+  'libgl'
+  'libjpeg-turbo'
+  'libmad'
+  'libmpeg2'
+  'libpng' 
+  'libtheora'
+  'libvorbis'
+  'sdl2'
+  'sdl2_net'      
+)
+makedepends=('mesa')
+source=("$pkgname::git+https://github.com/scummvm/scummvm")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname"
+
+  ./configure \
+    --prefix="$_installdir" \
+    --enable-all-engines \
+    --enable-c++11 \
+    --enable-release
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="$pkgdir" install
+}

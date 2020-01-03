@@ -1,0 +1,36 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-digger
+pkgver=r429.c1e9241
+pkgrel=1
+pkgdesc="Classical game of Digger, digitally remastered and enhanced."
+arch=('x86_64')
+url="http://www.digger.org/"
+license=('GPL2')
+depends=('sdl2' 'zlib')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/sobomax/digger.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd $pkgname
+
+    cmake . \
+      -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/$pkgname
+    make
+}
+
+package() {
+    cd $pkgname
+    
+    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname/{bin,docs}
+    
+    install -m755 ./digger "$pkgdir/opt/archrgs/ports/$pkgname/bin"
+    install -m755 ./{digger.txt,README.md} "$pkgdir/opt/archrgs/ports/$pkgname/docs"
+}

@@ -1,0 +1,29 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-jumpnbump
+pkgver=1.61
+pkgrel=1
+pkgdesc="Jump 'n Bump, play cute bunnies jumping on each other's heads."
+arch=('x86_64')
+url="https://libregames.gitlab.io/jumpnbump/"
+license=('GPL')
+depends=('sdl2' 'sdl2_mixer' 'sdl2_net' 'pygtk')
+source=("$pkgname::git+https://gitlab.com/LibreGames/jumpnbump#tag=1.61"
+        'jumpnbump.sh')
+sha256sums=('SKIP'
+            '2da2322a17ce2709fbbed04b7aa2d973add15b270d166f9f2fade06f11a9c064')
+
+build() {
+  cd $pkgname
+
+  make PREFIX="/opt/archrgs/ports/$pkgname"
+}
+
+package() {
+  cd $pkgname
+  
+  make PREFIX="$pkgdir/opt/archrgs/ports/$pkgname" install
+  
+  mkdir $pkgdir/opt/archrgs/ports/$pkgname/data
+  cp ../jumpnbump.sh $pkgdir/opt/archrgs/ports/$pkgname/data
+}

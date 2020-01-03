@@ -1,0 +1,56 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-supermariowar
+pkgver=2.0.beta.1.1.r55.g416b99ff
+pkgrel=1
+pkgdesc='A fan-made multiplayer Super Mario Bros. style deathmatch game.'
+arch=('x86_64')
+url='http://smwstuff.net'
+license=('unknown')
+depends=('enet' 'sdl' 'sdl_mixer' 'sdl_image')
+source=("$pkgname::git+https://github.com/mmatyas/supermariowar.git"
+         'https://github.com/matteblair/yaml-cpp.git')
+md5sums=('SKIP'
+         'SKIP')
+
+pkgver() {
+  cd "$pkgname"
+
+  git describe --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  unzip ./data.zip
+  
+  git submodule init
+  git config submodule.yaml-cpp.url $srcdir/yaml-cpp
+  git submodule update
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=None \
+    -DCMAKE_INSTALL_PREFIX=/opt/archrgs/ports/rgs-pt-supermariowar \
+    -DSMW_BINDIR=/opt/archrgs/ports/rgs-pt-supermariowar \
+    -DSMW_DATADIR=/opt/archrgs/ports/rgs-pt-supermariowar/data \
+    -DBUILD_STATIC_LIBS=1
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -dm755 "${pkgdir}/opt/archrgs/ports/$pkgname"
+
+  cp --no-preserve=ownership ./build/Binaries/Release/{smw,smw-leveledit,smw-worldedit} "${pkgdir}/opt/archrgs/ports/$pkgname/"
+  cp -r ./data --no-preserve=ownership "${pkgdir}/opt/archrgs/ports/$pkgname/"
+}

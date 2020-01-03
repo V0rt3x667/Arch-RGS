@@ -1,0 +1,31 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-lr-atari800
+pkgver=1
+pkgrel=1
+pkgdesc="Libretro implementation of Atari800 v3.1.0 (Atari 5200/400/800/XL/XE)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-atari800"
+license=('GPL2')
+depends=('zlib' 'glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-atari800.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd $pkgname
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd $pkgname
+  
+  CFLAGS+=" -DDEFAULT_CFG_NAME=\\\".libretro-atari800.cfg\\\"" make
+}
+
+package() {
+  cd $pkgname
+
+  install -Dm644 ./atari800_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

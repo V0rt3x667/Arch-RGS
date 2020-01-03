@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-jzintv
+pkgver=20200712
+pkgrel=1
+pkgdesc="An Intellivision Emulator"
+arch=('x86_64')
+url="http://spatula-city.org/~im14u2c/intv"
+license=('GPL2')
+depends=('sdl')
+source=("http://spatula-city.org/~im14u2c/intv/dl/jzintv-$pkgver-src.zip")
+sha256sums=('b36b3b274d0fc05cb227818d4957f96620d23d8d6b7596c24f07675ced7129f3')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "jzintv-$pkgver-src/src"
+  
+  sed -i -e 's/WARN   += -Werror -Wstrict-aliasing/WARN   += -w -Wstrict-aliasing/g' Makefile.linux
+  sed -i -e 's/gcc-8.1.0 -std=c99/gcc -std=c99/g' Makefile.linux
+  sed -i -e 's/g++-8.1.0 -std=c++14/g++ -std=c++14/g' Makefile.linux
+}
+
+build() {
+  cd "jzintv-$pkgver-src/src"
+  
+  make -f Makefile.linux
+}
+
+package() {
+  cd "jzintv-$pkgver-src/src"
+  
+  install -dm755 "$pkgdir/$_installdir/"{bin,doc,examples,rom}
+  
+  cp -r ../{bin,doc,examples,rom,*.txt} "$pkgdir/$_installdir/"
+}

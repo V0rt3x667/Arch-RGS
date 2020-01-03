@@ -1,0 +1,41 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=rgs-pt-alephone
+pkgver=1.3b3.20190331
+pkgrel=1
+pkgdesc="A free, enhanced port of the classic FPS Marathon 2 by Bungie Software."
+arch=('x86_64')
+url="https://alephone.lhowon.org/"
+license=('GPL3')
+depends=('sdl2_ttf' 
+         'sdl2_image'
+         'sdl2_net'
+         'libmad'
+         'glu'
+         'zziplib'
+         'ffmpeg'
+         'boost-libs'
+         'curl')
+makedepends=('boost' 'mesa' 'icoutils')
+source=("$pkgname::git+https://github.com/Aleph-One-Marathon/alephone#tag=release-20190331")
+md5sums=('SKIP')
+
+pkgver() {
+  cd $pkgname/Source_Files/Misc
+
+  local _ver="$(grep '^#define A1_DISPLAY_VERSION' alephversion.h | cut -d\" -f2)"
+  printf "%s.%s" "$_ver" "$(git describe --tags | sed 's/^release-//;s/\([^-]*-g\)/r\1/;s/-/./g')"
+}
+
+build() {
+  cd $pkgname
+  
+  ./autogen.sh --prefix=/opt/archrgs/ports/$pkgname/
+  make
+}
+
+package() {
+  cd $pkgname
+
+  make PREFIX=/opt/archrgs/ports/$pkgname/ DESTDIR="$pkgdir/" install
+}

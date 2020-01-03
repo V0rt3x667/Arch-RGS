@@ -1,0 +1,36 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-fs-uae
+pkgver=3.0.5
+pkgrel=1
+pkgdesc="A Commodore Amiga 500, 500+, 600, 1200, CDTV and CD32 Emulator"
+arch=('x86_64')
+url="https://fs-uae.net"
+license=('GPL2')
+depends=(
+  'glib2'
+  'desktop-file-utils'
+  'hicolor-icon-theme'
+  'libmpeg2'
+  'libpng' 
+  'libx11'
+  'openal'
+  'shared-mime-info' 
+  'sdl2'
+  'zlib'
+)
+source=("https://fs-uae.net/stable/$pkgver/fs-uae-$pkgver.tar.gz")
+sha256sums=('f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+build() {
+  cd "fs-uae-$pkgver"
+  
+  ./configure --prefix="$_installdir"
+  make
+}
+
+package() {
+  cd "fs-uae-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}

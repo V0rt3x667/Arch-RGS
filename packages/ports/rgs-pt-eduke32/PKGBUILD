@@ -1,0 +1,43 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-eduke32
+pkgver=r9128.4627e16f0
+pkgrel=1
+pkgdesc="A Duke Nukem 3D Source Port"
+arch=('x86_64')
+url="http://eduke32.com"
+license=('GPL2''custom')
+depends=(
+  'flac'
+  'gtk2' 
+  'libgl' 
+  'libvpx'
+  'sdl2_mixer'
+)
+makedepends=(
+  'glu'
+  'mesa'
+)
+source=("$pkgname::git+https://voidpoint.io/terminx/eduke32.git")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+  
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname"
+
+  make PREFIX="$_installdir"
+}
+
+package() {
+  cd "$pkgname"
+
+  #install -dm755 "$pkgdir/$_installdir/bin"
+  install -Dm755 ./{eduke32,mapster32} -t "$pkgdir/$_installdir/bin/"
+  install -Dm644 ./package/common/buildlic.txt "$pkgdir/$_licencedir/LICENCE"
+}

@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-wolf4sdl
+pkgver=r10.5387b99
+pkgrel=1
+pkgdesc="Wolfenstein 3D for SDL"
+arch=('x86_64')
+url="https://github.com/mozzwald/wolf4sdl.git"
+license=('GPL2')
+depends=('sdl_mixer')
+makedepends=('git')
+provides=("$pkgname")
+source=("$pkgname::git+https://github.com/mozzwald/wolf4sdl")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+_get_opts_rgs-pt-wolf4sdl() {
+  echo 'wolf4sdl-sw-v14 -DCARMACIZED -DUPLOAD' # shareware v1.4
+  echo 'wolf4sdl-3dr-v14 -DCARMACIZED' # 3d realms / apogee v1.4 full
+  echo 'wolf4sdl-gt-v14 -DCARMACIZED -DGOODTIMES' # gt / id / activision v1.4 full
+  echo 'wolf4sdl-spear -DCARMACIZED -DGOODTIMES -DSPEAR' # spear of destiny
+  echo 'wolf4sdl-spear-sw -DCARMACIZED -DSPEARDEMO -DSPEAR' # spear of destiny demo
+}
+
+build() {
+  cd "$pkgname"
+    
+  mkdir "bin"
+  local opt
+  while read -r opt; do
+    local bin="${opt%% *}"
+    local defs="${opt#* }"
+    CFLAGS+=" -DVERSIONALREADYCHOSEN $defs" make PREFIX="$_installdir" DATADIR="$HOME/Arch-RGS/roms/ports/wolf3d/"
+    mv ./wolf3d "bin/$bin"
+  done < <(_get_opts_rgs-pt-wolf4sdl)
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 ./man6/* -t "${pkgdir}${_installdir%/}/share/man/man6/"
+}

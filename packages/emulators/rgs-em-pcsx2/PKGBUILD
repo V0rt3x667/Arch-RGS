@@ -1,0 +1,67 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-pcsx2
+pkgver=1.6.0
+pkgrel=1
+pkgdesc="A Sony PlayStation 2 Emulator"
+arch=('x86_64')
+url="http://www.pcsx2.net"
+license=(
+  'GPL2'
+  'GPL3'
+  'LGPL2.1'
+  'LGPL3'
+)
+depends=(
+  'lib32-glew' 
+  'lib32-libaio'
+  'lib32-libcanberra'
+  'lib32-libjpeg-turbo'
+  'lib32-libpcap'
+  'lib32-libpulse'
+  'lib32-portaudio'
+  'lib32-sdl2'
+  'lib32-soundtouch'
+  'lib32-wxgtk2'
+)
+makedepends=(
+  'cmake'
+  'lib32-libglvnd'
+  'png++'
+)
+source=("https://github.com/PCSX2/pcsx2/archive/v$pkgver.tar.gz")
+sha256sums=('c09914020e494640f187f46d017f9d142ce2004af763b9a6c5c3a9ea09e5281c')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd pcsx2-$pkgver
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  # disable ZeroGS and ZZOgl-PG
+  rm -rf plugins/{zerogs,zzogl-pg}
+}
+
+build() {
+  cd pcsx2-$pkgver/build
+
+  cmake .. \
+    -DCMAKE_TOOLCHAIN_FILE='cmake/linux-compiler-i386-multilib.cmake' \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DCMAKE_BUILD_TYPE='Release' \
+    -DEXTRA_PLUGINS='ON' \
+    -DREBUILD_SHADER='ON' \
+    -DGLSL_API='ON' \
+    -DPACKAGE_MODE='ON' \
+    -DDISABLE_ADVANCE_SIMD='ON' \
+    -DXDG_STD='ON'
+  make
+}
+
+package() {
+  cd pcsx2-$pkgver/build
+
+  make DESTDIR="$pkgdir" install
+}

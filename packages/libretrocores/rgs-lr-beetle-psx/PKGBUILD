@@ -1,0 +1,36 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+
+pkgname=('rgs-lr-beetle-psx')
+pkgver=2205
+pkgrel=1
+pkgdesc="Libretro implementation of Mednafen PSX."
+arch=('x86_64')
+url="https://github.com/libretro/beetle-psx-libretro"
+license=('GPL2')
+makedepends=('git' 'libgl' 'mesa' 'vulkan-icd-loader')
+source=("$pkgname::git+https://github.com/libretro/beetle-psx-libretro.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd $pkgname
+
+    git rev-list --count HEAD
+}
+
+prepare() {
+    cp -r rgs-lr-beetle-psx{,-hw}
+}
+
+build() {
+    cd $pkgname
+
+    make && cd ../$pkgname-hw
+    make HAVE_HW=1
+}
+
+package_rgs-lr-beetle-psx() {
+    cd $pkgname
+
+    install -Dm644 ./mednafen_psx_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname"
+    install -Dm644 ../$pkgname-hw/mednafen_psx_hw_libretro.so -t "${pkgdir}/opt/archrgs/libretrocores/$pkgname/"
+}

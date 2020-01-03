@@ -1,0 +1,81 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-mame
+pkgver=0.221
+pkgrel=1
+pkgdesc="A Multiple Arcade Machine Emulator"
+url="https://mamedev.org/"
+license=('GPL2')
+arch=('x86_64')
+depends=(
+  'libutf8proc'
+  'lua' 
+  'portaudio'
+  'portmidi' 
+  'qt5-base'
+  'pugixml'
+  'sdl2'
+  'sdl2_ttf'
+)
+makedepends=(
+  'asio'
+  'glm'
+  'libxinerama'
+  'nasm' 
+  'python' 
+  'rapidjson' 
+)
+source=("https://github.com/mamedev/mame/archive/mame${pkgver/./}.tar.gz")
+sha256sums=('8ead65f2585fc1330215e42db1d691f18497ff6d9e561d3cced54af599da4ac0')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd mame-mame"${pkgver/./}" || exit
+    
+  #Use System Libraries
+  sed -e 's|\# USE_SYSTEM_LIB|USE_SYSTEM_LIB|g' -i makefile
+  #Except for ASIO
+  sed -e 's|USE_SYSTEM_LIB_ASIO|\# USE_SYSTEM_LIB_ASIO|g' -i makefile
+}
+
+build() {
+  cd mame-mame"${pkgver/./}" || exit
+    
+  make \
+    PREFIX="$_installdir" \
+    BUILDDIR=./build \
+    ARCHOPTS=-flifetime-dse=1 \
+    NOWERROR=1 \
+    TOOLS=1
+}
+
+package() {
+  cd mame-mame"${pkgver/./}" || exit
+
+  _BIN=(
+    'castool' 
+    'chdman' 
+    'imgtool' 
+    'jedutil' 
+    'nltool' 
+    'nlwav' 
+    'pngcmp' 
+    'regrep' 
+    'romcmp'
+    'split' 
+    'srcclean' 
+    'ldverify' 
+    'ldresample' 
+    'testkeys' 
+    'unidasm'
+)
+
+  #Install Binaries
+  install -Dm755 ./mame64 "$pkgdir/$_installdir/bin/mame"
+  
+  for bin in "${_BIN[@]}"; do
+    cp "$bin" "$pkgdir/$_installdir/bin"
+  done
+
+  #Install Data
+  cp -ar ./{artwork,bgfx,docs,plugins,language,ctrlr,keymaps,hash} "${pkgdir}${_installdir%/}"
+}
