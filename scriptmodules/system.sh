@@ -34,10 +34,14 @@ function test_chroot() {
     if [[ "$(stat -c %d:%i /)" != "$(stat -c %d:%i /proc/1/root/.)" ]]; then
         [[ -z "$QEMU_CPU" && -n "$__qemu_cpu" ]] && export QEMU_CPU=$__qemu_cpu
         __chroot=1
+    # detect the usage of systemd-nspawn
+    elif [[ -n "$(systemd-detect-virt)" && "$(systemd-detect-virt)" == "systemd-nspawn" ]]; then
+        __chroot=1
     else
         __chroot=0
     fi
 }
+
 
 function conf_memory_vars() {
     __memory_total_kb=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
@@ -58,12 +62,17 @@ function conf_build_vars() {
 
     # calculate build concurrency based on cores and available memory
     __jobs=1
+    local unit=768
     if [[ "$(nproc)" -gt 1 ]]; then
-        # if we have less than 1gb of ram free, then limit build jobs to 2
-        if [[ "$__memory_avail" -lt 1024 ]]; then
-           __jobs=2
-        else
-           __jobs=$(nproc)
+        local nproc="$(nproc)"
+        # max one thread per unit (MB) of ram
+        local max_jobs=$(($__memory_avail / $unit))
+        if [[ "$max_jobs" -gt 0 ]]; then
+            if [[ "$max_jobs" -lt "$nproc" ]]; then
+                __jobs="$max_jobs"
+            else
+                __jobs="$nproc"
+            fi
         fi
     fi
     __default_makeflags="-j${__jobs}"
@@ -71,8 +80,6 @@ function conf_build_vars() {
     # set our default gcc optimisation level
     if [[ -z "$__opt_flags" ]]; then
         __opt_flags="$__default_opt_flags"
-        # -pipe is faster but will use more memory - so let's only add it if we have at least 512MB ram.
-        [[ "$__memory_avail" -ge 512 ]] && __opt_flags+=" -pipe"
     fi
 
     # set default cpu flags
@@ -108,7 +115,7 @@ function get_os_version() {
     # make sure lsb_release is installed
     getDepends lsb-release
 
-    # get os distributor id, description, release number
+    # get os distributor id, description, release
     __os_desc=$(lsb_release -s -i -d -r)
 }
 

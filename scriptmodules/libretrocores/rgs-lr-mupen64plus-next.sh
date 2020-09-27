@@ -22,6 +22,8 @@ function configure_rgs-lr-mupen64plus-next() {
     mkRomDir "n64"
     ensureSystemretroconfig "n64"
 
+    setRetroArchCoreOption "mupen64plus-next-EnableNativeResFactor" "1"
+
     addEmulator 0 "$md_id" "n64" "$md_inst/mupen64plus_next_libretro.so"
     addSystem "n64"
 }

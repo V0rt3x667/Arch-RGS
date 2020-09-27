@@ -277,6 +277,12 @@ function archrgs_hasPackage() {
     fnExists "install_bin_${__mod_id[$idx]}" && return 0
 }
 
+function archrgs_getInstallPath() {
+    local idx="$1"
+    local id=$(archrgs_getIdFromIdx "$idx")
+    echo "$rootdir/${__mod_type[$idx]}/$id"
+}
+
 function archrgs_installModule() {
     local idx="$1"
     local mode
@@ -399,10 +405,4 @@ function archrgs_updateHooks() {
         mod_idx="$(archrgs_getIdxFromId "${function/_update_hook_/}")"
         [[ -n "$mod_idx" ]] && archrgs_callModule "$mod_idx" _update_hook
     done
-}
-
-function archrgs_getInstallPath() {
-    local idx="$1"
-    local id=$(archrgs_getIdFromIdx "$idx")
-    echo "$rootdir/${__mod_type[$idx]}/$id"
 }

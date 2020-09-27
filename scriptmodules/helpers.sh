@@ -98,7 +98,7 @@ function hasFlag() {
 ## @brief Test for current platform / platform flags.
 function isPlatform() {
     local flag="$1"
-    if hasFlag "$__platform $__platform_flags" "$flag"; then
+    if hasFlag "${__platform_flags[*]}" "$flag"; then
         return 0
     fi
     return 1
@@ -237,7 +237,7 @@ function getDepends() {
 ## @details depth parameter will default to 1 (shallow clone) so long as __persistent_repos isn't set.
 ## A depth parameter of 0 will do a full clone with all history.
 function gitPullOrClone() {
-    local dir="$1/$md_id"
+    local dir="$1"
     local repo="$2"
     local branch="$3"
     [[ -z "$branch" ]] && branch="master"
@@ -248,8 +248,6 @@ function gitPullOrClone() {
     else
         depth=0
     fi
-    
-    mkdir -p "$dir"
     
     if [[ -d "$dir/.git" ]]; then
         pushd "$dir" > /dev/null

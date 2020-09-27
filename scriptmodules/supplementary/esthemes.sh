@@ -206,6 +206,9 @@ function gui_esthemes() {
         'RetroHursty69 CosmicRise'
         'RetroHursty69 uniflyered'
         'RetroHursty69 gametime'
+        'RetroHursty69 CRTBlast'
+        'RetroHursty69 CRTNeonBlast'
+        'RetroHursty69 CRTCabBlast'
         'Saracade scv720'
         'chicueloarcade Chicuelo'
         'SuperMagicom nostalgic'
@@ -228,8 +231,14 @@ function gui_esthemes() {
         'arcadeforge pixel-heaven-text'
         'arcadeforge 240p_Bubblegum'
         'arcadeforge 240p-honey'
+        'dionmunk clean'
+        'c64-dev epicnoir'
+        'AndreaMav arcade-crt'
+        'AndreaMav arcade-crt2020'
+        'Zechariel VectorPie'
+        'KALEL1981 nes-box'
+        'KALEL1981 super-arcade1up-5x4'
     )
-
     while true; do
         local theme
         local installed_themes=()

@@ -23,11 +23,18 @@ function configure_rgs-em-atari800() {
     mkRomDir "atari800"
     mkRomDir "atari5200"
 
-    [[ "$md_mode" == "install" ]]
-
-    mkUserDir "$md_conf_root/atari800"
-
     moveConfigFile "$home/.atari800.cfg" "$md_conf_root/atari800/atari800.cfg"
+
+    addEmulator 0 "atari800-800-pal" "atari800" "$md_inst/atari800.sh %ROM% Atari800-PAL"
+    addEmulator 1 "atari800-800-ntsc" "atari800" "$md_inst/atari800.sh %ROM% Atari800-NTSC"
+    addEmulator 1 "atari800-800xl" "atari800" "$md_inst/atari800.sh %ROM% Atari800XL"
+    addEmulator 1 "atari800-130xe" "atari800" "$md_inst/atari800.sh %ROM% Atari130XE"
+    addEmulator 1 "atari800-5200" "atari5200" "$md_inst/atari800.sh %ROM% Atari5200"
+    
+    addSystem "atari800"
+    addSystem "atari5200"
+
+    [[ "$md_mode" == "remove" ]] && return
 
     iniConfig " = " "" "$md_conf_root/atari800/atari800.cfg"
     iniSet "SDL_JOY_0_ENABLED" "1"
@@ -43,15 +50,7 @@ function configure_rgs-em-atari800() {
     iniSet "SDL_JOY_1_DOWN" "115"
     iniSet "SDL_JOY_1_TRIGGER" "306"
 
-    # copy launch script (used for unpacking archives)
-    cp "$md_data/atari800.sh" "$md_inst"
+    #Copy launch script (used for unpacking archives)
+    install -Dm755 "$md_data/atari800.sh" "$md_inst"
     chmod +x "$md_inst/atari800.sh"
-
-    addEmulator 0 "atari800-800-pal" "atari800" "$md_inst/atari800.sh %ROM% Atari800-PAL"
-    addEmulator 1 "atari800-800-ntsc" "atari800" "$md_inst/atari800.sh %ROM% Atari800-NTSC"
-    addEmulator 1 "atari800-800xl" "atari800" "$md_inst/atari800.sh %ROM% Atari800XL"
-    addEmulator 1 "atari800-130xe" "atari800" "$md_inst/atari800.sh %ROM% Atari130XE"
-    addEmulator 1 "atari800-5200" "atari5200" "$md_inst/atari800.sh %ROM% Atari5200"
-    addSystem "atari800"
-    addSystem "atari5200"
 }

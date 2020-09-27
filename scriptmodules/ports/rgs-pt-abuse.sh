@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-pt-abuse"
 archrgs_module_desc="Abuse SDL port originally from Crack-Dot-Com and released into the public domain."
-archrgs_module_license="GPL https://raw.githubusercontent.com/Xenoveritas/abuse/master/COPYING"
+archrgs_module_licence="GPL https://raw.githubusercontent.com/Xenoveritas/abuse/master/COPYING"
 archrgs_module_section="ports"
 
 function install_bin_rgs-pt-abuse() {

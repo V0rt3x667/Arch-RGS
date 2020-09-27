@@ -24,14 +24,14 @@ function configure_rgs-em-dolphin() {
 
     moveConfigDir "$home/.dolphin-emu" "$md_conf_root/gc"
 
-    if [[ ! -f "$md_conf_root/gc/Config/Dolphin.ini" ]]; then
+    if [[ "$md_mode" == "install" ]] && [[ ! -f "$md_conf_root/gc/Config/Dolphin.ini" ]]; then
         mkdir -p "$md_conf_root/gc/Config"
         cat >"$md_conf_root/gc/Config/Dolphin.ini" <<_EOF_
 [Display]
 FullscreenResolution = Auto
 Fullscreen = True
 _EOF_
-        chown -R $user:$user "$md_conf_root/gc/Config"
+        chown -R "$user":"$user" "$md_conf_root/gc/Config"
     fi
 
     addEmulator 1 "$md_id" "gc" "$md_inst/bin/dolphin-emu-nogui -e %ROM%"

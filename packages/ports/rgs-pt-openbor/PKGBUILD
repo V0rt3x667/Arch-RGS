@@ -1,57 +1,74 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
-
 pkgname=rgs-pt-openbor
-pkgver=6510.dev.r572.g5428eec8
+pkgver=0
 pkgrel=1
-pkgdesc="Ultimate 2D side scrolling engine for beat em' ups, shooters, and more!"
+pkgdesc="2D Side Scrolling Game Engine"
 arch=('x86_64')
 url="http://www.chronocrash.com"
 license=('BSD')
-depends=('sdl2' 'sdl2_gfx' 'sdl2_image' 'sdl2_mixer' 'libvorbis' 'libpng' 'libvpx' 'yasm')
+depends=(
+  'libpng'
+  'libvorbis'
+  'libvpx'
+  'sdl2_gfx'
+  'sdl2_image'
+  'sdl2_mixer'
+  'yasm'
+)
 makedepends=('git')
-source=("$pkgname::git+https://github.com/DCurrent/openbor.git"
-        'unpack.sh')
-md5sums=('SKIP'
-         '0f56ea5f12731fdb5848655e1c0be47c')
+source=(
+  "$pkgname::git+https://github.com/DCurrent/openbor"
+  'unpack.sh'
+)
+sha256sums=(
+  'SKIP'
+  '0f56ea5f12731fdb5848655e1c0be47c'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
 
 pkgver() {
-  cd $pkgname
+  cd "$pkgname"
 
-  git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
 prepare() {
-  cd $pkgname/engine
+  cd "$pkgname/engine" || exit
 
-  # disable abort on warnings/errors
+  #Disable Abort On Warnings & Errors
   sed 's/-Werror//' -i Makefile
-  # disable RPATH
+  
+  #Disable RPATH
   sed 's/-Wl,-rpath,$(LIBRARIES)//' -i Makefile
-  # verbose output
-  #sed 's/@$(CC)/$(CC)/' -i Makefile
-  # fix a locale warning
+  
+  #Fix Locale Warning
   sed 's|en_US.UTF-8|C|g' -i version.sh
-  # convert icon
+  
+  #Convert Icon
   convert -resize 48x48 resources/OpenBOR_Icon_128x128.png ../openbor.png
 }
 
 build() {
-    cd $pkgname/engine
-    ./version.sh
-    make SDKPATH=/usr LNXDEV=/usr/bin BUILD_LINUX=1 GCC_TARGET=$CARCH
+  cd "$pkgname/engine" || exit
+  
+  ./version.sh
+  make \
+    SDKPATH=/usr \
+    LNXDEV=/usr/bin \
+    BUILD_LINUX=1 \
+    GCC_TARGET=$CARCH
     
-    cd ../../$pkgname/tools/borpak/source
-    sh ./build.sh linux
+  cd "$srcdir/$pkgname/tools/borpak/source" || exit
+  
+  sh ./build.sh linux
 }
 
 package() {
-    cd $pkgname/engine
-    
-    mkdir -p $pkgdir/opt/archrgs/ports/$pkgname/bin
-    mkdir -p $pkgdir/usr/share/licenses/$pkgname
-    
-    cp ./OpenBOR "$pkgdir/opt/archrgs/ports/$pkgname/bin/"
-    cp ../tools/borpak/source/borpak "$pkgdir/opt/archrgs/ports/$pkgname/bin/"
-    cp ../../unpack.sh "$pkgdir/opt/archrgs/ports/$pkgname/bin/"
-    cp ./LICENSE "$pkgdir/usr/share/licenses/$pkgname/"
+  cd "$pkgname/engine" || exit
+  
+  install -Dm755 ./OpenBOR -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm755 ../tools/borpak/source/borpak -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm755 ../../unpack.sh -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/"
 }

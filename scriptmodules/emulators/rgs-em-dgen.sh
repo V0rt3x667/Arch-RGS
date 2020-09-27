@@ -5,7 +5,7 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="rgs-em-dgen"
-archrgs_module_desc="Megadrive/Genesis emulator DGEN"
+archrgs_module_desc="Sega Megadrive/Genesis Emulator"
 archrgs_module_help="ROM Extensions: .32x .iso .cue .smd .bin .gen .md .sg .zip\n\nCopy your  Megadrive / Genesis roms to $romdir/megadrive\nSega 32X roms to $romdir/sega32x\nand SegaCD roms to $romdir/segacd\nThe Sega CD requires the BIOS files bios_CD_U.bin, bios_CD_E.bin, and bios_CD_J.bin copied to $biosdir"
 archrgs_module_licence="GPL2 https://sourceforge.net/p/dgen/dgen/ci/master/tree/COPYING"
 archrgs_module_section="emulators"
@@ -20,17 +20,21 @@ function remove_rgs-em-dgen() {
 }
 
 function configure_rgs-em-dgen() {
-    local system
-    for system in megadrive segacd sega32x; do
-        mkRomDir "$system"
-        addEmulator 0 "$md_id" "$system" "$md_inst/bin/dgen -f -r $md_conf_root/megadrive/dgenrc %ROM%"
-        addSystem "$system"
-    done
-
-    [[ "$md_mode" == "remove" ]] && return
-
+    mkRomDir megadrive
+    mkRomDir segacd
+    mkRomDir sega32x
+    
     moveConfigDir "$home/.dgen" "$md_conf_root/megadrive"
-    chown -R $user:$user "$md_conf_root/megadrive"
+
+    addEmulator 0 "$md_id" "megadrive" "$md_inst/bin/dgen -f -r $md_conf_root/megadrive/dgenrc %ROM%"
+    addEmulator 0 "$md_id" "segacd" "$md_inst/bin/dgen -f -r $md_conf_root/megadrive/dgenrc %ROM%"
+    addEmulator 0 "$md_id" "sega32x" "$md_inst/bin/dgen -f -r $md_conf_root/megadrive/dgenrc %ROM%"
+        
+    addSystem megadrive
+    addSystem segacd
+    addSystem sega32x
+    
+    [[ "$md_mode" == "remove" ]] && return
 
     if [[ ! -f "$md_conf_root/megadrive/dgenrc" ]]; then
         cp "$md_inst/share/docs/sample.dgenrc" "$md_conf_root/megadrive/dgenrc"

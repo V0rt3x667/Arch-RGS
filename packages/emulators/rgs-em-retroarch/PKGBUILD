@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-retroarch
-pkgver=1.8.8
+pkgver=1.9.0
 pkgrel=1
 pkgdesc="Frontend for the Libretro API"
 arch=('x86_64')
@@ -31,25 +31,22 @@ makedepends=(
 source=(
   "$pkgname::git+https://github.com/libretro/RetroArch.git#tag=v$pkgver"
   "$pkgname-core-info::git+https://github.com/libretro/libretro-core-info.git#tag=v$pkgver"
-  '01_hotkey_hack.patch'
-  '02_disable_search.patch'
-  '03_shader_path_config_enable.patch'
+  '01_disable_search.patch'
+  '02_shader_path_config_enable.patch'
 )
 sha256sums=(
   'SKIP'
   'SKIP'
-  '0c6ae5b47c1e718274ca20a1e812485c677d9298514453ed7a675411c9b2a6d2'
-  '90ea69b875bf365701fc65aea59f5883ff245109ca7607739301439d67c8ccc6'
-  '1d0d9132958ca5b5ed013d6d80938d14d81cb8903819078f05cf04488c862fb8'
+  '9a31ab6f9e873ee37fe3be924dadc08f657f227c36c000983370bbf0f2f61608'
+  '1cdcdd233ad5cf6e0ea583f7386dc806255ffb4e8b3879dfdbc2547a8ecb74fe'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 prepare() {
   cd "$pkgname"
 
-  patch -Np1 -i ../01_hotkey_hack.patch
-  patch -Np1 -i ../02_disable_search.patch
-  patch -Np1 -i ../03_shader_path_config_enable.patch
+  patch -Np1 -i ../01_disable_search.patch
+  patch -Np1 -i ../02_shader_path_config_enable.patch
 }
 
 build() {

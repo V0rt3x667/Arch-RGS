@@ -20,21 +20,24 @@ function remove_rgs-em-daphne() {
 }
 
 function configure_rgs-em-daphne() {
-    mkRomDir "daphne"
     mkRomDir "daphne/roms"
-
-    addEmulator 1 "$md_id" "daphne" "$md_inst/bin/daphne.sh %ROM%"
-    addSystem "daphne"
-
-    [[ "$md_mode" == "remove" ]] && return
 
     mkUserDir "$md_conf_root/daphne"
 
-    if [[ ! -f "$md_conf_root/daphne/dapinput.ini" ]]; then
+    moveConfigDir "$romdir/daphne/roms" "$md_inst/roms"
+
+    if [[ "$md_mode" == "install" ]] && [[ ! -f "$md_conf_root/daphne/dapinput.ini" ]]; then
         cp -v "$md_inst/share/doc/dapinput.ini" "$md_conf_root/daphne/dapinput.ini"
+        chown "$user":"$user" "$md_conf_root/daphne/dapinput.ini"    
     fi
-    ln -snf "$romdir/daphne/roms" "$md_inst/roms"
-    ln -sf "$md_conf_root/daphne/dapinput.ini" "$md_inst/dapinput.ini"
+    
+    moveConfigFile "$md_conf_root/daphne/dapinput.ini" "$md_inst/dapinput.ini"
+    
+    addEmulator 1 "$md_id" "daphne" "$md_inst/bin/daphne.sh %ROM%"
+    
+    addSystem "daphne"
+
+    [[ "$md_mode" == "remove" ]] && return
 
     cat >"$md_inst/bin/daphne.sh" <<_EOF_
 #!/bin/bash
@@ -46,10 +49,10 @@ if [[ -f "\$dir/\$name.commands" ]]; then
     params=\$(<"\$dir/\$name.commands")
 fi
 
-"$md_inst/bin/daphne" "\$name" vldp -framefile "\$dir/\$name.txt" -homedir "$md_inst" -fullscreen_window \$params
+"$md_inst/bin/daphne" "\$name" vldp -framefile "\$dir/\$name.txt" -homedir "$md_inst" -fullscreen_window "\$params"
 _EOF_
     chmod +x "$md_inst/bin/daphne.sh"
     
-    chown -R "$user:$user" "$md_inst"
-    chown -R "$user:$user" "$md_conf_root/daphne/dapinput.ini"
+    #chown -R "$user:$user" "$md_inst"
+    
 }

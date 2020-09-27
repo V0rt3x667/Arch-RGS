@@ -4,24 +4,24 @@
 #
 # Please see the LICENSE file at the top-level directory of this distribution.
 
-archrgs_module_id="rgs-ut-skyscraper"
+archrgs_module_id="rgs-sr-skyscraper"
 archrgs_module_desc="A Game Scraper by Lars Muldjord"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/muldjord/skyscraper/master/LICENSE"
 archrgs_module_section="exp"
 
-function install_bin_rgs-ut-skyscraper() {
-    pacmanPkg rgs-ut-skyscraper
+function install_bin_rgs-sr-skyscraper() {
+    pacmanPkg rgs-sr-skyscraper
 }
 
-function remove_rgs-ut-skyscraper() {
-    pacmanRemove rgs-ut-skyscraper
+function remove_rgs-sr-skyscraper() {
+    pacmanRemove rgs-sr-skyscraper
     
-    _purge_rgs-ut-skyscraper
+    _purge_rgs-sr-skyscraper
 }
 
 # Get the location of the cached resources folder. In v3+, this changed to 'cache'.
 # Note: the cache folder might be unavailable during first time installations
-function _cache_folder_rgs-ut-skyscraper() {
+function _cache_folder_rgs-sr-skyscraper() {
     if [[ -d "$configdir/all/skyscraper/dbs" ]]; then
         echo "dbs"
     else
@@ -30,44 +30,48 @@ function _cache_folder_rgs-ut-skyscraper() {
 }
 
 # Purge all Skyscraper caches
-function _purge_rgs-ut-skyscraper() {
+function _purge_rgs-sr-skyscraper() {
     local platform
-    local cache_folder=$(_cache_folder_rgs-ut-skyscraper)
+    local cache_folder
+    cache_folder=$(_cache_folder_rgs-sr-skyscraper)
 
     [[ ! -d "$configdir/all/skyscraper/$cache_folder" ]] && return
 
     while read platform; do
         # Find any sub-folders of the cache folder and clear them
-        _clear_platform_rgs-ut-skyscraper "$platform"
+        _clear_platform_rgs-sr-skyscraper "$platform"
     done < <(find "$configdir/all/skyscraper/$cache_folder" -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 }
 
-function _clear_platform_rgs-ut-skyscraper() {
+function _clear_platform_rgs-sr-skyscraper() {
     local platform="$1"
     local mode="$2"
-    local cache_folder=$(_cache_folder_rgs-ut-skyscraper)
+    local cache_folder
+    cache_folder=$(_cache_folder_rgs-sr-skyscraper)
 
     [[ ! -d "$configdir/all/skyscraper/$cache_folder/$platform" ]] && return
 
     if [[ $mode == "vacuum" ]]; then
-        sudo -u "$user" stdbuf -o0 $md_inst/bin/Skyscraper --unattend -p "$platform" --cache vacuum
+        sudo -u "$user" stdbuf -o0 "$md_inst"/bin/Skyscraper --unattend -p "$platform" --cache vacuum
     else
-        sudo -u "$user" stdbuf -o0 $md_inst/bin/Skyscraper --unattend -p "$platform" --cache purge:all
+        sudo -u "$user" stdbuf -o0 "$md_inst"/bin/Skyscraper --unattend -p "$platform" --cache purge:all
     fi
     sleep 5
 }
 
-function _purge_platform_rgs-ut-skyscraper() {
+function _purge_platform_rgs-sr-skyscraper() {
     local options=()
-    local cache_folder=$(_cache_folder_rgs-ut-skyscraper)
+    local cache_folder
     local system
+    cache_folder=$(_cache_folder_rgs-sr-skyscraper)
 
     while read system; do
         # If there is no 'db.xml' file underneath the folder, skip it, it means folder is empty
         [[ ! -f "$configdir/all/skyscraper/$cache_folder/$system/db.xml" ]] && continue
 
         # Get the size on disk of the system and show it in the select list
-        local size=$(du -sh  "$configdir/all/skyscraper/$cache_folder/$system" | cut -f1)
+        local size 
+        size=$(du -sh  "$configdir/all/skyscraper/$cache_folder/$system" | cut -f1)
         options+=("$system" "$size" OFF)
     done < <(find "$configdir/all/skyscraper/$cache_folder" -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
@@ -81,30 +85,27 @@ function _purge_platform_rgs-ut-skyscraper() {
     [[ -z "$mode" ]] && mode="purge"
 
     local cmd=(dialog --backtitle "$__backtitle" --radiolist "Select platform to $mode" 20 60 12)
-    local platform=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    local platform 
+    platform=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
     # Exit if no platform chosen
     [[ -z "$platform" ]] && return
 
-    _clear_platform_rgs-ut-skyscraper "$platform" "$@"
+    _clear_platform_rgs-sr-skyscraper "$platform" "$@"
 }
 
-function _get_ver_rgs-ut-skyscraper() {
+function _get_ver_rgs-sr-skyscraper() {
     if [[ -f "$md_inst/bin/Skyscraper" ]]; then
-        echo $("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper'  | cut -d' '  -f 3 | tr -d v 2>/dev/null)
+        printf '%s\n' "$("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper'  | cut -d' '  -f 3 | tr -d v 2>/dev/null)"
     fi
 }
 
-#function _latest_ver_skyscraper() {
-#    wget -qO- https://api.github.com/repos/muldjord/skyscraper/releases/latest | grep -m 1 tag_name | cut -d\" -f4
-#}
-
 # List any non-empty systems found in the ROM folder
-function _list_systems_rgs-ut-skyscraper() {
+function _list_systems_rgs-sr-skyscraper() {
     find -L "$romdir/" -mindepth 1 -maxdepth 1 -type d -not -empty | sort -u
 }
 
-function configure_rgs-ut-skyscraper() {
+function configure_rgs-sr-skyscraper() {
     if [[ "$md_mode" == "remove" ]]; then
         return
     fi
@@ -146,11 +147,11 @@ function configure_rgs-ut-skyscraper() {
         fi
     done
 
-    _init_config_rgs-ut-skyscraper
-    chown -R $user:$user "$configdir/all/skyscraper"
+    _init_config_rgs-sr-skyscraper
+    chown -R "$user:$user" "$configdir/all/skyscraper"
 }
 
-function _init_config_rgs-ut-skyscraper() {
+function _init_config_rgs-sr-skyscraper() {
     local scraper_conf_dir="$configdir/all/skyscraper"
 
     # Make sure the `artwork.xml` and other conf file(s) are present, but don't overwrite them on upgrades
@@ -177,13 +178,13 @@ function _init_config_rgs-ut-skyscraper() {
 }
 
 # Scrape one system, passed as parameter
-function _scrape_rgs-ut-skyscraper() {
+function _scrape_rgs-sr-skyscraper() {
     local system="$1"
 
     [[ -z "$system" ]] && return
 
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
-    eval $(_load_config_rgs-ut-skyscraper)
+    eval "$(_load_config_rgs-sr-skyscraper)"
 
     local -a params=(-i "$romdir/$system" -p "$system")
     local flags="unattend,skipped,"
@@ -197,6 +198,8 @@ function _scrape_rgs-ut-skyscraper() {
     [[ "$cache_screenshots" -eq 0 ]] && flags+="noscreenshots,"
 
     [[ "$cache_wheels" -eq 0 ]] && flags+="nowheels,"
+
+    [[ "$only_missing" -eq 1 ]] && flags+="onlymissing,"
 
     [[ "$rom_name" -eq 1 ]] && flags+="forcefilename,"
 
@@ -234,7 +237,7 @@ function _scrape_rgs-ut-skyscraper() {
 }
 
 # Scrape a list of systems, chosen by the user
-function _scrape_chosen_rgs-ut-skyscraper() {
+function _scrape_chosen_rgs-sr-skyscraper() {
     local options=()
     local system
     local i=1
@@ -243,7 +246,7 @@ function _scrape_chosen_rgs-ut-skyscraper() {
         system=${system/$romdir\//}
         options+=($i "$system" OFF)
         ((i++))
-    done < <(_list_systems_rgs-ut-skyscraper)
+    done < <(_list_systems_rgs-sr-skyscraper)
 
     if [[ ${#options[@]} -eq 0 ]] ; then
         printMsgs "dialog" "No populated ROM folders were found in $romdir."
@@ -266,21 +269,21 @@ function _scrape_chosen_rgs-ut-skyscraper() {
 
     for choice in "${choices[@]}"; do
         choice="${options[choice*3-2]}"
-        _scrape_rgs-ut-skyscraper "$choice" "$@"
+        _scrape_rgs-sr-skyscraper "$choice" "$@"
     done
 }
 
 # Generate gamelists for a list of systems, chosen by the user
-function _generate_chosen_rgs-ut-skyscraper() {
+function _generate_chosen_rgs-sr-skyscraper() {
     local options=()
     local system
     local i=1
 
     while read system; do
         system=${system/$romdir\//}
-        options+=($i "$system" OFF)
+        options+=("$i" "$system" OFF)
         ((i++))
-    done < <(_list_systems_rgs-ut-skyscraper)
+    done < <(_list_systems_rgs-sr-skyscraper)
 
     if [[ ${#options[@]} -eq 0 ]] ; then
         printMsgs "dialog" "No populated ROM folders were found in $romdir."
@@ -290,19 +293,20 @@ function _generate_chosen_rgs-ut-skyscraper() {
     local choices
     local cmd=(dialog --backtitle "$__backtitle" --ok-label "Start" --cancel-label "Back" --checklist " Select platforms for gamelist(s) generation\n\n" 22 60 16) 
 
-    choices=($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))
+    choices="($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))"
 
     # Exit if nothing was chosen or Cancel was used
     [[ ${#choices[@]} -eq 0 || $? -eq 1 ]] && return 1
 
     for choice in "${choices[@]}"; do
         choice="${options[choice*3-2]}"
-        _scrape_rgs-ut-skyscraper "$choice" "cache" "$@"
+        _scrape_rgs-sr-skyscraper "$choice" "cache" "$@"
     done
 }
 
-function _load_config_rgs-ut-skyscraper() {
-    echo "$(loadModuleConfig \
+function _load_config_rgs-sr-skyscraper() {
+    printf '%s\n' \
+        "$(loadModuleConfig \
         'rom_name=0' \
         'use_rom_folder=0' \
         'download_videos=0' \
@@ -312,21 +316,22 @@ function _load_config_rgs-ut-skyscraper() {
         'cache_screenshots=1' \
         'scrape_source=screenscraper' \
         'remove_brackets=0' \
-        'force_refresh=0'
+        'force_refresh=0' \
+        'only_missing=0'
     )"
 }
 
-function _open_editor_rgs-ut-skyscraper() {
+function _open_editor_rgs-sr-skyscraper() {
     local editor
         editor="${EDITOR:-nano}"
         sudo -u "$user" "$editor" "$1" > /dev/tty < /dev/tty
 }
 
-function _gui_advanced_rgs-ut-skyscraper() {
+function _gui_advanced_rgs-sr-skyscraper() {
     declare -A help_strings_adv
 
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
-    eval $(_load_config_rgs-ut-skyscraper)
+    eval "$(_load_config_rgs-sr-skyscraper)"
 
     help_strings_adv=(
         [E]="Opens the configuration file \Zbconfig.ini\Zn in an editor."
@@ -343,7 +348,8 @@ function _gui_advanced_rgs-ut-skyscraper() {
         options+=(F "Edit 'artwork.xml'")
         options+=(G "Edit 'aliasMap.csv'")
 
-        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 > /dev/tty)
+        local choice 
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
         if [[ -n "$choice" ]]; then
             local default="$choice"
@@ -351,21 +357,21 @@ function _gui_advanced_rgs-ut-skyscraper() {
             case "$choice" in
 
                 E)
-                    _open_editor_rgs-ut-skyscraper "$configdir/all/skyscraper/config.ini"
+                    _open_editor_rgs-sr-skyscraper "$configdir/all/skyscraper/config.ini"
                     ;;
 
                 F)
-                    _open_editor_rgs-ut-skyscraper "$configdir/all/skyscraper/artwork.xml"
+                    _open_editor_rgs-sr-skyscraper "$configdir/all/skyscraper/artwork.xml"
                     ;;
 
                 G)
-                    _open_editor_rgs-ut-skyscraper "$configdir/all/skyscraper/aliasMap.csv"
+                    _open_editor_rgs-sr-skyscraper "$configdir/all/skyscraper/aliasMap.csv"
                     ;;
 
                 HELP*)
                     # Retain choice
                     default="${choice/HELP /}"
-                    if [[ ! -z "${help_strings_adv[${default}]}" ]]; then
+                    if [[ -n "${help_strings_adv[${default}]}" ]]; then
                     dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_adv[${default}]}" 22 65 >&1
                     fi
             esac
@@ -375,14 +381,14 @@ function _gui_advanced_rgs-ut-skyscraper() {
     done
 }
 
-function gui_rgs-ut-skyscraper() {
+function gui_rgs-sr-skyscraper() {
     if pgrep "emulationstatio" >/dev/null; then
         printMsgs "dialog" "This scraper must not be run while EmulationStation is running or the scraped data will be overwritten.\n\nPlease quit EmulationStation and run Arch-RGS from the terminal:\n\n sudo \$HOME/arch-rgs/archrgs_setup.sh"
         return
     fi
 
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
-    eval $(_load_config_rgs-ut-skyscraper)
+    eval "$(_load_config_rgs-sr-skyscraper)"
     chown "$user":"$user" "$configdir/all/skyscraper.cfg"
 
     local -a s_source
@@ -471,7 +477,8 @@ function gui_rgs-ut-skyscraper() {
         options+=(A "Advanced options -->")
 
         # Run the GUI
-        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+        local choice 
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
         if [[ -n "$choice" ]]; then
             local default="$choice"
@@ -479,7 +486,7 @@ function gui_rgs-ut-skyscraper() {
             case "$choice" in
 
                 1)
-                    if _scrape_chosen_rgs-ut-skyscraper; then
+                    if _scrape_chosen_rgs-sr-skyscraper; then
                         printMsgs "dialog" "ROMs information gathered.\nDon't forget to use 'Generate Game list(s)' to add this information to EmulationStation."
                     elif [[ $? -eq 2 ]]; then
                         printMsgs "dialog" "Gathering was aborted"
@@ -510,13 +517,15 @@ function gui_rgs-ut-skyscraper() {
                         --menu "Choose one of the available scraping sources" 18 50 9)
 
                     # Run the Scraper source selection dialog
-                    local scrape_source_name=$("${s_cmd[@]}" "${s_options[@]}" 2>&1 >/dev/tty)
+                    local scrape_source_name
+                    scrape_source_name=$("${s_cmd[@]}" "${s_options[@]}" 2>&1 >/dev/tty)
 
                     # If Cancel was chosen, don't do anything
                     [[ -z "$scrape_source_name" ]] && continue
 
                     # Strip the "XYZ:" prefix from the chosen scraper source, then compare to our list
-                    local src=$(echo "$scrape_source_name" | cut -d' ' -f2-)
+                    local src 
+                    src=$(echo "$scrape_source_name" | cut -d' ' -f2-)
 
                     for i in "${!s_source_names[@]}"; do
                         [[ "${s_source_names[$i]}" == "$src" ]] && scrape_source=${s_source[$i]}
@@ -526,11 +535,11 @@ function gui_rgs-ut-skyscraper() {
                     ;;
 
                 3)
-                    _gui_cache_rgs-ut-skyscraper
+                    _gui_cache_rgs-sr-skyscraper
                     ;;
 
                 4)
-                    if _generate_chosen_rgs-ut-skyscraper "cache"; then
+                    if _generate_chosen_rgs-sr-skyscraper "cache"; then
                         printMsgs "dialog" "Game list(s) generated."
                     elif [[ $? -eq 2 ]]; then
                         printMsgs "dialog" "Game list generation aborted"
@@ -538,7 +547,7 @@ function gui_rgs-ut-skyscraper() {
                     ;;
 
                 5)
-                    _gui_generate_rgs-ut-skyscraper
+                    _gui_generate_rgs-sr-skyscraper
                     ;;
 
                 V)
@@ -547,7 +556,7 @@ function gui_rgs-ut-skyscraper() {
                     ;;
 
                 A)
-                    _gui_advanced_rgs-ut-skyscraper
+                    _gui_advanced_rgs-sr-skyscraper
                     ;;
 
                 HELP*)
@@ -564,20 +573,22 @@ function gui_rgs-ut-skyscraper() {
     done
 }
 
-function _gui_cache_rgs-ut-skyscraper() {
+function _gui_cache_rgs-sr-skyscraper() {
     local db_size
-    local cache_folder=$(_cache_folder_rgs-ut-skyscraper)
+    local cache_folder
     declare -A help_strings_cache
+    cache_folder=$(_cache_folder_rgs-sr-skyscraper)
 
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
-    eval $(_load_config_rgs-ut-skyscraper)
+    eval "$(_load_config_rgs-sr-skyscraper)"
 
     help_strings_cache=(
         [1]="Toggle whether screenshots are cached locally when scraping.\n\nSkyscraper option: \Zb--flags noscreenshots\Zn"
         [2]="Toggle whether covers are cached locally when scraping.\n\nSkyscraper option: \Zb--flags nocovers\Zn"
         [3]="Toggle whether wheels are cached locally when scraping.\n\nSkyscraper option: \Zb--flags nowheels\Zn"
         [4]="Toggle whether marquees are cached locally when scraping.\n\nSkyscraper option: \Zb--flags nomarquees\Zn"
-        [5]="Force the refresh of resources in the local cache when scraping.\n\nSkyscraper option: \Zb--cache refresh\Zn"
+        [5]="Enable this to only scrape files that do not already have data in the Skyscraper resource cache.\n\nSkyscraper option: \Zb--flags onlymissing\Zn"
+        [6]="Force the refresh of resources in the local cache when scraping.\n\nSkyscraper option: \Zb--cache refresh\Zn"
         [P]="Purge \ZbALL\Zn all cached resources for all platforms."
         [S]="Purge all cached resources for a chosen platform.\n\nSkyscraper option: \Zb--cache purge:all\Zn"
         [V]="Removes all non-used cached resources for a chosen platform (vacuum).\n\nSkyscraper option: \Zb--cache vacuum\Zn"
@@ -615,10 +626,16 @@ function _gui_cache_rgs-ut-skyscraper() {
             options+=(4 "Cache marquees (Disabled)")
         fi
 
-        if [[ "$force_refresh" -eq 0 ]]; then
-            options+=(5 "Force cache refresh (Disabled)")
+        if [[ "$only_missing" -eq 1 ]]; then
+            options+=(5 "Scrape only missing (Enabled)")
         else
-            options+=(5 "Force cache refresh (Enabled)")
+            options+=(5 "Scrape only missing (Disabled)")
+        fi
+
+        if [[ "$force_refresh" -eq 0 ]]; then
+            options+=(6 "Force cache refresh (Disabled)")
+        else
+            options+=(6 "Force cache refresh (Enabled)")
         fi
 
         options+=("-" "PURGE cache commands")
@@ -626,7 +643,8 @@ function _gui_cache_rgs-ut-skyscraper() {
         options+=(S "Purge chosen platform")
         options+=(P "Purge all platforms(!)")
 
-        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 > /dev/tty)
+        local choice 
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 > /dev/tty)
 
         if [[ -n "$choice" ]]; then
             local default="$choice"
@@ -654,29 +672,34 @@ function _gui_cache_rgs-ut-skyscraper() {
                     ;;
 
                 5)
+                    only_missing="$((only_missing ^ 1))"
+                    iniSet "only_missing" "$only_missing"
+                    ;;
+
+                6)
                     force_refresh="$((force_refresh ^ 1))"
                     iniSet "force_refresh" "$force_refresh"
                     ;;
 
                 V)
-                    _purge_platform_rgs-ut-skyscraper "vacuum"
+                    _purge_platform_rgs-sr-skyscraper "vacuum"
                     ;;
 
                 S)
-                    _purge_platform_rgs-ut-skyscraper
+                    _purge_platform_rgs-sr-skyscraper
                     ;;
 
                 P)
                     dialog --clear --defaultno --colors --yesno  "\Z1\ZbAre you sure ?\Zn\nThis will \Zb\ZuERASE\Zn all locally cached scraped resources" 8 60 2>&1 >/dev/tty
                     if [[ $? == 0 ]]; then
-                        _purge_rgs-ut-skyscraper
+                        _purge_rgs-sr-skyscraper
                     fi
                     ;;
 
                 HELP*)
                     # Retain choice
                     default="${choice/HELP /}"
-                    if [[ ! -z "${help_strings_cache[${default}]}" ]]; then
+                    if [[ -n "${help_strings_cache[${default}]}" ]]; then
                     dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_cache[${default}]}" 22 65 >&1
                     fi
             esac
@@ -686,11 +709,11 @@ function _gui_cache_rgs-ut-skyscraper() {
     done
 }
 
-function _gui_generate_rgs-ut-skyscraper() {
+function _gui_generate_rgs-sr-skyscraper() {
     declare -A help_strings_gen
 
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
-    eval $(_load_config_rgs-ut-skyscraper)
+    eval "$(_load_config_rgs-sr-skyscraper)"
 
     help_strings_gen=(
         [1]="Game name format used in the EmulationStation game list. Available options:\n\n\ZbSource name\Zn: use the name returned by the scraper\n\ZbFilename\Zn: use the filename of the ROM as game name\n\nSkyscraper option: \Zb--flags forcefilename\Z0"

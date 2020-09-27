@@ -124,7 +124,8 @@ function remove_rgs-fe-emulationstation() {
     pacmanRemove rgs-fe-emulationstation
 
     rm -f "/usr/bin/emulationstation"
-    rm -rfv "/usr/local/share/icons/Arch-RGS.svg" "/usr/local/share/applications/Arch-RGS.desktop"
+    rm -rfv "/usr/local/share/icons/Arch-RGS.svg" "/usr/local/share/applications/Arch-RGS.desktop" \
+      "/usr/local/share/applications/Arch-RGS_Setup.desktop"
 }
 
 function init_input_rgs-fe-emulationstation() {

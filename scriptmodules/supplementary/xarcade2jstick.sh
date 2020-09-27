@@ -7,7 +7,7 @@
 
 archrgs_module_id="xarcade2jstick"
 archrgs_module_desc="Xarcade2Jstick"
-archrgs_module_license="GPL3 https://raw.githubusercontent.com/petrockblog/Xarcade2Jstick/master/gpl3.txt"
+archrgs_module_licence="GPL3 https://raw.githubusercontent.com/petrockblog/Xarcade2Jstick/master/gpl3.txt"
 archrgs_module_section="driver"
 archrgs_module_flags="noinstclean"
 

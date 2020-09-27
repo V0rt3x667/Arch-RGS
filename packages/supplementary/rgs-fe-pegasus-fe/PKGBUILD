@@ -7,20 +7,20 @@ arch=('x86_64')
 url="http://pegasus-frontend.org"
 license=('GPL3')
 depends=(
-  'qt-gstreamer'
   'fontconfig'
   'openssl-1.0'
   'polkit'
+  'qt-gstreamer'
 )
 makedepends=(
-  'qt5-tools'
-  'qt5-quickcontrols'
-  'qt5-gamepad'
-  'qt5-svg'
-  'qt5-multimedia'
-  'qt5-graphicaleffects'
   'qt5-declarative'
+  'qt5-gamepad'
+  'qt5-graphicaleffects'
   'qt5-imageformats'
+  'qt5-multimedia'
+  'qt5-quickcontrols'
+  'qt5-svg'
+  'qt5-tools'
   'sdl2'
 )
 source=("$pkgname::git+https://github.com/mmatyas/pegasus-frontend")

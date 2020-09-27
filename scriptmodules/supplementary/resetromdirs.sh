@@ -5,7 +5,7 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="resetromdirs"
-archrgs_module_desc="Reset ownership/permissions of $romdir"
+archrgs_module_desc="Reset Ownership & Permissions of the Arch-RGS/roms Directory"
 archrgs_module_section="config"
 
 function gui_resetromdirs() {

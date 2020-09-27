@@ -24,12 +24,19 @@ makedepends=(
   'python' 
   'rapidjson' 
 )
-source=("https://github.com/mamedev/mame/archive/mame${pkgver/./}.tar.gz")
-sha256sums=('8ead65f2585fc1330215e42db1d691f18497ff6d9e561d3cced54af599da4ac0')
+_latestver=$(wget -qO- https://api.github.com/repos/mamedev/mame/releases/latest | grep -m 1 tag_name | cut -d\" -f4)
+source=("$pkgname::git+https://github.com/mamedev/mame#tag=${_latestver}")
+sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
+pkgver() {
+  cd "$pkgname"
+  
+  printf "%s" "$_latestver"
+}
+
 prepare() {
-  cd mame-mame"${pkgver/./}" || exit
+  cd "$pkgname" || exit
     
   #Use System Libraries
   sed -e 's|\# USE_SYSTEM_LIB|USE_SYSTEM_LIB|g' -i makefile
@@ -38,7 +45,7 @@ prepare() {
 }
 
 build() {
-  cd mame-mame"${pkgver/./}" || exit
+  cd "$pkgname" || exit
     
   make \
     PREFIX="$_installdir" \
@@ -49,7 +56,7 @@ build() {
 }
 
 package() {
-  cd mame-mame"${pkgver/./}" || exit
+  cd "$pkgname" || exit
 
   _BIN=(
     'castool' 
@@ -73,7 +80,7 @@ package() {
   install -Dm755 ./mame64 "$pkgdir/$_installdir/bin/mame"
   
   for bin in "${_BIN[@]}"; do
-    cp "$bin" "$pkgdir/$_installdir/bin"
+    install -Dm755 "$bin" "$pkgdir/$_installdir/bin"
   done
 
   #Install Data

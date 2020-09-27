@@ -210,7 +210,7 @@ function hotkey_rgs-em-retroarch() {
     local cmd=(dialog --backtitle "$__backtitle" --menu "Choose the desired hotkey behaviour." 22 76 16)
     local options=(1 "Hotkeys enabled. (default)"
              2 "Press ALT to enable hotkeys."
-             3 "Hotkeys disabled. Press ESCAPE to open XMB.")
+             3 "Hotkeys disabled. Press ESCAPE to open retroarch menu.")
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     if [[ -n "$choice" ]]; then
         case "$choice" in

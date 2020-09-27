@@ -21,16 +21,13 @@ function remove_rgs-em-pcsxr() {
 
 function configure_rgs-em-pcsxr() {
     mkRomDir "psx"
-    mkUserDir "$md_conf_root/psx"
-
-    # symlink config folder
+    
     moveConfigDir "$home/.pcsxr" "$md_conf_root/psx/pcsxr"
-
-    # symlink the bios and plugins directories.
-    ln -s "$biosdir" "$md_conf_root/psx/pcsxr/"
-    ln -s  "$md_inst/lib" "$md_conf_root/psx/pcsxr/plugins"
+    moveConfigDir "$biosdir" "$md_conf_root/psx/pcsxr/"
+    moveConfigDir "$md_inst/lib" "$md_conf_root/psx/pcsxr/plugins"
 
     addEmulator 0 "$md_id-nogui" "psx" "$md_inst/bin/pcsxr -nogui -cdfile %ROM%"
     addEmulator 1 "$md_id" "psx" "$md_inst/bin/pcsxr -cdfile %ROM%"
+    
     addSystem "psx"
 }

@@ -25,15 +25,11 @@ function configure_rgs-lr-fbneo() {
         ensureSystemretroconfig "$dir"
     done
 
-    # Create samples directory
+    #Create samples directory
     mkUserDir "$biosdir/fbneo"
     mkUserDir "$biosdir/fbneo/samples"
 
-    # copy hiscore.dat
-    cp "$md_inst/data/hiscore.dat" "$biosdir/fbneo/"
-    chown "$user:$user" "$biosdir/fbneo/hiscore.dat"
-
-    # Set core options
+    #Set core options
     setRetroArchCoreOption "fbneo-diagnostic-input" "Hold Start"
 
     addEmulator 0 "$md_id" "arcade" "$md_inst/fbneo_libretro.so"
@@ -66,4 +62,10 @@ function configure_rgs-lr-fbneo() {
     addSystem "coleco"
     addSystem "msx"
     addSystem "zxspectrum"
+
+    [[ "$md_mode" == "remove" ]] && return
+
+    #Copy hiscore.dat
+    install -Dm755 "$md_inst/data/hiscore.dat" "$biosdir/fbneo/"
+    chown "$user":"$user" "$biosdir/fbneo/hiscore.dat"
 }

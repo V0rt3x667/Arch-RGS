@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-pt-giana"
 archrgs_module_desc="Giana's Return"
-archrgs_module_license="NONCOM https://www.gianas-return.de/?page_id=6"
+archrgs_module_licence="NONCOM https://www.gianas-return.de/?page_id=6"
 archrgs_module_section="ports"
 archrgs_module_flags="x86_64"
 

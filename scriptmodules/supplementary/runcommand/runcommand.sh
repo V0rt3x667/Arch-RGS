@@ -320,9 +320,11 @@ function default_emulator() {
 }
 
 function load_mode_defaults() {
-    local separator=":"
+    local separator="-"
+    [[ "$HAS_MODESET" == "x11" ]] && separator=":"
     local temp
     MODE_ORIG=()
+
 
     if [[ -n "$HAS_MODESET" ]]; then
         # populate available modes
@@ -679,7 +681,9 @@ _EOF_
 
 function mode_switch() {
     local command_prefix
-    local separator=":"
+    local separator="-"
+    # X11 uses hypens in connector names
+    [[ $HAS_MODESET == "x11" ]] && separator=":"
     local mode_id=(${1/${separator}/ })
 
     # if the requested mode is the same as the current mode, don't switch

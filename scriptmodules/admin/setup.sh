@@ -102,7 +102,6 @@ function post_update_setup() {
     archrgs_logInit
     {
         archrgs_logStart
-        # Run _update_hook_id functions to fix up modules for archrgs-setup install detection.
         printHeading "Running post update hooks"
         archrgs_updateHooks
         archrgs_logEnd

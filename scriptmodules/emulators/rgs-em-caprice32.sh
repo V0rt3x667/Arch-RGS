@@ -23,16 +23,16 @@ function configure_rgs-em-caprice32() {
 
     moveConfigDir "$home/.config/caprice32" "$md_conf_root/amstradcpc/caprice32"
 
-    cp "$md_inst/share/caprice32/resources/cap32.cfg" "$md_conf_root/amstradcpc/caprice32/"
-    chown "$user:$user" "$md_conf_root/amstradcpc/caprice32/cap32.cfg"
-
     local DIR=('cart' 'disk' 'snap' 'tape')
     for dir in "${DIR[@]}"; do
-      #mkdir "$md_conf_root/amstradcpc/caprice32/$dir" && \
-      #chown "$user:$user" "$md_conf_root/amstradcpc/caprice32/$dir" && \
-      ln -s "$romdir/amstradcpc/" "$md_conf_root/amstradcpc/caprice32/$dir" 
+      moveConfigDir "$romdir/amstradcpc/" "$md_conf_root/amstradcpc/caprice32/$dir" 
     done
-    
+
     addEmulator 1 "$md_id" "amstradcpc" "$md_inst/bin/cap32 %ROM%"
     addSystem "amstradcpc"
+
+    [[ "$md_mode" == "remove" ]] && return
+    
+    install -Dm755 "$md_inst/share/caprice32/resources/cap32.cfg" "$md_conf_root/amstradcpc/caprice32/"
+    chown "$user":"$user" "$md_conf_root/amstradcpc/caprice32/cap32.cfg"
 }

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-fe-emulationstation
-pkgver=v2.7.6.r401.e56be5ec
+pkgver=2.9.3
 pkgrel=1
 pkgdesc="A Flexible Emulator Front-End"
 arch=('x86_64')
@@ -27,16 +27,10 @@ makedepends=(
   'pugixml' 
   'rapidjson'
 )
-source=("$pkgname::git+https://github.com/retropie/emulationStation.git#tag=v2.9.2")
+source=("$pkgname::git+https://github.com/retropie/emulationStation.git#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/supplementary/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
-
-pkgver() {
-	cd "$pkgname"
-
-	printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
-}
 
 prepare() {
   cd "$pkgname"
@@ -61,7 +55,8 @@ build() {
 package() {
   cd "$pkgname"
 
-  install -Dm755 ./{emulationstation,emulationstation.sh,CREDITS.md,GAMELISTS.md,README.md,THEMES.md} -t "$pkgdir/$_installdir"
-  install -Dm644 ./LICENSE.md "$pkgdir/$_licencedir/LICENSE"
-  cp -r ./resources "$pkgdir/$_installdir"
+  install -dm755 "${pkgdir}${_installdir%/}"
+  install -Dm755 ./{emulationstation,emulationstation.sh,CREDITS.md,GAMELISTS.md,README.md,THEMES.md} "${pkgdir}${_installdir%/}/"
+  install -Dm644 ./LICENSE.md "${pkgdir}${_licencedir%/}/LICENSE"
+  cp -r ./resources "${pkgdir}${_installdir%/}"
 }
