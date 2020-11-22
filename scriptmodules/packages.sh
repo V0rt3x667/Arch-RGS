@@ -169,7 +169,7 @@ function archrgs_callModule() {
       rmDirExists "$md_inst"
     fi
     if [[ $md_idx = rgs-* ]]; then
-      continue
+      return
     else
       mkdir -p "$md_inst"
     fi

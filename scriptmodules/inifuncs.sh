@@ -16,7 +16,7 @@ function fatalError() {
   exit 1
 }
 
-##Arg 1: Delimiter, Arg 2: Quote, Arg 3: File
+##ARG 1: DELIMITER, ARG 2: QUOTE, ARG 3: FILE
 
 ## @fn iniConfig()
 ## @param delim ini file delimiter eg. ' = '
@@ -29,7 +29,7 @@ function iniConfig() {
   __ini_cfg_file="$3"
 }
 
-##Arg 1: Command, Arg 2: Key, Arg 2: Value, Arg 3: File (Optional - Uses File From iniConfig If Not Used)
+##ARG 1: COMMAND, ARG 2: KEY, ARG 2: VALUE, ARG 3: FILE (OPTIONAL - USES FILE FROM iniConfig IF NOT USED)
 
 # @fn iniProcess()
 # @param command `set`, `unset` or `del`
@@ -50,15 +50,15 @@ function iniProcess() {
   [[ -z "$file" ]] && fatalError "No file provided for ini/config change"
   [[ -z "$key" ]] && fatalError "No key provided for ini/config change on $file"
 
-  # we strip the delimiter of spaces, so we can "fussy" match existing entries that have the wrong spacing
+  ##STRIP THE DELIMITER OF SPACES, SO WE MATCH EXISTING ENTRIES THAT HAVE THE WRONG SPACING
   local delim_strip=${delim// /}
-  # if the stripped delimiter is empty - such as in the case of a space, just use the delimiter instead
+  ##IF THE STRIPPED DELIMITER IS EMPTY - SUCH AS IN THE CASE OF A SPACE, JUST USE THE DELIMITER INSTEAD
   [[ -z "$delim_strip" ]] && delim_strip="$delim"
   local match_re="^[[:space:]#]*$key[[:space:]]*$delim_strip.*$"
 
   local match
   if [[ -f "$file" ]]; then
-    match=$(egrep -i "$match_re" "$file" | tail -1)
+    match=$(grep -E -i "$match_re" "$file" | tail -1)
   else
     touch "$file"
   fi
@@ -72,11 +72,11 @@ function iniProcess() {
 
   local replace="$key$delim$quote$value$quote"
   if [[ -z "$match" ]]; then
-    ##Make Sure there is a Newline, then add the Key-Value Pair
+    ##MAKE SURE THERE IS A NEWLINE, THEN ADD THE KEY-VALUE PAIR
     sed -i --follow-symlinks '$a\' "$file"
     echo "$replace" >>"$file"
   else
-    ##Replace Existing Key-Value Pair
+    ##REPLACE EXISTING KEY-VALUE PAIR
     sed -i --follow-symlinks "s|$(sedQuote "$match")|$(sedQuote "$replace")|g" "$file"
   fi
 
@@ -135,12 +135,12 @@ function iniGet() {
 
   local delim="$__ini_cfg_delim"
   local quote="$__ini_cfg_quote"
-  ##Strip the delimiter of spaces, match existing entries that have the wrong spacing
+  ##STRIP THE DELIMITER OF SPACES, MATCH EXISTING ENTRIES THAT HAVE THE WRONG SPACING
   local delim_strip=${delim// /}
-  ##If the stripped delimiter is empty - such as in the case of a space, just use the delimiter instead
+  ##IF THE STRIPPED DELIMITER IS EMPTY - SUCH AS IN THE CASE OF A SPACE, JUST USE THE DELIMITER INSTEAD
   [[ -z "$delim_strip" ]] && delim_strip="$delim"
 
-  ##Create a Regexp to match the value based on whether we are looking for quotes or not
+  ##CREATE A REGEXP TO MATCH THE VALUE BASED ON WHETHER WE ARE LOOKING FOR QUOTES OR NOT
   local value_m
   if [[ -n "$quote" ]]; then
     value_m="$quote*\([^$quote|\r]*\)$quote*"
@@ -166,20 +166,20 @@ function retroarchIncludeToEnd() {
 
   local re="^#include.*retroarch\.cfg"
 
-  ##Extract the include line (unless it is the last line in the file)
-  ##(remove blank lines, the last line and search for an include line in remaining lines)
+  ##EXTRACT THE INCLUDE LINE UNLESS IT IS THE LAST LINE IN THE FILE
+  ##REMOVE BLANK LINES, THE LAST LINE AND SEARCH FOR AN INCLUDE LINE IN REMAINING LINES
   local include=$(sed '/^$/d;$d' "$config" | grep "$re")
 
-  ##If Matched Remove and Re-add it at the End
+  ##IF MATCHED REMOVE AND READD IT AT THE END
   if [[ -n "$include" ]]; then
     sed -i --follow-symlinks "/$re/d" "$config"
-    ##Add Newline if Missing and the #include Line
+    ##ADD NEWLINE IF MISSING AND THE #include LINE
     sed -i --follow-symlinks '$a\' "$config"
     echo "$include" >>"$config"
   fi
 }
 
-##Arg 1: Key, Arg 2: Default Value (Optional - Is 1 If Not Used)
+##ARG 1: KEY, ARG 2: DEFAULT VALUE (OPTIONAL - IS 1 IF NOT USED)
 function addAutoConf() {
   local key="$1"
   local default="$2"
@@ -198,7 +198,7 @@ function addAutoConf() {
   fi
 }
 
-##Arg 1: Key, Arg 2: Value
+##ARG 1: KEY, ARG 2: VALUE
 function setAutoConf() {
   local key="$1"
   local value="$2"
@@ -209,7 +209,7 @@ function setAutoConf() {
   chown "$user:$user" "$file"
 }
 
-##Arg 1: Key
+##ARG 1: KEY
 function getAutoConf() {
   local key="$1"
 
@@ -220,7 +220,7 @@ function getAutoConf() {
   return 1
 }
 
-##Escape Special Characters for sed
+##ESCAPE SPECIAL CHARACTERS FOR sed
 function sedQuote() {
   local string="$1"
   string="${string//\\/\\\\}"

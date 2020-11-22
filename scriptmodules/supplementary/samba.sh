@@ -21,7 +21,7 @@ function remove_share_samba() {
 function add_share_samba() {
   local name="$1"
   local path="$2"
-  [[ -z "name" || -z "$path" ]] && return
+  [[ -z "$name" || -z "$path" ]] && return
   remove_share_samba "$name"
   cat >>/etc/samba/smb.conf <<_EOF_
 [$1]
