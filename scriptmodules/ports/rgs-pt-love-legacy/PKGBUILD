@@ -1,0 +1,40 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-love-legacy
+pkgver=0.10.2
+pkgrel=1
+pkgdesc="2D Game Framework for Lua"
+arch=('x86_64')
+url="http://love2d.org"
+license=('custom:')
+depends=(
+  'freetype2'
+  'libmodplug'
+  'libtheora'
+  'libvorbis'
+  'luajit'
+  'mpg123'
+  'openal'
+  'physfs'
+  'sdl2'
+)
+provides=('love=0.10.2' 'liblove.so')
+source=("https://github.com/love2d/love/releases/download/${pkgver}/love-${pkgver}-linux-src.tar.gz")
+sha256sums=('b26b306b113158927ae12d2faadb606eb1db49ffdcd7592d6a0a3fc0af21a387')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+build() {
+  cd "$srcdir/love-$pkgver"
+
+  ./configure --prefix="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "$srcdir/love-$pkgver"
+
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 ./license.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

@@ -1,0 +1,57 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-cgenius
+pkgver=2.6.3.1
+pkgrel=1
+pkgdesc="Modern Interpreter for the Commander Keen Games (Vorticon and Galaxy Games)"
+arch=('x86_64')
+url="http://clonekeenplus.sourceforge.net"
+license=('GPL2')
+depends=(
+  'sdl2_image' 
+  'sdl2_mixer'
+  'sdl2_ttf'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'glu'
+)
+source=("$pkgname::git+https://gitlab.com/Dringgstein/Commander-Genius#tag=v2.6.3.1")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf %s $(git describe --tags | sed 's/^v//')
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DAPPDIR="${_installdir%/}/bin" \
+    -DSHAREDIR="${_installdir%/}/share" \
+    -DGAMES_SHAREDIR="${_installdir%/}/games" \
+    -DDOCDIR="${_installdir%/}/docs" \
+    -DUSE_SDL2=yes \
+    -DNOTYPESAVE=on
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

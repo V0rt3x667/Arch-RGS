@@ -1,0 +1,77 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-hatari
+pkgver=5523
+pkgrel=1
+pkgdesc="Libretro Core - Atari ST, STE, TT & Falcon"
+arch=('x86_64')
+url="https://github.com/libretro/hatari"
+license=('GPL2' 'custom:MAME')
+depends=(
+  'gcc-libs'
+  'zlib'
+)
+makedepends=(
+  'dos2unix'
+  'git'
+)
+source=(
+  "$pkgname::git+https://github.com/libretro/hatari"
+  "http://www.kryoflux.com/download/spsdeclib_5.1_source.zip"
+  "01_libcapsimage.patch"
+)
+sha256sums=(
+  'SKIP'
+  'e60b756fa68c5fe073a28c618a0ec06220ef185e2a3c59e4a8d001c930f693d1'
+  '7c678c49cd9a463af5ef3fd78280b26b168b267608f8845e81a9522035a67e8f'
+)
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+
+  unzip -o ../capsimg_source_linux_macosx.zip
+  chmod u+x ./capsimg_source_linux_macosx/CAPSImg/configure
+
+  dos2unix ./Makefile.libretro
+
+  patch -Np1 -i ../01_libcapsimage.patch
+}
+
+build() {
+  cd "$pkgname/capsimg_source_linux_macosx/CAPSImg"
+
+  ##Build CAPSImage
+  ./configure
+  make
+
+  ##Copy CAPSImg Header Files
+  install -Dm644 ./libcapsimage.so.5.1 -t "$srcdir/$pkgname/src/caps5/"
+  install -Dm644 ../LibIPF/*.h -t "$srcdir/$pkgname/src/caps5/"
+  install -Dm644 ../Core/CommonTypes.h -t "$srcdir/$pkgname/src/caps5/"
+
+  cd "$srcdir/$pkgname"
+
+  ##Build Hatari Core
+  CFLAGS+=" -D__cdecl='' -DENABLE_SDL2 -DHAVE_CAPSIMAGE=1 -DCAPSIMAGE_VERSION=5" \
+  LDFLAGS+=" -Wl,-rpath='$_installdir/lib/'" \
+  CAPSIMG_LDFLAGS="-L./src/caps5 -l:libcapsimage.so.5.1" \
+  make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./hatari_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./src/caps5/libcapsimage.so.5.1 -t "${pkgdir}${_installdir%/}/lib"
+  install -Dm644 ../LICENCE.txt "${pkgdir}${_licencedir%/}/LICENCE"
+
+  ln -s "${_installdir%/}/lib/libcapsimage.so.5.1" "${pkgdir}${_installdir%/}/lib/libcapsimage.so.5"
+}
+

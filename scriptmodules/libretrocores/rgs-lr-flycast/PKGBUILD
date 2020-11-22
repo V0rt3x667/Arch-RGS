@@ -1,0 +1,41 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-flycast
+pkgver=4271
+pkgrel=1
+pkgdesc="Libretro Core - Sega Dreamcast & Naomi Atomiswave"
+arch=('x86_64')
+url="https://github.com/libretro/flycast"
+license=('GPL2')
+depends=('libglvnd')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/flycast")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+    
+  sed "s/^HAVE_OIT.*:=.*/HAVE_OIT := 1/;
+      s/^CFLAGS.*:=.*/CFLAGS := ${CFLAGS}/;
+      s/^CXXFLAGS.*:=.*/CXXFLAGS := ${CXXFLAGS}/;
+      s/^LDFLAGS.*:=.*/LDFLAGS := ${LDFLAGS}/;" -i Makefile
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./flycast_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

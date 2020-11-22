@@ -1,0 +1,44 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-blastem
+pkgver=1981
+pkgrel=1
+pkgdesc="Libretro Core - Sega Mega Drive (Genesis)"
+arch=('x86_64')
+url="https://github.com/libretro/blastem"
+license=('GPL3')
+depends=('glibc')
+makedepends=('git')
+source=(
+  "$pkgname::git+https://github.com/libretro/blastem"
+  "01_blastem_flags.patch"
+)
+sha256sums=(
+  'SKIP'
+  '78438f352cc051c5fe1048bbddbf078e0d89c52af9bac35521cae13fc5ed7150'
+)
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np1 -i ../01_blastem_flags.patch
+}
+
+build() {
+  cd "$pkgname"
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./blastem_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

@@ -1,0 +1,55 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-snes9x
+pkgver=1.53.r1790.364aa1b
+pkgrel=1
+pkgdesc="Super Nintendo Entertainment System Emulator"
+arch=('x86_64')
+url="http://www.snes9x.com"
+license=('custom:')
+depends=(
+  'gtkmm3'
+  'libpulse'
+  'libxv'
+  'minizip'
+  'portaudio'
+  'sdl2'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/snes9xgit/snes9x")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="$pkgdir/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//; s/\([^-]*-\)g/r\1/; s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  git submodule update --init --recursive
+}
+
+build() {
+  cd "$pkgname/gtk"
+
+  meson \
+    --buildtype=release \
+    --prefix="${_installdir%/}" \
+  build
+
+  cd ./build
+
+  ninja
+}
+
+package() {
+  cd "$pkgname/gtk/build"
+
+  DESTDIR="${pkgdir}" ninja install
+
+  install -Dm644 ../../LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

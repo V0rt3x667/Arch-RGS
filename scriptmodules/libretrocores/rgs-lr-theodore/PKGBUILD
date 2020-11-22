@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-theodore
+pkgver=308
+pkgrel=1
+pkgdesc="Libretro Core - Thomson TO7, TO7/70, TO8, TO8D, TO9, TO9+, MO5 & MO6"
+arch=('x86_64')
+url="https://github.com/libretro/theodore"
+license=('GPL3')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/theodore")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname/"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./theodore_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

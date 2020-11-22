@@ -1,0 +1,60 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-openbor
+pkgver=r7087.e7614649
+pkgrel=1
+pkgdesc="2D Side Scrolling Game Engine"
+arch=('x86_64')
+url="http://www.chronocrash.com"
+license=('BSD')
+depends=(
+  'libogg'
+  'libpng'
+  'libvorbis'
+  'libvpx'
+  'sdl2'
+)
+makedepends=(
+  'gcc9'
+  'git'
+)
+source=("$pkgname::git+https://github.com/DCurrent/openbor")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname/engine"
+
+  #Disable Abort On Warnings & Errors
+  sed 's/-Werror//' -i Makefile
+
+  #Fix Locale Warning
+  sed 's|en_US.UTF-8|C|g' -i version.sh
+}
+
+build() {
+  cd "$pkgname/engine"
+
+  ./version.sh
+  make SDKPATH=/usr LNXDEV=/usr/bin BUILD_LINUX=1 GCC_TARGET="$CARCH" CC=gcc-9 LDFLAGS="$LDFLAGS"
+
+  cd "$srcdir/$pkgname/tools/borpak/source"
+
+  sh ./build.sh lin
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./engine/OpenBOR -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./tools/borpak/scripts/{packer,paxplode} -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./tools/borpak/source/borpak -t "${pkgdir}${_installdir%/}/bin/"
+  install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

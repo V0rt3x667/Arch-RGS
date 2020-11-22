@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-duckstation
+pkgver=2789
+pkgrel=1
+pkgdesc="Libretro Core - Sony PlayStation"
+arch=('x86_64')
+url="https://github.com/stenzek/duckstation"
+license=('GPL3')
+depends=('gcc-libs')
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/stenzek/duckstation.git")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DBUILD_LIBRETRO_CORE=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm644 ./duckstation_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

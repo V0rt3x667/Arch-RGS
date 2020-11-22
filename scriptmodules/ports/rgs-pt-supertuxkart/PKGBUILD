@@ -1,0 +1,71 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-supertuxkart
+pkgver=r22265.a27737ef8
+pkgrel=1
+pkgdesc="3D Kart Racing Game Featuring Tux & Friends"
+arch=('x86_64')
+url="https://supertuxkart.net"
+license=('GPL3')
+depends=(
+  'bluez-libs'
+  'glew'
+  'libjpeg-turbo'
+  'libvorbis'
+  'openal'
+  'python'
+  'sdl2'
+  'sqlite'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'mesa'
+)
+source=(
+  "$pkgname::git+https://github.com/supertuxkart/stk-code"
+  "https://gitlab.com/arch-rgs/arch-rgs-resources/-/archive/assets/rgs-pt-supertuxkart/arch-rgs-resources-assets-$pkgname.tar.gz"
+)
+sha256sums=(
+  'SKIP'
+  'e87b1b799ecf6caa69123d3b9c0321733dd6e8593ea881a1a2a107e3b4940923'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+  mkdir -p assets/installer
+
+  cd "${srcdir}/arch-rgs-resources-assets-$pkgname"
+
+  ./Xtract.sh
+  mv ./stk-assets "${srcdir}" && rm -r "${srcdir}/arch-rgs-resources-assets-$pkgname"
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_RECORDER=0
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

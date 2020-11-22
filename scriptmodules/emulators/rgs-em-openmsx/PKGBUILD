@@ -1,0 +1,54 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-openmsx
+pkgver=16.0.r127.9d3741947
+pkgrel=1
+pkgdesc="Microsoft MSX, MSX2, MSX2+ & TurboR Emulator"
+arch=('x86_64')
+url="http://openmsx.org"
+license=('GPL2')
+depends=(
+  'alsa-lib' 
+  'glew' 
+  'libtheora' 
+  'libvorbis' 
+  'sdl2_ttf' 
+  'tcl'
+)
+makedepends=(
+  'git' 
+  'python'
+)
+source=("$pkgname::git+https://github.com/openMSX/openMSX")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^RELEASE_//;s/_/./;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  sed -i "s|INSTALL_BASE:=/opt/openMSX|INSTALL_BASE:=${_installdir%/}|" build/custom.mk
+  sed -i "s|SYMLINK_FOR_BINARY:=true|SYMLINK_FOR_BINARY:=false|" build/custom.mk
+  sed -i "s|<SDL_ttf.h>|<SDL2/SDL_ttf.h>|" build/libraries.py
+  echo "INSTALL_DOC_DIR:=${_installdir%/}/share/doc" >> build/custom.mk
+  echo "INSTALL_SHARE_DIR:=${_installdir%/}/share" >> build/custom.mk
+  echo "LINK_FLAGS:=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now, -lrt" >> build/custom.mk
+}
+
+build() {
+  cd "$pkgname"
+
+  ./configure
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="${pkgdir}" install
+}
+

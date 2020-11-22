@@ -1,0 +1,35 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-fmsx
+pkgver=165
+pkgrel=1
+pkgdesc="Libretro Core - Microsoft MSX, MSX2 & MSX2+"
+arch=('x86_64')
+url="https://fms.komkon.org/fMSX"
+license=('custom')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/fmsx-libretro")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./fmsx_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./fMSX/ROMs/{*.ROM,*.FNT,*.SHA} -t "${pkgdir}${_installdir%/}/ROMS/"
+  install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

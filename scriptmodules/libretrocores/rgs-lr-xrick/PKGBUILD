@@ -1,0 +1,41 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-xrick
+pkgver=146
+pkgrel=1
+pkgdesc="Libretro Core - Rick Dangerous"
+arch=('x86_64')
+url="https://github.com/libretro/xrick-libretro"
+license=('custom')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/xrick-libretro")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+
+  sed -n '3,27p' ./README > ./LICENCE
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./xrick_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./data.zip -t "${pkgdir}${_installdir%/}/data"
+  install -Dm644 ./LICENCE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

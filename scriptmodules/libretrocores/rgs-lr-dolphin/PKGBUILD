@@ -1,0 +1,64 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-dolphin
+pkgver=32966
+pkgrel=1
+pkgdesc="Libretro Core - Nintendo GameCube & Nintendo Wii"
+arch=('x86_64')
+url="https://github.com/libretro/dolphin"
+license=('GPL2')
+depends=(
+  'alsa-lib' 
+  'bluez-libs' 
+  'hidapi' 
+  'libevdev' 
+  'lzo' 
+  'mbedtls'
+  'sfml' 
+)
+makedepends=(
+  'cmake' 
+  'git' 
+  'mesa'
+  'python'
+)
+source=("$pkgname::git+https://github.com/libretro/dolphin")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$_installdir" \
+    -DENABLE_LTO=ON \
+    -DENABLE_NOGUI=OFF \
+    -DENABLE_QT=OFF \
+    -DENABLE_TESTS=OFF \
+    -DLIBRETRO=ON \
+    -DUSE_SHARED_ENET=ON \
+    -Wno-dev
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm644 ./dolphin_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

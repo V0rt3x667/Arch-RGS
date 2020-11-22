@@ -1,0 +1,33 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-ti99sim
+pkgver=0.16.0
+pkgrel=1
+pkgdesc="Texas Instruments Home Computer Emulator"
+arch=('x86_64')
+url="http://www.mrousseau.org/programs/ti99sim"
+license=('GPL3')
+depends=('sdl2')
+makedepends=('openssl')
+source=("http://www.mrousseau.org/programs/ti99sim/archives/ti99sim-$pkgver.src.tar.xz")
+sha256sums=('14bd72f372fe1a253c3a25bca579d29b5c3e47aff2f22622188dc4023576b159')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "ti99sim-$pkgver"
+
+  sed s'/LFLAGS   += -Wl,--gc-sections/LFLAGS   += -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,--gc-sections/'g -i ./rules.mak
+}
+
+build() {
+  cd "ti99sim-$pkgver"
+
+  make DATA_DIR="${_installdir%/}"
+}
+
+package() {
+  cd "ti99sim-$pkgver"
+
+  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}/bin"
+  install -dm755 "${pkgdir}${_installdir%/}/{cartridges,console,disks}"
+}
+

@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-fceumm
+pkgver=1040
+pkgrel=1
+pkgdesc="Libretro Core - Nintendo NES & Famicom"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-fceumm"
+license=('GPL2')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-fceumm")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./fceumm_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

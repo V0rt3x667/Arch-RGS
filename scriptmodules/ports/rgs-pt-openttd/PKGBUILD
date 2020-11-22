@@ -1,0 +1,57 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-openttd
+pkgver=1.10.0.beta2.r384.eb01f2e08
+pkgrel=1
+pkgdesc="Game Engine for Transport Tycoon Deluxe"
+arch=('x86_64')
+url="https://www.openttd.org"
+license=('GPL2')
+depends=(
+  'allegro4'
+  'fluidsynth'
+  'fontconfig'
+  'freetype2'
+  'lzo'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/OpenTTD/OpenTTD")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+      rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DPERSONAL_DIR=".config/${pkgname}" \
+    -DGLOBAL_DIR="${_installdir%/}/share/${pkgname}" \
+    -DCMAKE_INSTALL_DATADIR="share" \
+    -DCMAKE_INSTALL_DOCDIR="share/doc/${pkgname}" \
+    -DBINARY_NAME=openttd
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

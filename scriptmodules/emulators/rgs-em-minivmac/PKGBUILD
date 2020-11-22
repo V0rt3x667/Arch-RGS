@@ -1,0 +1,30 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-minivmac
+pkgver=36.04
+pkgrel=1
+pkgdesc="Apple Macintosh Plus Emulator"
+arch=('x86_64')
+url="https://www.gryphel.com/c/minivmac"
+license=('GPL2')
+depends=('libx11')
+source=("https://www.gryphel.com/d/minivmac/minivmac-$pkgver/minivmac-$pkgver.src.tgz")
+sha256sums=('9b7343cec87723177a203e69ad3baf20f49b4e8f03619e366c4bf2705167dfa4')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+build() {
+  cd minivmac
+
+  gcc setup/tool.c -o setup_t
+  ./setup_t -t lx64 > setup.sh
+  . setup.sh
+  ##Fix Missing RELOC
+  sed -e 's|$(ObjFiles) -ldl -L/usr/X11R6/lib -lX11|$(ObjFiles) $(LDFLAGS) -ldl -L/usr/X11R6/lib -lX11|' -i ./Makefile
+  make
+}
+
+package() {
+  cd minivmac
+
+  install -Dm755 ./minivmac -t "${pkgdir}${_installdir%/}/bin"
+}
+

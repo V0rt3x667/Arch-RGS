@@ -1,0 +1,52 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-tyrquake
+pkgver=0.66.r6.2292f2b
+pkgrel=1
+pkgdesc="Quake 1 Port"
+arch=('x86_64')
+url="http://disenchant.net/tyrquake"
+license=('GPL2')
+depends=(
+  'libglvnd'
+  'libpulse'
+)
+makedepends=('git')
+source=(
+  "$pkgname::git://disenchant.net/tyrquake" 
+  "01_Fix_RELOC_Missing.patch"
+)
+sha256sums=(
+  'SKIP' 
+  'fceac54a610a0cacf19c1a7f7b696277eed2fc2681d88e4a3a70253f2c35bb75'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np2 -i ../01_Fix_RELOC_Missing.patch
+}
+
+build() {
+  cd "$pkgname"
+
+  make \
+    LOCALBASE="${_installdir%/}" \
+    OPTIMIZED_CFLAGS=N \
+    USE_SDL=N
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./bin/tyr-* -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./icons/*.png -t "${pkgdir}${_installdir%/}/share/icons"
+  install -Dm644 ./man/*.6 -t "${pkgdir}${_installdir%/}/share/man"
+}
+

@@ -1,0 +1,44 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-superflappybirds
+pkgver=29
+pkgrel=1
+pkgdesc="Libretro Core - Super Flappy Bird"
+arch=('x86_64')
+url="https://github.com/IgniparousTempest/libretro-superflappybirds"
+license=('GPL3')
+depends=('gcc-libs')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/IgniparousTempest/libretro-superflappybirds")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake ..
+  
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm644 ./superflappybirds_libretro.so -t "${pkgdir}${_installdir%/}"
+  cp -r ../resources "${pkgdir}${_installdir%/}"
+}
+

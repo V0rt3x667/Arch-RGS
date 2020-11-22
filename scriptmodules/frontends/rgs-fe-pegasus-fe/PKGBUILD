@@ -1,0 +1,61 @@
+# Maintainer: V0rt3x667 <al-g0l at outlook dot com>
+pkgname=rgs-fe-pegasus-fe
+pkgver=alpha14.r62.74f285fe
+pkgrel=1
+pkgdesc="Graphical Front-End for Launching Emulators"
+arch=('x86_64')
+url="http://pegasus-frontend.org"
+license=('GPL3')
+depends=(
+  'qt5-declarative'
+  'sdl2'
+)
+makedepends=(
+  'git'
+  'qt5-gamepad'
+  'qt5-graphicaleffects'
+  'qt5-imageformats'
+  'qt5-multimedia'
+  'qt5-quickcontrols'
+  'qt5-svg'
+  'qt5-tools'
+)
+source=("$pkgname::git+https://github.com/mmatyas/pegasus-frontend")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/frontends/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//; s/\([^-]*-\)g/r\1/; s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  git submodule update --init --recursive
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  qmake .. \
+    USE_SDL_GAMEPAD=1 \
+    INSTALL_BINDIR="${_installdir%/}/bin" \
+    INSTALL_DOCDIR="${_installdir%/}/share/doc/$pkgname" \
+    INSTALL_ICONDIR="${_installdir%/}/share/pixmaps" \
+    INSTALL_DESKTOPDIR="${_installdir%/}/share/applications"
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make INSTALL_ROOT="${pkgdir}" install
+}
+

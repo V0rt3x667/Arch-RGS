@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-ioquake3
+pkgver=r3343.e7a7a2b6
+pkgrel=1
+pkgdesc="Quake 3 Arena Port"
+arch=('x86_64')
+url="https://www.ioquake3.org"
+license=('GPL2')
+depends=('sdl2')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/ioquake/ioq3")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make COPYDIR="${pkgdir}${_installdir%/}" copyfiles
+}
+

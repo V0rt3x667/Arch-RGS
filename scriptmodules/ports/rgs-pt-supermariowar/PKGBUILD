@@ -1,0 +1,62 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-supermariowar
+pkgver=r1237.c9a383be
+pkgrel=1
+pkgdesc="Fan-made Multiplayer Super Mario Bros. Style Deathmatch Game"
+arch=('x86_64')
+url="http://smwstuff.net"
+license=('custom:')
+depends=(
+  'enet'
+  'sdl2_image'
+  'sdl2_mixer'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/mmatyas/supermariowar")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  git submodule update --init
+
+  sed -n '46p' README.md > LICENCE
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DSMW_BINDIR="${_installdir%/}/bin" \
+    -DSMW_DATADIR="${_installdir%/}/share/data"
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./Binaries/Release/{smw,smw-leveledit,smw-worldedit} -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ../LICENCE "${pkgdir}${_licencedir%/}/LICENCE"
+
+  install -dm755 "${pkgdir}${_installdir%/}/share/data"
+  cp -r ../data "${pkgdir}${_installdir%/}/share"
+}
+

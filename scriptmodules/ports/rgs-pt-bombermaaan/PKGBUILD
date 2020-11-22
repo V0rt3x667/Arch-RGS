@@ -1,0 +1,50 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-bombermaaan
+pkgver=2.0.2.2144
+pkgrel=1
+pkgdesc="Bomberman Clone"
+arch=('x86_64')
+url="https://github.com/bjaraujo/Bombermaaan"
+license=('GPL3')
+depends=('sdl_mixer')
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/bjaraujo/Bombermaaan#tag=v2.0.2.2144")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git describe --tags | sed 's/^v//'
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake ../trunk \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DLOAD_RESOURCES_FROM_FILES=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./bin/Bombermaaan "${pkgdir}${_installdir%/}/bombermaaan"
+  install -Dm644 ../trunk/config/config.xml -t "${pkgdir}${_installdir%/}"
+  cp -r ../trunk/levels "${pkgdir}${_installdir%/}"
+  cp -r ../trunk/res/{images,sounds} "${pkgdir}${_installdir%/}"
+}
+

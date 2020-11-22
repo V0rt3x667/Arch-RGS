@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-np2kai
+pkgver=1029
+pkgrel=1
+pkgdesc="Libretro Core - NEC PC-9800 Series"
+arch=('x86_64')
+url="http://domisan.sakura.ne.jp/article/np2kai/np2kai.html"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/AZO234/NP2kai")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname/sdl"
+
+  make -f Makefile.libretro
+}
+
+package() {
+  cd "$pkgname/sdl"
+
+  install -Dm644 ./np2kai_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ../LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

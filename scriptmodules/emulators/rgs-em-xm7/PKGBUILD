@@ -1,0 +1,70 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-xm7
+pkgver=r1163.2a48dce
+pkgrel=1
+pkgdesc="Fujitsu FM-7, 77AV & 77AV40 Emulator"
+arch=('x86_64')
+url="http://retropc.net/ryu/xm7"
+license=('custom:')
+depends=(
+  'fontconfig'
+  'freetype2'
+  'libglvnd'
+  'libjpeg-turbo'
+  'libxinerama'
+  'sdl'
+)
+makedepends=('git')
+source=(
+  "$pkgname::git+https://github.com/nakatamaho/XM7-for-SDL"
+  "https://gitlab.com/arch-rgs/arch-rgs-resources/-/raw/assets/rgs-em-xm7/libagar.tar.zst"
+  "01_Fix_Build.patch"
+)
+sha256sums=(
+  'SKIP'
+  'e643c056330d69fe223e6a6e407f6d126b63efabcba6fd1b85123153144b4711'
+  'c72a2d1b7406c65cf982402d0f0bb6280bf3851096e6e9d60197ad7e76ebe42b'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -p1 -i ../01_Fix_Build.patch
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake ../linux-sdl \
+    -DCMAKE_CXX_FLAGS="-DSHAREDIR='\"${_installdir%/}/share/xm7\"'" \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_OPENGL=Yes \
+    -DUSE_OPENCL=No \
+    -DUSE_OPENMP=No \
+    -DWITH_LIBAGAR_PREFIX="$srcdir/libagar" \
+    -DWITH_AGAR_STATIC=yes
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 ../linux-sdl/LICENSE.en.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

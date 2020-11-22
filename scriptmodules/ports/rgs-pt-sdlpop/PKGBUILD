@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-sdlpop
+pkgver=1.21.r6.ad52f87
+pkgrel=1
+pkgdesc="Open-Source Port of Prince of Persia"
+arch=('x86_64')
+license=('GPL3')
+url="https://github.com/NagyD/SDLPoP"
+depends=('sdl2_image')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/NagyD/SDLPoP")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname/src"
+
+  make PREFIX="${_installdir%/}" LDFLAGS="$LDFLAGS"
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./{prince,SDLPoP.ini} -t "${pkgdir}${_installdir%/}"
+
+  cp -r ./{data,doc,mods} "${pkgdir}${_installdir%/}"
+}
+

@@ -1,0 +1,24 @@
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,9 +20,8 @@
+   # Use the package PkgConfig to detect GTK+ headers/library files
+   find_package(PkgConfig REQUIRED)
+   PKG_CHECK_MODULES(GTK3 REQUIRED gtk+-3.0)
+-
+   find_package(SDL2 REQUIRED)
+-
++  PKG_CHECK_MODULES(SDL2 REQUIRED sdl2)
+   # Setup CMake to use GTK+ and SDL2, tell the compiler where to look for headers
+   # and to the linker where to look for libraries
+   include_directories(${GTK3_INCLUDE_DIRS} ${SDL2_INCLUDE_DIRS})
+@@ -33,9 +32,6 @@
+ 
+ include_directories(
+   ${CMAKE_CURRENT_BINARY_DIR}
+-if (WIN32)
+-  "${PROJECT_SOURCE_DIR}/msvc"
+-endif (WIN32)
+ )
+ 
+ SET (SRCAMIGA
+

@@ -1,0 +1,52 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-lincity-ng
+pkgver=2.9.beta.r101.35ffbacb
+pkgrel=1
+pkgdesc="Open Source City Building Game"
+arch=('x86_64')
+url="https://github.com/lincity-ng/lincity-ng"
+license=('GPL2')
+depends=(
+  'libglvnd'
+  'physfs'
+  'sdl_gfx'
+  'sdl_image'
+  'sdl_mixer'
+  'sdl_ttf'
+)
+makedepends=(
+  'ftjam'
+  'glu'
+  'mesa'
+)
+source=("$pkgname::git+https://github.com/lincity-ng/lincity-ng")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^lincity.ng.//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  ##Generate CREDITS File
+  eval "$(grep -m1 CREDITS makerelease.sh)"
+}
+
+build() {
+  cd "$pkgname"
+
+  ./autogen.sh
+  ./configure --prefix="${_installdir%/}"
+  jam
+}
+
+package() {
+  cd "$pkgname"
+
+  jam -sprefix="${pkgdir}${_installdir%/}" install
+}
+

@@ -1,0 +1,35 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-jumpnbump
+pkgver=1.60.r31.b407dee
+pkgrel=1
+pkgdesc="Jump 'n' Bump Play Cute Bunnies Jumping On Each Other's Heads"
+arch=('x86_64')
+url="https://libregames.gitlab.io/jumpnbump"
+license=('GPL')
+depends=(
+  'sdl2_mixer'
+  'sdl2_net'
+)
+makedepends=('git')
+source=("$pkgname::git+https://gitlab.com/LibreGames/jumpnbump")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  make PREFIX="${_installdir%/}"
+}
+
+package() {
+  cd "$pkgname"
+
+  make PREFIX="${pkgdir}" install
+}
+

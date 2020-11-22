@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-basiliskii
+pkgver=r2660.29bb3d5a
+pkgrel=1
+pkgdesc="Apple Macintosh II Emulator"
+arch=('x86_64')
+url="http://basilisk.cebix.net"
+license=('GPL2')
+depends=(
+  'gtk2'
+  'sdl'
+  'vde2'
+)
+makedepends=(
+  'gcc9'
+  'git'
+)
+source=("$pkgname::git+https://github.com/cebix/macemu")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname/BasiliskII/src/Unix"
+
+  sed -i "/I_PUSH/d" sshpty.c
+
+  ./autogen.sh CC=/usr/bin/cc-9 CXX=/usr/bin/c++-9 \
+    --prefix="$_installdir" \
+    --enable-sdl-video \
+    --enable-sdl-audio \
+    --enable-jit-compiler \
+    --with-bincue \
+    --with-vdeplug
+  make LDFLAGS="-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now"
+}
+
+package() {
+  cd "$pkgname/BasiliskII/src/Unix"
+
+  make DESTDIR="$pkgdir" install
+}
+

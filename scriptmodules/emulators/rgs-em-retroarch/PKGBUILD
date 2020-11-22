@@ -1,0 +1,84 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-retroarch
+pkgver=1.9.0
+pkgrel=1
+pkgdesc="Frontend for the Libretro API"
+arch=('x86_64')
+url="http://www.libretro.com"
+license=('GPL3')
+depends=(
+  'ffmpeg'
+  'flac'
+  'libass'
+  'libcaca'
+  'libxinerama'
+  'libxrandr'
+  'mbedtls'
+  'miniupnpc'
+  'openal'
+  'python'
+  'qt5-base'
+)
+makedepends=(
+  'git'
+  'libx11'
+  'libxcb'
+  'libxext'
+  'libxkbcommon'
+  'libxv'
+  'libxxf86vm'
+  'vulkan-headers'
+  'vulkan-icd-loader'
+  'wayland'
+  'wayland-protocols'
+)
+source=(
+  "$pkgname::git+https://github.com/libretro/RetroArch#tag=v$pkgver"
+  "core-info::git+https://github.com/libretro/libretro-core-info#tag=v$pkgver"
+  "01_disable_search.patch"
+  "02_shader_path_config_enable.patch"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  '9a31ab6f9e873ee37fe3be924dadc08f657f227c36c000983370bbf0f2f61608'
+  '1cdcdd233ad5cf6e0ea583f7386dc806255ffb4e8b3879dfdbc2547a8ecb74fe'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np1 -i ../01_disable_search.patch
+  patch -Np1 -i ../02_shader_path_config_enable.patch
+}
+
+build() {
+  cd "$pkgname"
+
+  ./configure \
+    --prefix="${_installdir%/}" \
+    --disable-builtinflac \
+    --disable-builtinmbedtls \
+    --disable-builtinminiupnpc \
+    --disable-builtinzlib \
+    --disable-cg \
+    --disable-jack \
+    --disable-oss \
+    --disable-sdl \
+    --enable-dbus
+  make
+  make -C ./libretro-common/audio/dsp_filters
+  make -C ./gfx/video_filters
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 ./libretro-common/audio/dsp_filters/*.{dsp,so} -t "${pkgdir}${_installdir%/}/filters/audio"
+  install -Dm644 ./gfx/video_filters/*.{filt,so} -t "${pkgdir}${_installdir%/}/filters/video"
+  install -Dm644 ../core-info/*.info -t "${pkgdir}${_installdir%/}/info"
+}
+

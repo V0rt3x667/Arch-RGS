@@ -1,0 +1,39 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-px68k
+pkgver=r92.74ddbb3
+pkgrel=1
+pkgdesc="SHARP X68000 Emulator"
+arch=('x86_64')
+url="http://hissorii.blog45.fc2.com"
+license=('custom:')
+depends=(
+  'gcc-libs'
+  'sdl_gfx'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/hissorii/px68k")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+  cd "$pkgname"
+
+  make \
+    MOPT="" \
+    CDEBUGFLAGS="$CFLAGS $LDFLAGS -O2 -DUSE_SDLGFX -DNO_MERCURY"
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./px68k -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./readme.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

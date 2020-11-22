@@ -1,0 +1,31 @@
+# Maintainer V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-xroar
+pkgver=0.36.2
+pkgrel=1
+pkgdesc="Dragon Data Dragon 32 & 64 & Tandy Colour Computer (CoCo) 1 & 2 Emulator"
+arch=('x86_64')
+license=('GPL2')
+url="https://www.6809.org.uk/xroar"
+depends=(
+  'alsa-lib'
+  'gtkglext'
+  'libpulse'
+  'sdl2'
+)
+source=("$url/dl/xroar-$pkgver.tar.gz")
+sha256sums=('6fdc05b57b3c59dae41f5418e4465f25ae2d24c778c36c0a15d8afe3218c6353')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+build() {
+  cd "xroar-$pkgver"
+
+  ./configure --prefix="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "xroar-$pkgver"
+
+  make DESTDIR="${pkgdir}" install
+}
+

@@ -1,0 +1,52 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-solarus
+pkgver=1.6.4
+pkgrel=1
+pkgdesc="Open-source Game Engine for Action-RPGs"
+arch=('x86_64')
+url="http://www.solarus-games.org"
+license=('GPL3')
+depends=(
+  'libmodplug'
+  'libvorbis'
+  'luajit'
+  'openal'
+  'physfs'
+  'qt5-base'
+  'sdl2_image'
+  'sdl2_ttf'
+)
+makedepends=('cmake')
+source=("https://gitlab.com/solarus-games/solarus/-/archive/release-$pkgver/solarus-release-$pkgver.tar.gz")
+sha256sums=('d8448461c347ed1e97170d161cae99a4c68bbe7a6342f0bd658b4bbb69d4da34')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "$srcdir/solarus-release-$pkgver"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$srcdir/solarus-release-$pkgver/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSOLARUS_TESTS=OFF \
+    -DSOLARUS_FILE_LOGGING=OFF \
+    -DSOLARUS_LIBRARY_INSTALL_DESTINATION="${_installdir%/}/lib" \
+    -DCMAKE_INSTALL_RPATH="${_installdir%/}/lib" \
+    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
+  make
+}
+
+package() {
+  cd "$srcdir/solarus-release-$pkgver/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

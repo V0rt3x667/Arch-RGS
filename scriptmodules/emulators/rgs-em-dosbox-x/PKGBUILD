@@ -1,0 +1,47 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dosbox-x
+pkgver=0
+pkgrel=1
+pkgdesc="DOS Emulator Includes Additional Patches & Features"
+arch=('x86_64')
+url="http://dosbox-x.com"
+license=('GPL')
+depends=(
+  'alsa-lib'
+  'fluidsynth'
+  'freetype2'
+  'libpcap'
+  'libxkbfile'
+  'libxrandr'
+  'sdl2_net'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/joncampbell123/dosbox-x#tag=dosbox-x-v0.83.6")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^dosbox.x.v//;s/_/./;s/\([^-]*-g\)/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  ./autogen.sh
+  ./configure \
+    --prefix="${_installdir%/}" \
+    --enable-sdl2 \
+    --enable-core-inline \
+    --disable-debug \
+    --enable-avcodec
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make DESTDIR="$pkgdir" install
+}
+

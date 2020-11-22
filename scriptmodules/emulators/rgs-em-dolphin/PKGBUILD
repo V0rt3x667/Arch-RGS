@@ -1,0 +1,61 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-dolphin
+pkgver=5.0.r12946.g35a113f6a2
+pkgrel=1
+pkgdesc="Nintendo Gamecube, Wii & Triforce Emulator"
+arch=('x86_64')
+url="https://dolphin-emu.org"
+license=('GPL2')
+depends=(
+  'bluez-libs'
+  'enet mbedtls'
+  'ffmpeg'
+  'lzo'
+  'miniupnpc'
+  'pugixml'
+  'qt5-base'
+  'sfml'
+)
+makedepends=(
+  'cmake' 
+  'git'
+  'python'
+)
+options=('!emptydirs')
+source=("$pkgname::git+https://github.com/dolphin-emu/dolphin")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v_//;s/_/./;s/\([^-]*-g\)/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DUSE_SHARED_ENET=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="$pkgdir" install
+
+  install -Dm644 ../Data/51-usb-device.rules -t "$pkgdir/usr/lib/udev/rules.d"
+}
+

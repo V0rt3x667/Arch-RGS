@@ -1,0 +1,99 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-mame
+pkgver=0226
+pkgrel=1
+pkgdesc="Multiple Arcade Machine Emulator"
+url="https://mamedev.org"
+license=('custom:MAME')
+arch=('x86_64')
+depends=(
+  'flac'
+  'libutf8proc'
+  'lua53' 
+  'portaudio'
+  'portmidi' 
+  'qt5-base'
+  'pugixml'
+  'sdl2_ttf'
+)
+makedepends=(
+  'asio'
+  'glm'
+  'libxinerama'
+  'nasm' 
+  'python' 
+  'rapidjson' 
+)
+_latestver=$(wget -qO- https://api.github.com/repos/mamedev/mame/releases/latest | grep -m 1 tag_name | cut -d\" -f4)
+source=("$pkgname::git+https://github.com/mamedev/mame#tag=${_latestver}")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  echo ${_latestver} | sed 's/^mame//'
+}
+
+prepare() {
+  cd "$pkgname"
+
+  ##Use System Libraries
+  sed -e 's|\# USE_SYSTEM_LIB|USE_SYSTEM_LIB|g' -i makefile
+  ##Except for ASIO
+  sed -e 's|USE_SYSTEM_LIB_ASIO|\# USE_SYSTEM_LIB_ASIO|g' -i makefile
+}
+
+build() {
+  cd "$pkgname"
+
+  export CFLAGS+=" -I/usr/include/lua5.3/"
+  export CXXFLAGS+=" -I/usr/include/lua5.3/"
+
+  ##Force Linking to lua5.3
+  mkdir lib
+  ln -s /usr/lib/liblua5.3.so lib/liblua.so
+  export LDFLAGS+=" -L${PWD}/lib"
+
+  make \
+    PREFIX="${_installdir%/}" \
+    BUILDDIR=./build \
+    ARCHOPTS=-flifetime-dse=1 \
+    NOWERROR=1 \
+    TOOLS=1
+}
+
+package() {
+  cd "$pkgname"
+
+  _BIN=(
+    'castool'
+    'chdman'
+    'imgtool'
+    'jedutil'
+    'ldresample'
+    'ldverify'
+    'nltool'
+    'nlwav'
+    'pngcmp'
+    'regrep'
+    'romcmp'
+    'split'
+    'srcclean'
+    'testkeys'
+    'unidasm'
+)
+
+  ##Install Binaries
+  install -Dm755 ./mame64 "${pkgdir}${_installdir%/}/bin/mame"
+
+  for bin in "${_BIN[@]}"; do
+    install -Dm755 "$bin" "${pkgdir}${_installdir%/}/bin"
+  done
+
+  ##Install Data
+  cp -ar ./{artwork,bgfx,docs,plugins,language,ctrlr,keymaps,hash} "${pkgdir}${_installdir%/}"
+  install -Dm644 ./COPYING "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

@@ -1,0 +1,36 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-jzintv
+pkgver=20200712
+pkgrel=1
+pkgdesc="Mattel Electronics Intellivision Emulator"
+arch=('x86_64')
+url="http://spatula-city.org/~im14u2c/intv"
+license=('GPL2')
+depends=('sdl2')
+source=("http://spatula-city.org/~im14u2c/intv/dl/jzintv-$pkgver-src.zip")
+sha256sums=('b36b3b274d0fc05cb227818d4957f96620d23d8d6b7596c24f07675ced7129f3')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "jzintv-$pkgver-src/src"
+
+  sed -i -e 's|SLFLAGS ?= -static $(LFLAGS)|SLFLAGS ?= $(LFLAGS)|g' Makefile.common
+  sed -i -e 's|RL_LFLAGS = -lreadline -ltermcap|RL_LFLAGS = -lreadline|g' Makefile.linux_sdl2
+  sed -i -e 's|LFLAGS   += -lrt|LFLAGS   += -lrt -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now|g' Makefile.linux_sdl2
+}
+
+build() {
+  cd "jzintv-$pkgver-src/src"
+
+  make -f Makefile.linux_sdl2
+}
+
+package() {
+  cd "jzintv-$pkgver-src"
+
+  install -Dm755 ./bin/jzintv -t "${pkgdir}${_installdir%/}/bin"
+
+  install -dm755 "${pkgdir}${_installdir%/}/share/$pkgname"
+  cp -r ./{doc,rom} "${pkgdir}${_installdir%/}/share/$pkgname"
+}
+

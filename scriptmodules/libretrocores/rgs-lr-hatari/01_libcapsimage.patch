@@ -1,0 +1,92 @@
+diff -ruN a/floppy_ipf.c b/floppy_ipf.c
+--- ./src/floppy_ipf.c	2020-10-09 01:10:23.000000000 +0100
++++ ./src/floppy_ipf.c	2020-10-11 12:00:15.063457529 +0100
+@@ -24,6 +24,7 @@
+ #include "screen.h"
+ #include "video.h"
+ #include "cycles.h"
++#include "inttypes.h"
+ 
+ #ifdef HAVE_CAPSIMAGE
+ #if CAPSIMAGE_VERSION == 5
+@@ -46,7 +47,7 @@
+ 
+ 	struct CapsFdc		Fdc;				/* Fdc state */
+ 	struct CapsDrive 	Drive[ MAX_FLOPPYDRIVES ];	/* Physical drives */
+-	CapsLong		CapsImage[ MAX_FLOPPYDRIVES ];	/* For the IPF disk images */
++	Sint32		CapsImage[ MAX_FLOPPYDRIVES ];	/* For the IPF disk images */
+ 
+ 	int			Rev_Track[ MAX_FLOPPYDRIVES ];	/* Needed to handle CAPSSetRevolution for type II/III commands */
+ 	int			Rev_Side[ MAX_FLOPPYDRIVES ];
+@@ -63,9 +64,9 @@
+ 
+ 
+ #ifdef HAVE_CAPSIMAGE
+-static void	IPF_CallBack_Trk ( struct CapsFdc *pc , CapsULong State );
+-static void	IPF_CallBack_Irq ( struct CapsFdc *pc , CapsULong State );
+-static void	IPF_CallBack_Drq ( struct CapsFdc *pc , CapsULong State );
++static void	IPF_CallBack_Trk ( struct CapsFdc *pc , Uint32 State );
++static void	IPF_CallBack_Irq ( struct CapsFdc *pc , Uint32 State );
++static void	IPF_CallBack_Drq ( struct CapsFdc *pc , Uint32 State );
+ static void	IPF_Drive_Update_Enable_Side ( void );
+ #endif
+ 
+@@ -317,8 +318,8 @@
+ 	return false;
+ 
+ #else
+-	CapsLong	ImageId;
+-	CapsLong	ImageType;
++	Sint32	ImageId;
++	Sint32	ImageType;
+ 
+ 	ImageId = CAPSAddImage();
+ 	if ( ImageId < 0 )
+@@ -351,7 +352,7 @@
+ 	}
+ #endif
+ 
+-	if ( CAPSLockImageMemory ( ImageId , pImageBuffer , (CapsULong)ImageSize , DI_LOCK_MEMREF ) == imgeOk )
++	if ( CAPSLockImageMemory ( ImageId , pImageBuffer , (Uint32)ImageSize , DI_LOCK_MEMREF ) == imgeOk )
+ 	{
+ 		struct CapsImageInfo cii;
+ 		int		i;
+@@ -467,7 +468,7 @@
+  * We need to update the track data by calling CAPSLockTrack
+  */
+ #ifdef HAVE_CAPSIMAGE
+-static void	IPF_CallBack_Trk ( struct CapsFdc *pc , CapsULong State )
++static void	IPF_CallBack_Trk ( struct CapsFdc *pc , Uint32 State )
+ {
+ 	int	Drive = State;				/* State is the drive number in that case */
+ 	struct CapsDrive *pd = pc->drive+Drive;		/* Current drive where the track change occurred */
+@@ -496,7 +497,7 @@
+  * Callback function used when the FDC change the IRQ signal
+  */
+ #ifdef HAVE_CAPSIMAGE
+-static void	IPF_CallBack_Irq ( struct CapsFdc *pc , CapsULong State )
++static void	IPF_CallBack_Irq ( struct CapsFdc *pc , Uint32 State )
+ {
+ 	LOG_TRACE(TRACE_FDC, "fdc ipf callback irq state=0x%x VBL=%d HBL=%d\n" , (int)State , nVBLs , nHBL );
+ 
+@@ -515,7 +516,7 @@
+  * -> copy the byte to/from the DMA's FIFO if it's a read or a write to the disk
+  */
+ #ifdef HAVE_CAPSIMAGE
+-static void	IPF_CallBack_Drq ( struct CapsFdc *pc , CapsULong State )
++static void	IPF_CallBack_Drq ( struct CapsFdc *pc , Uint32 State )
+ {
+ 	Uint8	Byte;
+ 
+diff -ruN a/Makefile.libretro b/Makefile.libretro
+--- ./Makefile.libretro	2020-10-09 01:10:23.000000000 +0100
++++ ./Makefile.libretro	2020-10-11 11:47:01.544882385 +0100
+@@ -225,7 +225,7 @@
+ ifeq ($(STATIC_LINKING_LINK),1)
+ 	$(AR) rcs $@ $(OBJECTS) 
+ else
+-	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) $(OBJECTS) -o $@ -lm $(ZLIB) $(SHARED)
++	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) $(OBJECTS) -o $@ -lm -lz $(SHARED) $(CAPSIMG_LDFLAGS)
+ endif
+ 
+ %.o: %.c

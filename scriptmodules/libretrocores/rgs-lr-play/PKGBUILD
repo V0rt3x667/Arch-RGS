@@ -1,0 +1,56 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-play
+pkgver=5907
+pkgrel=1
+pkgdesc="Libretro Core - Sony PlayStation 2"
+arch=('x86_64')
+url="https://purei.org"
+license=('MIT')
+depends=('glew')
+makedepends=(
+  'cmake'
+  'git'
+  'libglvnd'
+)
+source=("$pkgname::git+https://github.com/jpd002/Play-")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+  
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  git submodule init
+  git submodule update --init --recursive
+}
+
+build() {
+  cd "$pkgname/build"
+  
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_LIBRETRO_CORE=ON \
+    -DBUILD_PLAY=OFF \
+    -DBUILD_TESTS=OFF \
+    -DENABLE_AMAZON_S3=OFF
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm644 ./Source/ui_libretro/play_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ../License.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

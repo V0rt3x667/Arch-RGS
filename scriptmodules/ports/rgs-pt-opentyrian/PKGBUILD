@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-opentyrian
+pkgver=2.1.20130907.r115.822c719
+pkgrel=1
+pkgdesc="Port of the Classic DOS Game Tyrian"
+url="https://github.com/opentyrian/opentyrian/wiki"
+arch=('x86_64')
+license=('GPL2')
+depends=('sdl2_net')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/opentyrian/opentyrian")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  make PREFIX="${_installdir%/}"
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./opentyrian -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./{COPYING,NEWS,README} -t "${pkgdir}${_installdir%/}/share/doc"
+  install -Dm644 ./linux/man/opentyrian.6 -t "${pkgdir}${_installdir%/}/share/man/man6"
+}
+

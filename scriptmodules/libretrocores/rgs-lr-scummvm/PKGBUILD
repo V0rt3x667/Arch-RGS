@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-scummvm
+pkgver=93169
+pkgrel=1
+pkgdesc="Libretro Core - ScummVM"
+arch=('x86_64')
+url="https://github.com/libretro/scummvm"
+license=('GPL2')
+depends=('gcc-libs')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/scummvm")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname/backends/platform/libretro/build"
+
+  make
+}
+
+package() {
+  cd "$pkgname/backends/platform/libretro/build"
+
+  install -Dm644 ./scummvm_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

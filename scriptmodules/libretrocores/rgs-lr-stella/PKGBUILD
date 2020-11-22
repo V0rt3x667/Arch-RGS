@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-stella
+pkgver=6366
+pkgrel=1
+pkgdesc="Libretro Core - Atari 2600"
+arch=('x86_64')
+url="https://stella-emu.github.io"
+license=('GPL2')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/stella-emu/stella")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname/src/libretro"
+
+  make
+}
+
+package() {
+  cd "$pkgname/src/libretro"
+
+  install -Dm644 ./stella_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

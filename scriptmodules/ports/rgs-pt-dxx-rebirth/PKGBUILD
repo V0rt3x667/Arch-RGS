@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-dxx-rebirth
+pkgver=0.59.100.r1888.295619e63
+pkgrel=1
+pkgdesc="Descent 1 & Descent 2 Game Engine"
+arch=('x86_64')
+url="http://www.dxx-rebirth.com"
+license=('GPL3' 'custom:Parallax')
+depends=(
+  'glu'
+  'physfs'
+  'sdl_image'
+  'sdl_mixer'
+)
+makedepends=(
+  'git'
+  'scons'
+  'unzip'
+)
+source=("$pkgname::git+https://github.com/dxx-rebirth/dxx-rebirth")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  sed -ie "/^PREFIX =/s|${_installdir%/}|/usr/|" ./SConstruct
+  scons sharepath="${_installdir%/}/share"
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./{d1x-rebirth,d2x-rebirth}/d?x-rebirth -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./{d1x-rebirth,d2x-rebirth}/*.ini -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./{d1x-rebirth,d2x-rebirth}/*.xpm -t "${pkgdir}${_installdir%/}/share/pixmaps/"
+  install -Dm644 ./{d1x-rebirth,d2x-rebirth}/*.desktop -t "${pkgdir}${_installdir%/}/share/applications/"
+
+  install -Dm644 ./README.md "${pkgdir}${_installdir%/}/share/doc/README"
+  install -Dm644 ./d1x-rebirth/RELEASE-NOTES.txt "${pkgdir}${_installdir%/}/share/doc/D1X-RELEASE-NOTES"
+  install -Dm644 ./d2x-rebirth/RELEASE-NOTES.txt "${pkgdir}${_installdir%/}/share/doc/D2X-RELEASE-NOTES"
+  install -Dm644 ./COPYING.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

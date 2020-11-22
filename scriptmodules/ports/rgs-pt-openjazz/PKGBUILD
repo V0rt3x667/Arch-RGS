@@ -1,0 +1,36 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-openjazz
+pkgver=20190106.r47.b8bb914
+pkgrel=1
+pkgdesc="Open-Source Version of the Classic Jazz Jackrabbit Games"
+arch=('x86_64')
+url="http://alister.eu/jazz/oj"
+license=('GPL2')
+depends=(
+  'gcc-libs'
+  'sdl'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/AlisterT/openjazz")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  make PREFIX="${_installdir%/}"
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./{OpenJazz,openjazz.000} -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./{README.md,*.txt} -t "${pkgdir}${_installdir%/}/share/doc"
+}
+

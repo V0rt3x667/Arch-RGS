@@ -1,0 +1,38 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-fsuae
+pkgver=1719
+pkgrel=1
+pkgdesc="Libretro Core - Commodore Amiga 500, 500+, 600, 1200, 4000, CDTV & CD32"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-fsuae"
+license=('GPL2')
+depends=('glib2')
+makedepends=(
+  'gcc9'
+  'git'
+)
+source=("$pkgname::git+https://github.com/libretro/libretro-fsuae")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+  
+  ./autogen.sh
+  ./configure
+  make gen
+  make CC=gcc-9 CXX=g++-9
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./fsuae_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

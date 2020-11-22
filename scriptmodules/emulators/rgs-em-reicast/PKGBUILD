@@ -1,0 +1,56 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-reicast
+pkgver=20.04
+pkgrel=1
+pkgdesc="Sega Dreamcast Emulator"
+arch=('x86_64')
+url="http://reicast.com"
+license=(
+  'BSD'
+  'GPL2'
+)
+depends=(
+  'alsa-lib'
+  'libao'
+  'libglvnd'
+  'libpulse'
+  'python'
+  'udev'
+)
+makedepends=('cmake')
+source=("https://github.com/reicast/reicast-emulator/archive/r$pkgver.tar.gz")
+sha256sums=('bb7e1d2b871064dcc814f0ce440b2b18e4fec2b388d1d4b8b11adb6959fdb1ef')
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+prepare() {
+  cd "reicast-emulator-r$pkgver"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "reicast-emulator-r$pkgver/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "reicast-emulator-r$pkgver"
+
+  install -Dm755 ./build/reicast -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./reicast/linux/tools/reicast-joyconfig.py -t "${pkgdir}${_installdir%/}/bin/reicast-joyconfig"
+  install -Dm644 ./reicast/linux/mappings/*.cfg -t "${pkgdir}${_installdir%/}/share/$pkgname/mappings"
+  install -Dm644 ./reicast/linux/man/*.1 -t "${pkgdir}${_installdir%/}/share/man/man1"
+  install -Dm644 ./reicast/linux/reicast.desktop -t "${pkgdir}${_installdir%/}/share/applications"
+  install -Dm644 ./reicast/linux/reicast.png -t "${pkgdir}${_installdir%/}/share/pixmaps"
+  install -Dm644 ./docs/*.* -t "${pkgdir}${_installdir%/}/share/doc"
+  install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-fe-attractmode
+pkgver=2.6.1
+pkgrel=1
+pkgdesc="Graphical Front-End for Command Line Emulators"
+arch=('x86_64')
+url="http://www.attractmode.org"
+license=('GPL3')
+depends=(
+  'ffmpeg'
+  'libarchive'
+  'libxinerama'
+  'sfml'
+)
+source=(
+  "https://github.com/mickelson/attract/archive/v$pkgver.tar.gz"
+  "https://github.com/mickelson/attract/releases/download/v1.6.2/ATTRACT.MODE.intro.16-9.v6.1080p.mp4"
+  "https://github.com/mickelson/attract/releases/download/v1.6.2/ATTRACT.MODE.intro.4-3.v6.1080p.mp4"
+)
+sha256sums=(
+  '4c17641ce0a0b9ff77da5e75f0cb26cc48e4c6295ef57d86a37db18b2bd9fbe9'
+  '0a21286df3bd51edd24f6eb21a246f8a6576020d34ce3f5cfe93304dbbadc23b'
+  '5750cf26864a86d7625f52223ac1a4050ff4475a016bb4f94fc506b7558dbaf9'
+)
+_installdir="/opt/archrgs/frontends/$pkgname"
+
+prepare() {
+  cd attract-"$pkgver"
+
+  sed -e "s|\prefix=/usr/local|prefix=${_installdir}|g" -i ./Makefile
+  ##FIX LACKS FULL RELOC
+  sed -e "s|LIBS += -ldl -lGL|LIBS += -ldl -lGL -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now|g" -i ./Makefile
+}
+
+build() {
+  cd attract-"$pkgver"
+
+  make \
+    FE_HWACCEL_VAAPI=1 \
+    FE_HWACCEL_VDPAU=1
+}
+
+package() {
+  cd attract-"$pkgver"
+
+  make DESTDIR="${pkgdir}" install
+
+  install -Dm644 ../ATTRACT.MODE.intro.16-9.v6.1080p.mp4 "${pkgdir}${_installdir%/}/share/attract/intro/intro.mp4"
+  install -Dm644 ../ATTRACT.MODE.intro.4-3.v6.1080p.mp4 "${pkgdir}${_installdir%/}/share/attract/intro/intro_4x3.mp4"
+}
+

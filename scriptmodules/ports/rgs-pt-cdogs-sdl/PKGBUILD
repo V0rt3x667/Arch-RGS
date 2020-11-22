@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-cdogs-sdl
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="Enhanced SDL Port of C-Dogs (Cyberdogs 2)"
+arch=('x86_64')
+url="https://cxong.github.io/cdogs-sdl"
+license=('GPL2')
+depends=(
+  'gtk3'
+  'sdl2_image'
+  'sdl2_mixer'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+)
+source=(
+  "$pkgname::git+https://github.com/cxong/cdogs-sdl#tag=0.9.1"
+  "https://cxong.github.io/cdogs-sdl/missionpack.zip"
+)
+sha256sums=(
+  'SKIP'
+  '146fecd0ca467c68c100c3e7a1b3a08d7476408e2219036ce3e2cd54c4b8d04a'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  cmake -GNinja . \
+  -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+  -DCDOGS_DATA_DIR="${_installdir%/}"
+  ninja
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./src/{cdogs-sdl,cdogs-sdl-editor} -t "${pkgdir}${_installdir%/}"
+  cp -r ./{data,doc,dogfights,graphics,missions,music,sounds} "${pkgdir}${_installdir%/}"
+  cp -r ../missionpack/{dogfights,missions} "${pkgdir}${_installdir%/}"
+}
+

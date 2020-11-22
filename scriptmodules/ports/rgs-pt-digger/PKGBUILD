@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-digger
+pkgver=r296.a2bfc75
+pkgrel=1
+pkgdesc="Digger Digitally Remastered & Enhanced"
+arch=('x86_64')
+url="http://www.digger.org"
+license=('GPL2')
+depends=('sdl2')
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/sobomax/digger#commit=a2bfc7595e6b4119e4604d84a877c7adeed48980")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./digger -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ../{digger.txt,README.md} -t "${pkgdir}${_installdir%/}/docs"
+}
+

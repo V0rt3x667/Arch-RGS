@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-melonds
+pkgver=1590
+pkgrel=1
+pkgdesc="Libretro Core - Nintendo DS"
+arch=('x86_64')
+url="https://github.com/libretro/melonDS"
+license=('GPL3')
+depends=('libglvnd')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/melonDS")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  export LDFLAGS="$LDFLAGS -lpthread -Wl,-z,noexecstack"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./melonds_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

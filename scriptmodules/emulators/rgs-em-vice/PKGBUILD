@@ -1,0 +1,55 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-vice
+pkgver=3.4.r38933
+pkgrel=1
+pkgdesc="Commodore C64, C64DTV, C128, VIC20, PET, PLUS4 & CBM-II Emulator"
+arch=('x86_64')
+license=('GPL2')
+url="https://vice-emu.sourceforge.io"
+depends=(
+  'alsa-lib'
+  'libpulse'
+  'pciutils'
+  'portaudio'
+  'sdl2_image'
+)
+makedepends=(
+  'dos2unix'
+  'ffmpeg'
+  'libpcap' 
+  'libxaw'
+  'subversion'
+  'xa'
+  'xorg-bdftopcf'
+  'xorg-mkfontdir'
+)
+source=("$pkgname::svn://svn.code.sf.net/p/vice-emu/code/trunk")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s.r%s" "$(svn log -v --limit 1 ^/tags | awk '/^   A/ { print $2 }' | cut -c 8-10)" "$(svnversion | tr -d 'A-z')"
+}
+
+build() {
+  cd "$pkgname/vice"
+
+  ./autogen.sh
+  ./configure \
+    --prefix="${_installdir%/}" \
+    --enable-external-ffmpeg \
+    --enable-sdlui2 \
+    --enable-x64 \
+    --without-oss \
+    --enable-ethernet
+  make
+}
+
+package() {
+  cd "$pkgname/vice"
+
+  make DESTDIR="${pkgdir}" install
+}
+

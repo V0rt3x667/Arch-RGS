@@ -1,0 +1,78 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-opensurge
+pkgver=0.5.1.2.r116.b5f2288
+pkgrel=1
+pkgdesc="Fun 2D Retro Platformer & Game Engine"
+arch=('x86_64')
+url="https://github.com/alemart/opensurge"
+license=('GPL3')
+depends=('allegro')
+makedepends=(
+  'cmake'
+  'git'
+)
+source=(
+  "$pkgname::git+https://github.com/alemart/opensurge"
+  "git+https://github.com/alemart/surgescript"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+)
+OPTIONS=(!emptydirs)
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  for dir in $pkgname surgescript; do
+    cd ${srcdir}/$dir
+    if [[ -d build ]]; then
+      rm -rf build
+    fi
+    mkdir build
+  done
+}
+
+build() {
+  cd surgescript/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DICON_PATH="${_installdir%/}/share/pixmaps" \
+    -DMETAINFO_PATH="${_installdir%/}/share/metainfo" \
+    -DWANT_SHARED=ON \
+    -DWANT_STATIC=OFF
+  make
+
+  cd "$srcdir/$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DGAME_BINDIR="${_installdir%/}/bin" \
+    -DGAME_DATADIR="${_installdir%/}/share/$pkgname" \
+    -DDESKTOP_INSTALL="OFF" \
+    -DSURGESCRIPT_INCLUDE_PATH="$srcdir/surgescript/src" \
+    -DSURGESCRIPT_LIBRARY_PATH="$srcdir/surgescript"
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+
+  cd "$srcdir/surgescript/build"
+
+  make DESTDIR="${pkgdir}" install
+
+  rm -r "${pkgdir}/usr"
+}
+

@@ -1,0 +1,60 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-citra
+pkgver=r8857.1bb20571b
+pkgrel=1
+pkgdesc="Nintendo 3DS Emulator"
+arch=('x86_64')
+url="https://citra-emu.org"
+license=('GPL2')
+depends=(
+  'ffmpeg'
+  'qt5-multimedia'
+  'sdl2'
+)
+makedepends=(
+  'cmake' 
+  'git'
+)
+source=("$pkgname::git+https://github.com/citra-emu/citra")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  git submodule update --init --recursive
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DUSE_SYSTEM_CURL=ON \
+    -DENABLE_SDL2=ON \
+    -DENABLE_QT=ON \
+    -DENABLE_WEB_SERVICE=OFF \
+    -DCITRA_USE_BUNDLED_SDL2=OFF \
+    -DCITRA_USE_BUNDLED_QT=OFF \
+    -DENABLE_FFMPEG_AUDIO_DECODER=ON
+  make
+}
+
+package() {
+  cd "$pkgname"/build
+
+  make DESTDIR="$pkgdir" install
+}
+

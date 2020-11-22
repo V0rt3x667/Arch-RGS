@@ -1,0 +1,60 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-supertux
+pkgver=0.6.0.beta.1.r1985.6641f9a56
+pkgrel=1
+pkgdesc="Classic 2D Jump'n'Run Sidescroller Game"
+arch=('x86_64')
+url="https://supertux.org"
+license=('GPL3')
+depends=(
+  'boost-libs'
+  'glew'
+  'libraqm'
+  'libvorbis'
+  'openal'
+  'physfs'
+  'sdl2_image'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'mesa'
+  'optipng'
+)
+source=("$pkgname::git+https://github.com/SuperTux/supertux")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+
+  git submodule update --init
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DINSTALL_SUBDIR_BIN=bin \
+    -DUSE_SYSTEM_PHYSFS=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

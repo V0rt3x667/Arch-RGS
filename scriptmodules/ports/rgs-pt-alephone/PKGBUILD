@@ -1,0 +1,49 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-alephone
+pkgver=0
+pkgrel=1
+pkgdesc="Marathon 2 Game Engine"
+arch=('x86_64')
+url="https://alephone.lhowon.org"
+license=('GPL3')
+depends=(
+  'boost-libs'
+  'ffmpeg'
+  'glu'
+  'libmad'
+  'libvorbis'
+  'sdl2_image'
+  'sdl2_net'
+  'sdl2_ttf'
+  'zziplib'
+)
+makedepends=(
+  'boost'
+  'icoutils'
+  'mesa'
+)
+source=("$pkgname::git+https://github.com/Aleph-One-Marathon/alephone#tag=release-20200904")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname/Source_Files/Misc"
+
+  local _ver="$(grep '^#define A1_DISPLAY_VERSION' alephversion.h | cut -d\" -f2)"
+  printf "%s.%s" "$_ver" "$(git describe --tags | sed 's/^release-//;s/\([^-]*-g\)/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  ./autogen.sh \
+    --prefix="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  make PREFIX="${_installdir%/}" DESTDIR="${pkgdir}" install
+}
+

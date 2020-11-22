@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-prboom
+pkgver=640
+pkgrel=1
+pkgdesc="Libretro Core - PrBoom (Doom, Doom II, Final Doom & Doom IWAD Mods)"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-prboom"
+license=('GPL2')
+depends=('glibc')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-prboom")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./{prboom_libretro.so,prboom.wad} -t "${pkgdir}${_installdir%/}"
+}
+

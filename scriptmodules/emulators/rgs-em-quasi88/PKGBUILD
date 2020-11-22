@@ -1,0 +1,48 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-quasi88
+pkgver=0.6.4
+pkgrel=1
+pkgdesc="NEC PC-8801 Emulator"
+arch=('x86_64')
+url="https://www.eonet.ne.jp/~showtime/quasi88"
+license=('GPL')
+depends=(
+  'gcc-libs'
+  'sdl'
+)
+source=(
+  "https://www.eonet.ne.jp/~showtime/quasi88/release/quasi88-$pkgver.tgz"
+  "01_Fix_Build_Flags.patch"
+)
+sha256sums=(
+  '2c4329f9f77e02a1e1f23c941be07fbe6e4a32353b5d012531f53b06996881ff'
+  '447fdfdd5fded311010c1bd7a281ff1328e40ae2253d800e40a85e23d38665b6'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "quasi88-$pkgver"
+
+  patch -p1 -i ../01_Fix_Build_Flags.patch
+}
+
+build() {
+  cd "quasi88-$pkgver"
+
+  make LDFLAGS=${LDFLAGS} \
+    X11_VERSION=1 \
+    SDL_VERSION=1 \
+    ARCH=linux \
+    SOUND_SDL=1 \
+    USE_OLD_MAME_SOUND=1 \
+    USE_FMGEN=1
+}
+
+package() {
+  cd "quasi88-$pkgver"
+
+  mkdir -p "${pkgdir}${_installdir%/}/bin"
+
+  make DESTDIR="${pkgdir}" BINDIR="${pkgdir}${_installdir%/}/bin" install
+}
+

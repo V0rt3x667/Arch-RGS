@@ -1,0 +1,80 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-pcsx2
+pkgver=1.7.0.r518.9140f071f
+pkgrel=1
+pkgdesc="Sony PlayStation 2 Emulator"
+arch=('x86_64')
+url="http://www.pcsx2.net"
+license=('GPL2')
+depends=(
+  fmt
+  libaio
+  portaudio
+  sdl2
+  soundtouch
+  wxgtk3
+)
+makedepends=(
+  'cmake'
+  'git'
+  'png++'
+)
+source=(
+  "$pkgname::git+https://github.com/PCSX2/pcsx2"
+  "01_Fix_FMT_Not_Found.patch"
+)
+sha256sums=(
+  'SKIP'
+  '0ff127879b4006df0b9ff63e4d50add7de0539c0c97aec89144ec79eb5284ec3'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --tags | sed 's/^v//; s/-dev//; s/-/.r/; s/-g/./')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np1 -i ../01_Fix_FMT_Not_Found.patch
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DDOC_DIR=/doc/pcsx2 \
+    -DGAMEINDEX_DIR=/share/pcsx2 \
+    -DPLUGIN_DIR=/lib/pcsx2 \
+    -DDISABLE_ADVANCE_SIMD=ON \
+    -DDISABLE_BUILD_DATE=ON \
+    -DDISABLE_PCSX2_WRAPPER=ON \
+    -DENABLE_TESTS=OFF \
+    -DEXTRA_PLUGINS=ON \
+    -DGTK3_API=ON \
+    -DSDL2_API=ON \
+    -DPACKAGE_MODE=ON \
+    -DREBUILD_SHADER=ON \
+    -DUSE_LTO=OFF \
+    -DUSE_VTUNE=OFF \
+    -DXDG_STD=ON \
+    -DwxWidgets_CONFIG_EXECUTABLE=/usr/bin/wx-config-gtk3 \
+    -Wno-dev
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

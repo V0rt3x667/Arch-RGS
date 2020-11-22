@@ -1,0 +1,68 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-splitwolf
+pkgver=r674.44d197d
+pkgrel=1
+pkgdesc="2-4 Player Split-Screen Wolfenstein 3D & Spear of Destiny Port"
+arch=('x86_64')
+url="https://bitbucket.org/linuxwolf6/splitwolf/wiki/Home"
+license=('custom:MAME' 'custom:id')
+depends=('sdl2_mixer')
+makedepends=('git')
+source=("$pkgname::git+https://bitbucket.org/linuxwolf6/splitwolf#branch=scrubbed")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+_get_opts_splitwolf=(
+  'splitwolf-wolf3d VERSION_WOLF3D_SHAREWARE=y'
+  'splitwolf-wolf3d_apogee VERSION_WOLF3D_APOGEE=y'
+  'splitwolf-wolf3d_full VERSION_WOLF3D=y'
+  'splitwolf-sod VERSION_SPEAR=y'
+  'splitwolf-sodmp VERSION_SPEAR_MP=y'
+  'splitwolf-spear_demo VERSION_SPEAR_DEMO=y'
+)
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d bin ]]; then
+    rm -rf bin
+  fi
+  mkdir bin
+
+  git submodule init
+  git submodule update
+}
+
+build() {
+  cd "$pkgname"
+
+  local bin
+  local defs
+  local opt
+
+  for opt in "${_get_opts_splitwolf[@]}"; do
+    bin="${opt%% *}"
+    defs="${opt#* }"
+    CFLAGS+=" -DUSE_GPL -Wno-narrowing" \
+    make "$defs" PREFIX="${_installdir%/}" 
+    mv "$bin" "bin/$bin"
+  done
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./gamecontrollerdb.txt -t "${pkgdir}${_installdir%/}/bin"
+
+  for licence in ./license-{id,mame}.txt; do
+    install -Dm644 "$licence" "${pkgdir}${_licencedir%/}/$licence"
+  done
+}
+

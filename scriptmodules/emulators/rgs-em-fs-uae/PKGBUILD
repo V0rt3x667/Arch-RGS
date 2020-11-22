@@ -1,0 +1,80 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-fs-uae
+pkgver=3.0.5
+pkgrel=1
+pkgdesc="Commodore Amiga 500, 500+, 600, 1200, CDTV & CD32 Emulator"
+arch=('x86_64')
+url="https://fs-uae.net"
+license=(
+  'GPL2'
+  'custom:MAME'
+)
+depends=(
+  'glib2'
+  'libmpeg2'
+  'libpng' 
+  'openal'
+  'python'
+  'python-lhafile'
+  'sdl2'
+)
+makedepends=('git')
+source=(
+  "https://fs-uae.net/stable/$pkgver/fs-uae-$pkgver.tar.gz"
+  "https://fs-uae.net/stable/$pkgver/fs-uae-launcher-$pkgver.tar.gz"
+  "01_Remove_Python2.patch"
+  "git+https://github.com/FrodeSolheim/capsimg"
+)
+sha256sums=(
+  'f26ec42e03cf1a7b53b6ce0d9845aa45bbf472089b5ec046b3eb784ec6859fe3'
+  '27797a04b9fc0be2805ae992c2950ff6228383fa153eccefbdebfc6789ca76b6'
+  '19b19a89857fbbcf82685f7e67aca6b0fddf28355c9545a85dd79cf68984bdda'
+  'SKIP'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+prepare() {
+  cd "$srcdir/fs-uae-launcher-$pkgver"
+
+  patch -Np1 -i ../01_Remove_Python2.patch
+}
+
+build() {
+  ##Build FS-UAE
+  cd "$srcdir/fs-uae-$pkgver"
+
+  ./configure --prefix="${_installdir%/}"
+  make
+
+  ##Build FS-UAE Launcher (Configuration GUI)
+  cd "$srcdir/fs-uae-launcher-$pkgver"
+
+  make all
+
+  ##Build CAPSLib (IPF Support)
+  cd "$srcdir/capsimg/CAPSImg"
+
+  sh ./bootstrap.sh
+  ./configure
+  make
+}
+
+package() {
+  ##Install FS-UAE
+  cd "$srcdir/fs-uae-$pkgver"
+
+  make DESTDIR="${pkgdir}" install
+
+  ##Install FS-UAE Launcher (Configuration GUI)
+  cd "$srcdir/fs-uae-launcher-$pkgver"
+
+  make prefix="${_installdir%/}" DESTDIR="${pkgdir}" install
+
+  ##Install CAPSLib (IPF Support)
+  cd "$srcdir/capsimg/CAPSImg"
+
+  install -Dm644 ./libcapsimage.so.5.1 "${pkgdir}${_installdir%/}/bin/capsimg.so"
+  install -Dm644 ../LICENCE.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

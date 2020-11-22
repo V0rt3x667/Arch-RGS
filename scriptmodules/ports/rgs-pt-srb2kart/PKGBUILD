@@ -1,0 +1,64 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-srb2kart
+pkgver=1.1.r738.e2749f8f
+pkgrel=1
+pkgdesc="Kart Racing Mod Based On Sonic Robo Blast 2"
+arch=('x86_64')
+license=('GPL2')
+url="https://mb.srb2.org/showthread.php?t=43708"
+depends=(
+  'libgme'
+  'libpng'
+  'sdl2_mixer'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'glu'
+  'mesa'
+)
+source=(
+  "$pkgname::git+https://github.com/STJr/Kart-Public.git"
+  "https://gitlab.com/arch-rgs/arch-rgs-resources/-/archive/assets/rgs-pt-srb2kart/arch-rgs-resources-assets-$pkgname.tar.gz"
+)
+sha256sums=(
+  'SKIP'
+  '8d5fe3b339dc6adc639db55a9a5274557ffa865341e098871503187405d2d8bf'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+  mkdir -p assets/installer
+
+  cd "${srcdir}/assets"
+
+  ./Xtract.sh
+  mv ./assets/{*.kart,*.srb} "${srcdir}/${pkgname}/assets/installer"
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  make DESTDIR="${pkgdir}" install
+}
+

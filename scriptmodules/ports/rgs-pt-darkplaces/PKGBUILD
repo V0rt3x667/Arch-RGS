@@ -1,0 +1,37 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-darkplaces
+pkgver=0.8.2.r193.792cfa2c
+pkgrel=1
+pkgdesc="Quake 1 Game Engine."
+arch=('x86_64')
+url="https://gitlab.com/xonotic/darkplaces"
+license=('GPL2')
+depends=(
+  'alsa-lib'
+  'libjpeg-turbo'
+  'libxpm'
+  'sdl2'
+)
+makedepends=('git')
+source=("$pkgname::git+https://gitlab.com/xonotic/darkplaces")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "%s" "$(git describe --long | sed 's/^xonotic-v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
+}
+
+build() {
+  cd "$pkgname"
+
+  make OPTIM_RELEASE="${CFLAGS} ${LDFLAGS}" DP_LINK_TO_LIBJPEG=1 release
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 darkplaces-{dedicated,glx,sdl} -t "${pkgdir}${_installdir%/}/bin/"
+}
+

@@ -1,0 +1,47 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-mrboom
+pkgver=362
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Libretro Core - Mr.Boom"
+url="https://github.com/libretro/mrboom-libretro"
+license=('MIT')
+depends=(
+  'minizip'
+  'sdl2_mixer'
+)
+makedepends=(
+  'git'
+  'python2'
+)
+source=("$pkgname::git+https://github.com/libretro/mrboom-libretro")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+prepare() {
+  cd "$pkgname"
+
+  git submodule init
+  git submodule update --init --recursive
+}
+
+build() {
+  cd "$pkgname"
+
+  make LIBSDL2=1
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./mrboom_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
+}
+

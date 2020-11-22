@@ -1,0 +1,34 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-handy
+pkgver=220
+pkgrel=1
+pkgdesc="Libretro Core - Atari Lynx"
+arch=('x86_64')
+url="https://github.com/libretro/libretro-handy"
+license=('custom')
+depends=('gcc-libs')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/libretro-handy")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./handy_libretro.so -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./lynx/license.txt "${pkgdir}${_licencedir%/}/LICENCE"
+}
+
