@@ -23,6 +23,8 @@ function configure_rgs-lr-superflappybirds() {
 
   addPort "$md_id" "superflappybirds" "Super Flappy Birds" "$md_inst/superflappybirds_libretro.so"
 
+  [[ "$md_mode" == "remove" ]] && return
+
   ensureSystemretroconfig "ports/superflappybirds"
 }
 
