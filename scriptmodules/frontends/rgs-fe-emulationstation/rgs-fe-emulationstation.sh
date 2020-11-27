@@ -151,7 +151,6 @@ function init_input_rgs-fe-emulationstation() {
 function copy_inputscripts_rgs-fe-emulationstation() {
   mkdir -p "$md_inst/scripts"
   cp -r "$md_data/data/"{configscripts,*.sh} "$md_inst/scripts"
-  #cp -r "$scriptdir/scriptmodules/$md_type/$md_id/data/"{configscripts,*.sh} "$md_inst/scripts"
   chmod +x "$md_inst/scripts/inputconfiguration.sh"
 }
 
@@ -179,7 +178,6 @@ _EOF_
   chmod +x /usr/bin/emulationstation
   mkdir -p /usr/local/share/{icons,applications}
   cp "$md_data/data/Arch-RGS.svg" "/usr/local/share/icons"
-  #cp "$scriptdir/scriptmodules/$md_type/$md_id/data/Arch-RGS.svg" "/usr/local/share/icons"
   cat >/usr/local/share/applications/Arch-RGS.desktop <<_EOF_
 [Desktop Entry]
 Type=Application
