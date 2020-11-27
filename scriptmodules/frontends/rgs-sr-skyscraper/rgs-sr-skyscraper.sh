@@ -168,7 +168,7 @@ function _init_config_rgs-sr-skyscraper() {
   [[ ! -f "$scraper_conf_dir/config.ini" ]] && cp "$md_inst/share/skyscraper/config.ini.example" "$scraper_conf_dir/config.ini"
 
   ##COPY REQUIRED FILES
-  cp -rf "$md_inst/share/skyscraper/" "$scraper_conf_dir"
+  cp -rf "$md_inst/share/skyscraper/*" "$scraper_conf_dir"
 
   ##CREATE THE IMPORT FOLDERS
   local folder
