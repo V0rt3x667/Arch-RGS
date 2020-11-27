@@ -19,11 +19,14 @@ function remove_rgs-lr-openlara() {
 }
 
 function configure_rgs-lr-openlara() {
-  mkRomDir "tombraider"
+  setConfigRoot "ports"
 
-  ensureSystemretroconfig "tombraider"
+  mkRomDir "tomb_raider"
 
-  addEmulator 0 "$md_id" "tombraider" "$md_inst/openlara_libretro.so"
-  addSystem "tombraider"
+  addPort "$md_id" "tomb_raider" "$md_inst/openlara_libretro.so"
+
+  [[ "$md_mode" == "remove" ]] && return
+
+  ensureSystemretroconfig "tomb_raider"
 }
 
