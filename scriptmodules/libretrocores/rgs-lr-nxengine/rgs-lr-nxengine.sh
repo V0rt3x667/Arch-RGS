@@ -19,22 +19,12 @@ function remove_rgs-lr-nxengine() {
 }
 
 function configure_rgs-lr-nxengine() {
-  local script
+  mkRomDir "ports/cavestory"
+
   setConfigRoot "ports"
 
-  addPort "$md_id" "cavestory" "Cave Story" "$md_inst/nxengine_libretro.so"
-  local file="$romdir/ports/Cave Story.sh"
-  ##Custom launch script - if the data files are not found, warn the user
-  cat >"$file" << _EOF_
-#!/bin/bash
-if [[ ! -f "$romdir/ports/CaveStory/Doukutsu.exe" ]]; then
-    dialog --no-cancel --pause "$md_help" 22 76 15
-else
-    "$rootdir/supplementary/runcommand/runcommand.sh" 0 _PORT_ cavestory "$romdir/ports/CaveStory/Doukutsu.exe"
-fi
-_EOF_
-  chown "$user:$user" "$file"
-  chmod +x "$file"
+  addPort "$md_id" "cavestory" "Cave Story" "$md_inst/nxengine_libretro.so" "$romdir/ports/cavestory/Doukutsu.exe"
 
   ensureSystemretroconfig "ports/cavestory"
 }
+
