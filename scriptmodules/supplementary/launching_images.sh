@@ -15,8 +15,8 @@ function depends_launching_images() {
     feh
     imagemagick
     librsvg
+    xorg-xrandr
   )
-
   getDepends "${depends[@]}"
 }
 
@@ -38,7 +38,7 @@ function _show_images_launching_images() {
   image="$1"
 
   feh \
-    --cycle-once \
+    --on-last-slide quit \
     --hide-pointer \
     --fullscreen \
     --auto-zoom \
@@ -59,13 +59,13 @@ function _dialog_menu_launching_images() {
 
   [[ "$#" -eq 0 ]] && return 1
 
-  i=1
-  for opt in "$@"; do
-    options+=("$i" "$opt")
-    ((i++))
-  done
-  choice=$(dialog --backtitle "$__backtitle" --menu "$text" 22 86 16 "${options[@]}" 2>&1 >/dev/tty) || return
-  echo "${options[choice *2-1]}"
+    i=1
+    for opt in "$@"; do
+        options+=( "$i" "$opt" )
+        ((i++))
+    done
+    choice=$(dialog --backtitle "$__backtitle" --menu "$text" 22 86 16 "${options[@]}" 2>&1 >/dev/tty) || return
+    echo "${options[choice*2-1]}"
 }
 
 function _set_theme_launching_images() {
@@ -166,18 +166,18 @@ function _dialog_yesno_launching_images() {
 }
 
 function _set_no_ask_launching_images() {
-    _dialog_yesno_launching_images "If you enable \"no_ask\" all generated images will be automatically accepted.\n\nDo you want to enable it?" \
-    && echo "--no-ask"
+  _dialog_yesno_launching_images "If you enable \"no_ask\" all generated images will be automatically accepted.\n\nDo you want to enable it?" \
+  && echo "--no-ask"
 }
 
 function _set_no_logo_launching_images() {
-    _dialog_yesno_launching_images "If you enable \"no_logo\" the images won't have the system logo (useful for tronkyfran theme, for example).\n\nDo you want to enable it?" \
-    && echo "--no-logo"
+  _dialog_yesno_launching_images "If you enable \"no_logo\" the images won't have the system logo (useful for tronkyfran theme, for example).\
+    \n\nDo you want to enable it?" && echo "--no-logo"
 }
 
 function _set_logo_belt_launching_images() {
-    _dialog_yesno_launching_images "If you enable \"logo_belt\" the image will have a semi-transparent white belt behind the logo.\n\nDo you want to enable it?" \
-    && echo "--logo-belt"
+  _dialog_yesno_launching_images "If you enable \"logo_belt\" the image will have a semi-transparent white belt behind the logo.\
+    \n\nDo you want to enable it?" && echo "--logo-belt"
 }
 
 function _get_all_launching_images() {
@@ -202,8 +202,7 @@ function _get_config_file_launching_images() {
 }
 
 function _load_config_launching_images() {
-  echo "$(
-    loadModuleConfig \
+  echo "$(loadModuleConfig \
       'theme=' \
       'extension=png' \
       'show_timeout=5' \
@@ -215,7 +214,7 @@ function _load_config_launching_images() {
       'no_logo=' \
       'solid_bg_color=' \
       'system=' \
-      'logo_belt='
+      'logo_belt=' \
   )"
 }
 
@@ -227,47 +226,51 @@ function _settings_launching_images() {
 
   iniConfig ' = ' '"' "$current_cfg"
 
-  while true; do
-    eval $(_load_config_launching_images)
-    options=(config_file "$([[ "$config_file" == *"$theme.cfg" ]] && echo "$(basename "$config_file")")"
-    theme "$theme"
-    system "$(
-      if [[ -z "$system" ]]; then
-        echo "all systems in es_systems.cfg"
-      else
-        echo "$system" | cut -d' ' -f2
-      fi
-    )"
-    extension ".$extension"
-    loading_text "\"$loading_text\""
-    press_button_text "\"$press_button_text\""
-    loading_text_color "$loading_text_color"
-    press_button_text_color "$press_button_text_color"
-    show_timeout "$([[ -n "$no_ask" ]] && echo "don't show (see no_ask)" || echo "$show_timeout seconds")"
-    no_ask "$([[ -n "$no_ask" ]] && echo true || echo false)"
-    no_logo "$([[ -n "$no_logo" ]] && echo true || echo false)"
-    logo_belt "$([[ -n "$logo_belt" ]] && echo true || echo false)"
-    solid_bg_color "$(
-      if [[ -z "$solid_bg_color" ]]; then
-        echo false
-      elif [[ -z "$(echo "$solid_bg_color" | cut -s -d' ' -f2)" ]]; then
-        echo "get from the theme"
-      else
-        echo "$solid_bg_color" | cut -s -d' ' -f2
-      fi
-    )"
-    )
-    choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    while true; do
+        eval $(_load_config_launching_images)
 
-    [[ -z "$choice" ]] && break
+        options=( 
+            config_file "$(
+               [[ "$config_file" == *"$theme.cfg" ]] && echo "$(basename "$config_file")"
+            )"
+            theme "$theme"
+            system "$(
+                if [[ -z "$system" ]]; then
+                    echo "all systems in es_systems.cfg"
+                else
+                    echo "$system" | cut -d' ' -f2
+                fi
+            )"
+            extension ".$extension"
+            loading_text "\"$loading_text\""
+            press_button_text "\"$press_button_text\""
+            loading_text_color "$loading_text_color"
+            press_button_text_color "$press_button_text_color"
+            show_timeout "$( [[ -n "$no_ask" ]] && echo "don't show (see no_ask)" || echo "$show_timeout seconds")"
+            no_ask "$( [[ -n "$no_ask" ]] && echo true || echo false)"
+            no_logo "$( [[ -n "$no_logo" ]] && echo true || echo false)"
+            logo_belt "$( [[ -n "$logo_belt" ]] && echo true || echo false)"
+            solid_bg_color "$(
+                if [[ -z "$solid_bg_color" ]]; then
+                    echo false
+                elif [[ -z "$(echo "$solid_bg_color" | cut -s -d' ' -f2)" ]]; then
+                    echo "get from the theme"
+                else
+                    echo "$solid_bg_color" | cut -s -d' ' -f2
+                fi
+            )"
+        )
+        choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
-    if [[ "$choice" = "config_file" ]]; then
-      config_file=$(_manage_config_file_launching_images)
-      continue
-    fi
+        [[ -z "$choice" ]] && break
 
-    iniSet "$choice" "$(_set_${choice}_launching_images)"
-  done
+        if [[ "$choice" = "config_file" ]]; then
+            config_file=$(_manage_config_file_launching_images)
+            continue
+        fi
+
+        iniSet "$choice" "$(_set_${choice}_launching_images)"
+    done
 }
 
 function _manage_config_file_launching_images() {

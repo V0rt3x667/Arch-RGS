@@ -127,7 +127,7 @@ function get_options() {
       ALL_SYSTEMS_FLAG="1"
       ;;
 
-      #H --list-systems               List the installed systems on your RetroPie
+      #H --list-systems               List the installed systems on your archrgs
       #H                              (get this info from es_systems.cfg)
     --list-systems)
       list_systems
@@ -287,7 +287,7 @@ function list_themes() {
 }
 
 function list_systems() {
-  xmlstarlet sel -t -v "/systemList/system/name" "$ES_SYSTEMS_CFG" | grep -v retropie
+  xmlstarlet sel -t -v "/systemList/system/name" "$ES_SYSTEMS_CFG" | grep -v archrgs
 }
 
 function check_argument() {
@@ -316,10 +316,9 @@ function show_image() {
 
   local image="$1"
 
-  # if we are running under X use feh otherwise try to use fbi
   if [[ "$IS_RUNNING_X" == 'true' ]]; then
     feh \
-      --cycle-once \
+      --on-last-slide quit \
       --hide-pointer \
       --fullscreen \
       --auto-zoom \
@@ -335,7 +334,7 @@ function get_systems() {
   [[ -n "$SYSTEMS_ARRAY" ]] && return 0
   local system_list
   if [[ "$ALL_SYSTEMS_FLAG" = "1" ]]; then
-    system_list=$(ls -d "$THEME_DIR"/*/ | xargs basename -a | grep -v 'retropie\|art\|_inc\|assets')
+    system_list=$(ls -d "$THEME_DIR"/*/ | xargs basename -a | grep -v 'archrgs\|art\|_inc\|assets')
   else
     system_list=$(list_systems)
   fi
@@ -473,26 +472,26 @@ function proceed() {
     echo "\"PRESS A BUTTON\" text......: $PRESS_BUTTON_TEXT\n"
     echo "\"PRESS A BUTTON\" text color: $PRESS_BUTTON_TEXT_COLOR\n"
 
-    [[ "$NO_ASK" = "1" ]] &&
-      echo "Do not ask for confirmation (blindly accept generated images).\n" ||
-      echo "Show image timeout.........: $SHOW_TIMEOUT\n"
+        [[ "$NO_ASK" = "1" ]] \
+        && echo "Do not ask for confirmation (blindly accept generated images).\n" \
+        || echo "Show image timeout.........: $SHOW_TIMEOUT\n"
 
-    [[ "$SOLID_BG_COLOR_FLAG" = "1" ]] &&
-      echo "Solid background color.....: ${SOLID_BG_COLOR:-get from the theme}\n"
+        [[ "$SOLID_BG_COLOR_FLAG" = "1" ]] \
+        && echo "Solid background color.....: ${SOLID_BG_COLOR:-get from the theme}\n"
 
-    [[ "$NO_LOGO" = "1" ]] &&
-      echo "The images will be created with no system logo.\n"
+        [[ "$NO_LOGO" = "1" ]] \
+        && echo "The images will be created with no system logo.\n"
 
-    [[ "$LOGO_BELT" = "1" ]] &&
-      echo "Put a semitransparent horizontal belt behind the system logo.\n"
+        [[ "$LOGO_BELT" = "1" ]] \
+        && echo "Put a semitransparent horizontal belt behind the system logo.\n"
 
     echo "\n\nDO YOU WANT TO PROCEED?\n"
   )
 
-  dialog \
-    --title " SETTINGS SUMMARY " \
-    --yesno "$msg" \
-    20 75 || exit 0
+    dialog \
+      --title " SETTINGS SUMMARY " \
+      --yesno "$msg" \
+      20 75 || exit 0
 }
 
 function create_launching_image() {
@@ -528,8 +527,7 @@ function create_launching_image() {
     return 1
   fi
 
-  # XXX: decide if this quality reducing is needed.
-  convert "$TMP_LAUNCHING" -quality 80 "$FINAL_IMAGE.$EXT"
+  convert "$TMP_LAUNCHING" -quality 100 "$FINAL_IMAGE.$EXT"
 } # end of create_launching_image
 
 # ImageMagick tricks go in these functions ###################################
@@ -591,14 +589,14 @@ function add_logo() {
     return 1
   fi
 
-  convert -background none \
-    -resize "450x176" \
-    "$logo" "$TMP_LOGO"
-
-  if ! [[ -f "$TMP_LOGO" ]]; then
-    echo "WARNING: we had some problem when converting \"$SYSTEM\" logo image."
-    return 1
-  fi
+    convert -background none \
+      -resize "450x176" \
+      "$logo" "$TMP_LOGO"
+    
+    if ! [[ -f "$TMP_LOGO" ]]; then
+        echo "WARNING: we had some problem when converting \"$SYSTEM\" logo image."
+        return 1
+    fi
 
   convert "$TMP_LAUNCHING" \
     -gravity center "$TMP_LOGO" \
@@ -609,8 +607,8 @@ function add_logo() {
 
 function add_text() {
   local font=
-
   font=$(get_data_from_theme_xml font)
+
   if [[ -z "$font" ]]; then
     echo "WARNING: No font found for \"$SYSTEM\" system."
     return 1
@@ -632,15 +630,12 @@ function add_text() {
       -fill "$PRESS_BUTTON_TEXT_COLOR" \
       -annotate +0+230 "$PRESS_BUTTON_TEXT" \
       "$TMP_LAUNCHING"
-
   return $?
 }
 
 # start here ################################################################
 
 trap safe_exit SIGHUP SIGINT SIGQUIT SIGKILL SIGTERM
-
-check_dep
 
 get_options "$@"
 
@@ -699,3 +694,4 @@ dialog \
   20 60
 
 safe_exit 0
+
