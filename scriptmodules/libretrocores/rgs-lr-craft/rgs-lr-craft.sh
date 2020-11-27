@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-craft"
 archrgs_module_desc="Craft (MineCraft Clone) Libretro Core"
-archrgs_module_help="ROM Extensions: n/a"
+archrgs_module_help="ROM Extensions: N/A"
 archrgs_module_licence="MIT https://raw.githubusercontent.com/libretro/Craft/master/LICENSE.md"
 archrgs_module_section="libretrocores"
 
@@ -23,7 +23,7 @@ function configure_rgs-lr-craft() {
 
   addPort "$md_id" "craft" "Craft" "$md_inst/craft_libretro.so"
 
-  mkRomDir "ports/craft"
+  [[ "$md_mode" == "remove" ]] && return
 
   ensureSystemretroconfig "ports/craft"
 }
