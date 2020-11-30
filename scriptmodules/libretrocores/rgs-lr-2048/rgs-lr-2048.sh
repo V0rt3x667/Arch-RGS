@@ -20,9 +20,9 @@ function remove_rgs-lr-2048() {
 
 function configure_rgs-lr-2048() {
   setConfigRoot "ports"
-  
+
   addPort "$md_id" "2048" "2048" "$md_inst/2048_libretro.so"
-  
+
   ensureSystemretroconfig "ports/2048"
 }
 
