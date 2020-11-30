@@ -52,4 +52,3 @@ function archiveExtract() {
 function archiveCleanup() {
   [[ -d "$arch_dir" ]] && rm -rf "$arch_dir"
 }
-
