@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-bsnes-mercury
-pkgver=318
+pkgver=324
 pkgrel=1
 pkgdesc="Libretro Core - Super Nintendo Entertainment System"
 arch=('x86_64')
@@ -8,9 +8,16 @@ url="https://github.com/libretro/bsnes-mercury"
 license=('GPL3')
 depends=('gcc-libs')
 makedepends=('git')
-source=("$pkgname::git+https://github.com/libretro/bsnes-mercury#commit=4a382621da58ae6da850f1bb003ace8b5f67968c")
+source=("$pkgname::git+https://github.com/libretro/bsnes-mercury")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+
+  ##SURPRESS UNDEFINED REFERENCE ERRORS WHEN BUILDING THE BALANCED CORE
+  sed -e "s|--no-undefined -Wl,||g" -i ./Makefile
+}
 
 pkgver() {
   cd "$pkgname"
@@ -21,29 +28,16 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  local profile
-  profile=(
-    'accuracy'
-    'balanced'
-    'performance'
-  )
-  for p in "${profile[@]}"; do
-    make profile=${p}
+  for profile in 'accuracy' 'balanced' 'performance'; do
+    make clean
+    make PROFILE="$profile"
   done
 }
 
 package() {
   cd "$pkgname"
 
-  local profile
-  profile=(
-    'accuracy'
-    'balanced'
-    'performance'
-  )
-
-  for p in "${profile[@]}"; do
-    install -Dm644 ./out/bsnes_mercury_${p}_libretro.so -t "${pkgdir}${_installdir%/}"
+  for profile in 'accuracy' 'balanced' 'performance'; do
+    install -Dm644 ./bsnes_mercury_"$profile"_libretro.so -t "${pkgdir}${_installdir%/}"
   done
 }
-
