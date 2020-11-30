@@ -160,7 +160,7 @@ function hasPackage() {
 ## @brief Calls pacman -Syu (if it has not been called before).
 function pacmanUpdate() {
   if [[ "$__pacman_update" != "1" ]]; then
-    pacman -Syu --noconfirm
+    pacman -Syyu --noconfirm
     __pacman_update="1"
   fi
 }
