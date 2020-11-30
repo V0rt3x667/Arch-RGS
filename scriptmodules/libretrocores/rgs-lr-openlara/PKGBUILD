@@ -3,17 +3,14 @@ pkgname=rgs-lr-openlara
 pkgver=1059
 pkgrel=1
 arch=('x86_64')
-pkgdesc="Libretro Core - Tomb Raider"
+pkgdesc="Libretro Core - Tomb Raider Game Engine"
 url="https://github.com/libretro/OpenLara"
 license=('BSD')
 depends=(
   'libglvnd'
   'libpulse'
 )
-makedepends=(
-  'gcc9'
-  'git'
-)
+makedepends=('git')
 source=("$pkgname::git+https://github.com/libretro/OpenLara")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname"
@@ -28,7 +25,7 @@ pkgver() {
 build() {
   cd "$pkgname/src/platform/libretro"
 
-  make CC=gcc-9
+  make CFLAGS+="-fcommon -I./libretro-common/include"
 }
 
 package() {
@@ -36,7 +33,5 @@ package() {
 
   install -Dm644 ./openlara_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 "$srcdir/$pkgname/LICENSE" "${pkgdir}${_licencedir%/}/LICENCE"
-  install -dm644 "${pkgdir}${_installdir%/}/data"
-  cp -r "$srcdir/$pkgname"/bin/{audio,level,*.json} "${pkgdir}${_installdir%/}/data"
 }
 
