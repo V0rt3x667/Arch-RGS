@@ -21,12 +21,17 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  make
+  for emutype in x64 x64dtv x64sc x128 xpet xplus4 xvic; do
+    make clean
+    make EMUTYPE="$emutype"
+  done
 }
 
 package() {
   cd "$pkgname"
 
-  install -Dm644 ./vice_x64_libretro.so -t "${pkgdir}${_installdir%/}"
+  for emutype in x64 x64dtv x64sc x128 xpet xplus4 xvic; do
+    install -Dm644 ./vice_"$emutype"_libretro.so -t "${pkgdir}${_installdir%/}"
+  done
 }
 
