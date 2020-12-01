@@ -1,16 +1,13 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-puae
-pkgver=1135
+pkgver=1150
 pkgrel=1
 pkgdesc="Libretro Core - Commodore Amiga 500, 500+, 600, 1200, 4000, CDTV & CD32"
 arch=('x86_64')
 url="https://github.com/libretro/libretro-uae"
 license=('GPL2')
 depends=('glibc')
-makedepends=(
-  'gcc9'
-  'git'
-)
+makedepends=('git')
 source=("$pkgname::git+https://github.com/libretro/libretro-uae")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname"
@@ -30,7 +27,7 @@ prepare() {
 build() {
   cd "$pkgname"
 
-  make CC=gcc-9
+  make
 }
 
 package() {
@@ -38,4 +35,3 @@ package() {
 
   install -Dm644 ./puae_libretro.so -t "${pkgdir}${_installdir%/}"
 }
-
