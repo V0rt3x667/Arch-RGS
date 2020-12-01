@@ -164,17 +164,16 @@ function archrgs_callModule() {
     ;;
   install|install_bin)
     action="Installing"
-    ##REMOVE ANY PREVIOUS INSTALL FOLDER BEFORE INSTALLING
-    if ! hasFlag "${__mod_flags[$md_idx]}" "noinstclean"; then
-      rmDirExists "$md_inst"
-    fi
+    ##REMOVE ANY PREVIOUS INSTALL FOLDER BEFORE INSTALLING EXCEPT FOR PKGBUILDS
     if [[ $md_idx = rgs-* ]]; then
       return
-    else
+    elif
+      ! hasFlag "${__mod_flags[$md_idx]}" "noinstclean"; then
+      rmDirExists "$md_inst"
       mkdir -p "$md_inst"
+      pushd "$md_build" 2>/dev/null
+      pushed=$?
     fi
-    pushd "$md_build" 2>/dev/null
-    pushed=$?
     ;;
   configure)
     action="Configuring"
@@ -205,8 +204,12 @@ function archrgs_callModule() {
       pushed=$?
       "configure_${md_id}"
     fi
-    rm -rf "$md_inst"
-    printMsgs "console" "Removed directory $md_inst"
+    if [[ $md_idx = rgs-* ]]; then
+      return
+    else
+      rm -rf "$md_inst"
+      printMsgs "console" "Removed directory $md_inst"
+    fi
     ;;
   install)
     if fnExists "$function"; then
