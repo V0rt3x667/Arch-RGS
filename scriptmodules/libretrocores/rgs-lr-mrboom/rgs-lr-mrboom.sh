@@ -21,10 +21,7 @@ function remove_rgs-lr-mrboom() {
 function configure_rgs-lr-mrboom() {
   setConfigRoot "ports"
 
-  mkRomDir "ports/mrboom"
-
   addPort "$md_id" "mrboom" "Mr.Boom" "$md_inst/mrboom_libretro.so"
 
   ensureSystemretroconfig "ports/mrboom"
 }
-
