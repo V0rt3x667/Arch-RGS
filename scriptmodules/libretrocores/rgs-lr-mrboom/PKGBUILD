@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-mrboom
-pkgver=362
+pkgver=367
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Libretro Core - Mr.Boom"
@@ -35,7 +35,7 @@ prepare() {
 build() {
   cd "$pkgname"
 
-  make LIBSDL2=1
+  make
 }
 
 package() {
