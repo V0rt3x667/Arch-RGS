@@ -742,7 +742,15 @@ function show_launch() {
 
   if [[ -n "$image" ]]; then
     if [[ -n "$DISPLAY" ]]; then
-      feh -F -N -Z -Y -q "$image" &&>/dev/null
+      feh \
+        --on-last-slide quit \
+        --hide-pointer \
+        --fullscreen \
+        --auto-zoom \
+        --no-menus \
+        --quiet \
+        --slideshow-delay "$IMAGE_DELAY" \
+        "$image" &&>/dev/null  
       IMG_PID=$!
       sleep "$IMAGE_DELAY"
     fi
@@ -880,4 +888,3 @@ function runcommand() {
 }
 
 runcommand "$@"
-
