@@ -574,20 +574,20 @@ ${COMMAND//\$/\\\$}
 _EOF_
     chmod +x "$xinitrc"
 
-    # rewrite command to launch our xinit script (if not startx)
+    ##REWRITE COMMAND TO LAUNCH OUR XINIT SCRIPT (IF NOT STARTX)
     if ! [[ "$COMMAND" =~ ^startx ]]; then
       COMMAND="xinit $xinitrc"
     fi
 
-    # workaround for launching xserver on correct/user owned tty
-    # see https://github.com/RetroPie/RetroPie-Setup/issues/1805
-    # if no TTY env var is set, try and get it - eg if launching a ports script or runcommand manually
+    ##WORKAROUND FOR LAUNCHING XSERVER ON CORRECT/USER OWNED TTY
+    ##SEE https://github.com/RetroPie/RetroPie-Setup/issues/1805
+    ##IF NO TTY ENVIRONMENT VARIABLE IS SET, TRY AND GET IT - EG IF LAUNCHING A PORTS SCRIPT OR RUNCOMMAND MANUALLY
     if [[ -z "$TTY" ]]; then
       TTY=$(tty)
       TTY=${TTY:8:1}
     fi
 
-    # if we managed to get the current tty then try and use it
+    ##IF WE MANAGED TO GET THE CURRENT TTY THEN TRY AND USE IT
     if [[ -n "$TTY" ]]; then
       COMMAND="$COMMAND -- vt$TTY -keeptty"
     fi
@@ -600,18 +600,16 @@ function mode_switch() {
   local separator=":"
   local mode_id=(${1/${separator}/ })
 
-  # if the requested mode is the same as the current mode, don't switch
+  ##IF THE REQUESTED MODE IS THE SAME AS THE CURRENT MODE, DON'T SWITCH
   [[ "${mode_id[*]}" == "${MODE_CUR[0]} ${MODE_CUR[1]}" ]] && return 1
 
   if [[ "$HAS_MODESET" == "x11" ]]; then
-    # query the target resolution
+    ##QUERY THE TARGET RESOLUTION
     MODE_CUR=($(get_${HAS_MODESET}_mode_info "${mode_id[*]}"))
-    # set target resolution
+    ##SET TARGET RESOLUTION
     $XRANDR --output "${MODE_CUR[0]}" --mode "${MODE_CUR[1]}"
-
     [[ "$?" -eq 0 ]] && return 0
   fi
-
   return 1
 }
 
@@ -619,10 +617,10 @@ function retroarch_append_config() {
   local conf="/dev/shm/retroarch.cfg"
   local dim
 
-  # only for retroarch emulators
+  ##ONLY FOR RETROARCH EMULATORS
   [[ "$EMULATOR" != rgs-lr-* ]] && return
 
-  # make sure tmp folder exists for unpacking archives
+  ##MAKE SURE TMP FOLDER EXISTS FOR UNPACKING ARCHIVES
   mkdir -p "/tmp/retroarch"
 
   rm -f "$conf"
@@ -630,23 +628,23 @@ function retroarch_append_config() {
   iniConfig " = " '"' "$conf"
 
   if [[ -n "$HAS_MODESET" && "${MODE_CUR[5]}" -gt 0 ]]; then
-    # set video_refresh_rate in our config to the same as the screen refresh
+    ##SET VIDEO_REFRESH_RATE IN OUR CONFIG TO THE SAME AS THE SCREEN REFRESH
     iniSet "video_refresh_rate" "${MODE_CUR[5]}"
   fi
 
-  # if the ROM has a custom configuration then append that too
+  ##IF THE ROM HAS A CUSTOM CONFIGURATION THEN APPEND THAT TOO
   if [[ -f "$ROM.cfg" ]]; then
     conf+="'|'\"$ROM.cfg\""
   fi
 
-  # if we already have an existing appendconfig parameter, we need to add our configs to that
+  ##IF WE ALREADY HAVE AN EXISTING APPENDCONFIG PARAMETER, WE NEED TO ADD OUR CONFIGS TO THAT
   if [[ "$COMMAND" =~ "--appendconfig" ]]; then
     COMMAND=$(echo "$COMMAND" | sed "s#\(--appendconfig *[^ $]*\)#\1'|'$conf#")
   else
     COMMAND+=" --appendconfig $conf"
   fi
 
-  # append any NETPLAY configuration
+  ##APPEND ANY NETPLAY CONFIGURATION
   if [[ "$NETPLAY" -eq 1 ]] && [[ -f "$RETRONETPLAY_CONF" ]]; then
     source "$RETRONETPLAY_CONF"
     COMMAND+=" -$__netplaymode $__netplayhostip_cfile --port $__netplayport --nick $__netplaynickname"
@@ -660,7 +658,7 @@ function get_sys_command() {
     exit 1
   fi
 
-  # get system & rom specific emulator if set
+  ##GET SYSTEM & ROM SPECIFIC EMULATOR IF SET
   local emulator
   emulator="$(default_emulator get emu_sys)"
   if [[ -z "$emulator" ]]; then
@@ -673,8 +671,8 @@ function get_sys_command() {
   fi
   EMULATOR="$emulator"
 
-  # get default emulator for system + rom combination
-  # try the old key first and convert to the new key if found
+  ##GET DEFAULT EMULATOR FOR SYSTEM & ROM COMBINATION
+  ##TRY THE OLD KEY FIRST AND CONVERT TO THE NEW KEY IF FOUND
   emulator="$(default_emulator get emu_rom_old)"
 
   if [[ -n "$emulator" ]]; then
@@ -688,20 +686,20 @@ function get_sys_command() {
 
   COMMAND="$(default_emulator get emu_cmd)"
 
-  # replace tokens
+  ##REPLACE TOKENS
   COMMAND="${COMMAND//\%ROM\%/\"$ROM\"}"
   COMMAND="${COMMAND//\%BASENAME\%/\"$ROM_BN\"}"
 
-  # special case to get the last 2 folders for quake games for the -game parameter
-  # remove everything up to /quake/
+  ##SPECIAL CASE TO GET THE LAST 2 FOLDERS FOR QUAKE GAMES FOR THE -GAME PARAMETER
+  ##REMOVE EVERYTHING UP TO /quake/
   local quake_dir="${ROM##*/quake/}"
-  # remove filename
+  ##REMOVE FILENAME
   quake_dir="${quake_dir%/*}"
   COMMAND="${COMMAND//\%QUAKEDIR\%/\"$quake_dir\"}"
 
-  # if it starts with CON: it is a console application (so we don't redirect stdout later)
+  ##IF IT STARTS WITH CON: IT IS A CONSOLE APPLICATION (SO WE DON'T REDIRECT STDOUT LATER)
   if [[ "$COMMAND" == CON:* ]]; then
-    # remove CON:
+    ##REMOVE CON:
     COMMAND="${COMMAND:4}"
     CONSOLE_OUT=1
   fi
@@ -711,14 +709,14 @@ function show_launch() {
   local images=()
 
   if [[ "$IS_SYS" -eq 1 && "$USE_ART" -eq 1 ]]; then
-    # if using art look for images in paths for es art.
+    ##IF USING ART LOOK FOR IMAGES IN PATHS FOR ES ART
     images+=(
       "$HOME/Arch-RGS/roms/$SYSTEM/images/${ROM_BN}-image"
       "$HOME/.emulationstation/downloaded_images/$SYSTEM/${ROM_BN}-image"
     )
   fi
 
-  # look for custom launching images
+  ##LOOK FOR CUSTOM LAUNCHING IMAGES
   if [[ "$IS_SYS" -eq 1 ]]; then
     images+=(
       "$HOME/Arch-RGS/roms/$SYSTEM/images/${ROM_BN}-launching"
@@ -767,7 +765,7 @@ function show_launch() {
 
 function check_menu() {
   local dont_launch=0
-  # check for key pressed to enter configuration
+  ##CHECK FOR KEY PRESSED TO ENTER CONFIGURATION
   IFS= read -r -s -t 2 -N 1 key </dev/tty
   if [[ -n "$key" ]]; then
     [[ -n "$IMG_PID" ]] && kill -SIGINT "$IMG_PID"
@@ -780,7 +778,7 @@ function check_menu() {
   return $dont_launch
 }
 
-# calls script with parameters SYSTEM, EMULATOR, ROM, and commandline
+##CALLS SCRIPT WITH PARAMETERS SYSTEM, EMULATOR, ROM AND COMMANDLINE
 function user_script() {
   local script="$CONFIGDIR/all/$1"
   if [[ -f "$script" ]]; then
@@ -789,7 +787,7 @@ function user_script() {
 }
 
 function restore_cursor_and_exit() {
-  # if we are not being run from emulationstation (get parent of parent), turn the cursor back on.
+  ##IF WE ARE NOT BEING RUN FROM EMULATIONSTATION (GET PARENT OF PARENT), TURN THE CURSOR BACK ON
   if [[ "$(ps -o comm= -p $(ps -o ppid= -p $PPID))" != "emulationstatio" ]]; then
     tput cnorm
   fi
@@ -798,14 +796,13 @@ function restore_cursor_and_exit() {
 
 function launch_command() {
   local ret
-
-  # escape $ to avoid variable expansion (eg roms containing $!)
+  ##ESCAPE $ TO AVOID VARIABLE EXPANSION (EG ROMS CONTAINING $!)
   COMMAND="${COMMAND//\$/\\\$}"
 
-  # launch the command
+  ##LAUNCH THE COMMAND
   echo -e "Parameters: $@\nExecuting: $COMMAND" >>"$LOG"
   if [[ "$CONSOLE_OUT" -eq 1 ]]; then
-    # turn cursor on
+    ##TURN CURSOR ON
     tput cnorm
     eval $COMMAND </dev/tty 2>>"$LOG"
     ret=$?
@@ -826,7 +823,7 @@ function runcommand() {
     exit 1
   fi
 
-  # turn off cursor and clear screen
+  ##TURN OFF CURSOR AND CLEAR SCREEN
   tput civis
   clear
 
@@ -853,14 +850,14 @@ function runcommand() {
 
   mode_switch "$MODE_REQ_ID"
 
-  # replace X/Y resolution and refresh (useful for KMS/modesetting)
+  ##REPLACE X/Y RESOLUTION AND REFRESH
   COMMAND="${COMMAND//\%XRES\%/${MODE_CUR[2]}}"
   COMMAND="${COMMAND//\%YRES\%/${MODE_CUR[3]}}"
   COMMAND="${COMMAND//\%REFRESH\%/${MODE_CUR[5]}}"
 
   retroarch_append_config
 
-  # build xinitrc and rewrite command if not already in X11 context
+  ##BUILD XINITRC AND REWRITE COMMAND IF NOT ALREADY IN X11 CONTEXT
   if [[ "$XINIT" -eq 1 && "$HAS_MODESET" != "x11" ]]; then
     build_xinitrc build
   fi
@@ -873,11 +870,11 @@ function runcommand() {
 
   clear
 
-  # remove tmp folder for unpacked archives if it exists
+  ##REMOVE tmp FOLDER FOR UNPACKED ARCHIVES IF IT EXISTS
   rm -rf "/tmp/retroarch"
 
 
-  # if we switched mode - restore preferred mode
+  ##IF WE SWITCHED MODE, RESTORE PREFERRED MODE
   mode_switch "$MODE_ORIG_ID"
 
   [[ "$EMULATOR" == rgs-lr-* ]] && retroarchIncludeToEnd "$CONF_ROOT/retroarch.cfg"
@@ -888,3 +885,4 @@ function runcommand() {
 }
 
 runcommand "$@"
+
