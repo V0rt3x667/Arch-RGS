@@ -27,7 +27,7 @@ function game_data_rgs-pt-jumpnbump() {
   tmpdir="$(mktemp -d)"
 
   ##Install Default Levels
-  cp "$md_inst/share/jumpnbump/jumpnbump.dat" "$romdir/ports/jumpnbump"
+  cp "$md_inst/share/jumpnbump/jumpbump.dat" "$romdir/ports/jumpnbump"
 
   ##Install Extra Levels
   downloadAndExtract "https://salsa.debian.org/games-team/jumpnbump-levels/-/archive/master/jumpnbump-levels-master.tar.bz2" \
@@ -45,7 +45,7 @@ function game_data_rgs-pt-jumpnbump() {
 }
 
 function configure_rgs-pt-jumpnbump() {
-  addPort "$md_id" "jumpnbump" "Jump 'n Bump" "$md_inst/data/jumpnbump.sh"
+  addPort "$md_id" "jumpnbump" "Jump 'n Bump" "$md_inst/jumpnbump.sh"
   mkRomDir "ports/jumpnbump"
 
   [[ "$md_mode" == "remove" ]] && return
@@ -67,4 +67,3 @@ function configure_rgs-pt-jumpnbump() {
     iniSet "nogore" "1"
   fi
 }
-

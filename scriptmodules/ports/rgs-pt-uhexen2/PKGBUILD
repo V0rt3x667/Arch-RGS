@@ -1,6 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-uhexen2
 pkgver=1.5.9
+_gamecodever=1.29b
 pkgrel=1
 pkgdesc="Hexen II Source Port"
 arch=('x86_64')
@@ -11,35 +12,73 @@ depends=(
   'libvorbis' 
   'sdl'
 )
-makedepends=(
-  'nasm'
-)
+makedepends=()
 source=(
   "http://downloads.sourceforge.net/uhexen2/hexen2source-$pkgver.tgz"
-  "01_Fix_RELOC_Missing.patch"
+  "http://downloads.sourceforge.net/uhexen2/hexen2source-gamecode-$pkgver.tgz"
+  "http://downloads.sourceforge.net/uhexen2/hexenworld-pakfiles-0.15.tgz"
+  "01_fix_reloc_missing.patch"
 )
 sha256sums=(
   '2aa84c141a820f9087850aacf3684a5f71c434428bc57545899eda1b9a28c3e0'
-  '8320af850d4e30d64d3ebb61ae344f2070727a9fbefc13ab931b6df486d6120c'
+  '15188ecace6f8431af88d096aae2c4ff9e41c0e1b3e107eee0c4f5f9d09d34bb'
+  '49462cdf984deee7350d03c7d192d1c34d682647ffc9d06de4308e0a7c71c4d9'
+  '42f786cba80155caee43ff7b2bc9c3af7fe94f3b5d00554b30f5dc319169fcb5'
 )
 _installdir="/opt/archrgs/ports/$pkgname"
 
 prepare() {
-  cd "hexen2source-$pkgver/engine/hexen2"
+  cd "hexen2source-$pkgver"
 
-  patch -Np2 -i $srcdir/01_Fix_RELOC_Missing.patch
+  patch -Np2 -i ../01_fix_reloc_missing.patch
 }
 
 build() {
   cd "hexen2source-$pkgver/engine/hexen2"
 
-  ./build_all.sh
+  sh ./build_all.sh
+
+  cd "../hexenworld"
+
+  sh ./build.sh
+
+  cd ../..
+
+  make -C ./hw_utils/hwmaster
+  make -C ./h2patch
+  make -C ./utils/hcc
+
+  ##Build Game Code Files
+  ./utils/hcc/hcc -src ../gamecode-$_gamecodever/hc/h2 -os
+  ./utils/hcc/hcc -src ../gamecode-$_gamecodever/hc/h2 -os -name progs2.src
+  ./utils/hcc/hcc -src ../gamecode-$_gamecodever/hc/portals -os -oi -on
+  ./utils/hcc/hcc -src ../gamecode-$_gamecodever/hc/hw -os -oi -on
+  ./utils/hcc/hcc -src ../gamecode-$_gamecodever/hc/siege -os -oi -on
 }
 
 package() {
-  cd "hexen2source-$pkgver/engine/hexen2"
+  cd "hexen2source-$pkgver"
 
-  install -Dm755 ./{hexen2,glhexen2} -t "${pkgdir}${_installdir%/}/bin"
-  install -Dm644 ../../docs/* -t "${pkgdir}${_installdir%/}/share/doc"
+  install -Dm755 ./engine/hexen2/{hexen2,glhexen2} -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./engine/hexenworld/client/{hwcl,glhwcl} -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./engine/hexenworld/server/hwsv -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./engine/hexen2/server/h2ded -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./h2patch/h2patch -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./scripts/cdrip_*.sh -t "${pkgdir}${_installdir%/}/scripts"
+
+  ##Install Documentation
+  install -Dm644 ./docs/* -t "${pkgdir}${_installdir%/}/share/doc"
+
+  cd "../gamecode-$_gamecodever"
+
+  ##Install Game Data
+  install -Dm644 ./hc/h2/*.dat ./res/h2/* -t "${pkgdir}${_installdir%/}/data1"
+  install -Dm644 ./hc/portals/*.dat ./res/portals/* -t "${pkgdir}${_installdir%/}/portals"
+  install -Dm644 ./hc/hw/*.dat ./res/hw/* ../hw/pak4.pak -t "${pkgdir}${_installdir%/}/hw"
+
+  install -Dm644 ./mapfixes/data1/maps/* -t "${pkgdir}${_installdir%/}/data1/maps"
+  install -Dm644 ./mapfixes/portals/maps/* -t "${pkgdir}${_installdir%/}/portals/maps"
+
+  install -Dm644 ./patch111/patchdat/data1/* -t "${pkgdir}${_installdir%/}/patchdat/data1"
+  install -Dm644 ./patch111/patchdat.txt -t "${pkgdir}${_installdir%/}/share/doc"
 }
-

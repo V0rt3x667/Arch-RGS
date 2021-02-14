@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-snes9x
-pkgver=1792
+pkgver=1812
 pkgrel=1
 pkgdesc="Libretro Core - Nintendo Super Nintendo Entertainment System"
 arch=('x86_64')
@@ -30,4 +30,3 @@ package() {
   install -Dm644 ./snes9x_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 ../LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

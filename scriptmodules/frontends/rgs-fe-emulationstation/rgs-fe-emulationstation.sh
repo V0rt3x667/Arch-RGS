@@ -15,7 +15,7 @@ function _get_input_cfg_rgs-fe-emulationstation() {
 }
 
 function _update_hook_rgs-fe-emulationstation() {
-  ##MAKE SURE THE INPUT CONFIGURATION SCRIPTS AND LAUNCH SCRIPT ARE ALWAYS UP TO DATE
+  ##Make Sure The Input Configuration Scripts And Launch Script Are Always Up To Date
   if archrgs_isInstalled "$md_idx"; then
     copy_inputscripts_rgs-fe-emulationstation
     install_launch_rgs-fe-emulationstation
@@ -122,19 +122,19 @@ function remove_rgs-fe-emulationstation() {
   pacmanRemove rgs-fe-emulationstation
 
   rm -f "/usr/bin/emulationstation"
-  rm -rfv "/usr/local/share/icons/Arch-RGS.svg" "/usr/local/share/applications/Arch-RGS.desktop"
+  rm -rfv "/usr/share/icons/Arch-RGS.svg" "/usr/share/applications/Arch-RGS.desktop"
 }
 
 function init_input_rgs-fe-emulationstation() {
   local es_config
   es_config="$(_get_input_cfg_rgs-fe-emulationstation)"
   
-  ##IF THERE IS NO ES CONFIG (OR EMPTY FILE) CREATE IT WITH INITIAL INPUTLIST ELEMENT
+  ##If There Is No Es Config (Or Empty File) Create It With Initial Inputlist Element
   if [[ ! -s "$es_config" ]]; then
     echo "<inputList />" >"$es_config"
   fi
 
-  ##ADD & UPDATE OUR inputconfiguration.sh inputAction
+  ##Add & Update inputconfiguration.sh inputAction
   if [[ $(xmlstarlet sel -t -v "count(/inputList/inputAction[@type='onfinish'])" "$es_config") -eq 0 ]]; then
     xmlstarlet ed -L -S \
       -s "/inputList" -t elem -n "inputActionTMP" -v "" \
@@ -150,7 +150,7 @@ function init_input_rgs-fe-emulationstation() {
 
 function copy_inputscripts_rgs-fe-emulationstation() {
   mkdir -p "$md_inst/scripts"
-  cp -r "$md_data/data/"{configscripts,*.sh} "$md_inst/scripts"
+  cp -r "$md_data/"{configscripts,*.sh} "$md_inst/scripts"
   chmod +x "$md_inst/scripts/inputconfiguration.sh"
 }
 
@@ -163,7 +163,7 @@ if [[ \$(id -u) -eq 0 ]]; then
     exit 1
 fi
 
-##SAVE CURRENT TTY/VT NUMBER FOR USE WITH X SO IT CAN BE LAUNCHED ON THE CORRECT TTY
+##Save Current TTY/VT Number For Use With X So It Can Be Launched On The Correct TTY
 TTY=\$(tty)
 export TTY="\${TTY:8:1}"
 
@@ -176,9 +176,9 @@ tput civis
 tput cnorm
 _EOF_
   chmod +x /usr/bin/emulationstation
-  mkdir -p /usr/local/share/{icons,applications}
-  cp "$md_data/data/Arch-RGS.svg" "/usr/local/share/icons"
-  cat >/usr/local/share/applications/Arch-RGS.desktop <<_EOF_
+  mkdir -p /usr/share/{icons,applications}
+  cp "$md_data/Arch-RGS.svg" "/usr/share/icons"
+  cat >/usr/share/applications/Arch-RGS.desktop <<_EOF_
 [Desktop Entry]
 Type=Application
 Exec=gnome-terminal --full-screen --hide-menubar -e emulationstation
@@ -189,7 +189,7 @@ Name[de_DE]=Arch-RGS
 Name=Arch-RGS
 Comment[de_DE]=Arch-RGS
 Comment=Arch-RGS
-Icon=/usr/local/share/icons/Arch-RGS.svg
+Icon=/usr/share/icons/Arch-RGS.svg
 Categories=Game
 _EOF_
 }
@@ -200,7 +200,7 @@ function clear_input_rgs-fe-emulationstation() {
 }
 
 function configure_rgs-fe-emulationstation() {
-  ##MOVE THE $home/emulationstation CONFIGURATION DIR AND SYMLINK IT
+  ##Move The $home/emulationstation Configuration Dir And Symlink It
   moveConfigDir "$home/.emulationstation" "$configdir/all/emulationstation"
 
   [[ "$md_mode" == "remove" ]] && return
@@ -213,7 +213,7 @@ function configure_rgs-fe-emulationstation() {
 
   mkdir -p "/etc/emulationstation"
 
-  ##ENSURE WE HAVE A DEFAULT THEME
+  ##Ensure We Have A Default Theme
   archrgs_callModule esthemes install_theme
 
   addAutoConf "es_swap_a_b" 0
@@ -272,4 +272,3 @@ function gui_rgs-fe-emulationstation() {
     esac
   done
 }
-

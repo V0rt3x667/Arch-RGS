@@ -90,7 +90,6 @@ function hasFlag() {
   local string="$1"
   local flag="$2"
   [[ -z "$string" || -z "$flag" ]] && return 1
-
   if [[ "$string" =~ (^| )$flag($| ) ]]; then
     return 0
   else
@@ -157,7 +156,7 @@ function hasPackage() {
 }
 
 ## @fn pacmanUpdate()
-## @brief Calls pacman -Syu (if it has not been called before).
+## @brief Calls pacman -Syyu (if it has not been called before).
 function pacmanUpdate() {
   if [[ "$__pacman_update" != "1" ]]; then
     pacman -Syyu --noconfirm
@@ -189,13 +188,13 @@ function pacmanPkg() {
   PKGBUILD="$1"
   for pkg in $PKGBUILD; do
     cd "$scriptdir/scriptmodules/$md_type/$pkg" || exit
-    sudo -u "$user" env \
+    sudo -u "$user" \
       BUILDDIR="$__builddir" \
       PKGDEST="$__builddir/$pkg" \
       SRCDEST="$__builddir/$pkg" \
       SRCPKGDEST="$__builddir/$pkg" \
-      PACKAGER="V0rt3x667 <archrgs.project@gmail.com>" \
-      makepkg -csi --noconfirm --needed
+      PACKAGER="archrgs.project <archrgs.project@gmail.com>" \
+      makepkg -csi --noconfirm
   done
 }
 

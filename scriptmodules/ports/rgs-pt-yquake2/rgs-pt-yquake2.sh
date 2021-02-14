@@ -26,6 +26,7 @@ function add_games_rgs-pt-yquake2() {
     ['baseq2/pak0']="Quake II"
     ['rogue/pak0']="Quake II - Ground Zero"
     ['xatrix/pak0']="Quake II - The Reckoning"
+    ['ctf/pak0']="Quake II - Third Wave Capture The Flag"
 )
 
   for game in "${!games[@]}"; do
@@ -58,6 +59,5 @@ function configure_rgs-pt-yquake2() {
   moveConfigDir "$home/.yq2" "$md_conf_root/quake2/yquake2"
 
   [[ "$md_mode" == "install" ]] && game_data_rgs-pt-yquake2
-  add_games_rgs-pt-yquake2 "$md_inst/bin/quake2 -datadir $romdir/ports/quake2 +set r_mode -1 +set vid_renderer gl3 +set r_vsync 1 +set game %ROM%"
+  add_games_rgs-pt-yquake2 "$md_inst/bin/quake2 -datadir $romdir/ports/quake2 +set r_mode -1 +set vid_fullscreen 1 +set vid_renderer gl3 +set r_vsync 1 +set game %ROM%"
 }
-

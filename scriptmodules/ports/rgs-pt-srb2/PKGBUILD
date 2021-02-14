@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-srb2
-pkgver=2.2.1.r1626.333d3a257
+pkgver=2.2.8
 pkgrel=1
 pkgdesc="3D Sonic the Hedgehog Fangame"
 arch=('x86_64')
@@ -18,20 +18,14 @@ makedepends=(
   'mesa'
 )
 source=(
-  "$pkgname::git+https://github.com/STJr/SRB2"
-  "https://gitlab.com/arch-rgs/arch-rgs-resources/-/archive/assets/rgs-pt-srb2/arch-rgs-resources-assets-$pkgname.tar.gz"
+  "$pkgname::git+https://github.com/STJr/SRB2#tag=SRB2_release_$pkgver"
+  "https://github.com/STJr/SRB2/releases/download/SRB2_release_$pkgver/SRB2-v$pkgver-Full.zip"
 )
 sha256sums=(
   'SKIP'
-  '3471a0d2b6e205ed22d1dcc9fe1a9211ac7a6e5ffe8aadf958ababa6de764a14'
+  '7a3805b1127bd42db6432a9fe3e25927269e334497d48bdc9c2751edc114d718'
 )
 _installdir="/opt/archrgs/ports/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^SRB2_release_//;s/\([^-]*-\)g/r\1/;s/-/./g')"
-}
 
 prepare() {
   cd "$pkgname"
@@ -41,11 +35,7 @@ prepare() {
   fi
   mkdir build
   mkdir -p assets/installer
-
-  cd "${srcdir}/assets"
-
-  ./Xtract.sh
-  mv ./assets/{*.dat,*.dta,*.pk3} "${srcdir}/${pkgname}/assets/installer"
+  mv ../{*.dat,*.dta,*.pk3,*.txt} ./assets/installer
 }
 
 build() {
@@ -55,7 +45,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DSRB2_CONFIG_HAVE_OPENMPT=OFF \
-    -DSRB2_ASSET_HASHED="srb2.pk3;player.dta;music.dta;zones.pk3"
+    -DSRB2_ASSET_HASHED="srb2.pk3;player.dta;music.dta;zones.pk3;patch.pk3"
   make
 }
 
@@ -64,4 +54,3 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
-

@@ -5,7 +5,7 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="rgs-pt-tyrquake"
-archrgs_module_desc="TyrQuake - Quake 1 Port"
+archrgs_module_desc="TyrQuake - Quake I Port"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/RetroPie/tyrquake/master/gnu.txt"
 archrgs_module_section="ports"
 
@@ -18,7 +18,7 @@ function remove_rgs-pt-tyrquake() {
 }
 
 function add_games_rgs-pt-tyrquake() {
-  add_games_rgs-lr-tyrquake "$md_inst/bin/tyr-glquake -basedir $romdir/ports/quake" "-game %QUAKEDIR%"
+  add_games_rgs-lr-tyrquake "$md_inst/bin/tyr-glquake -basedir $romdir/ports/quake -game %QUAKEDIR%"
 }
 
 function configure_rgs-pt-tyrquake() {
@@ -30,4 +30,3 @@ function configure_rgs-pt-tyrquake() {
 
   moveConfigDir "$home/.tyrquake" "$md_conf_root/quake/tyrquake"
 }
-

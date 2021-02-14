@@ -24,7 +24,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  git submodule init
   git submodule update --init --recursive
 
   if [[ -d build ]]; then
@@ -50,4 +49,3 @@ package() {
 
   install -Dm644 ./src/citra_libretro/citra_libretro.so -t "${pkgdir}${_installdir%/}"
 }
-

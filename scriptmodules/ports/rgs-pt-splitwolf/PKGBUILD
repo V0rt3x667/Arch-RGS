@@ -5,21 +5,22 @@ pkgrel=1
 pkgdesc="2-4 Player Split-Screen Wolfenstein 3D & Spear of Destiny Port"
 arch=('x86_64')
 url="https://bitbucket.org/linuxwolf6/splitwolf/wiki/Home"
-license=('custom:MAME' 'custom:id')
+license=(
+  'custom:id'
+  'custom:MAME'
+)
 depends=('sdl2_mixer')
 makedepends=('git')
-source=("$pkgname::git+https://bitbucket.org/linuxwolf6/splitwolf#branch=scrubbed")
-sha256sums=('SKIP')
+source=(
+  "$pkgname::git+https://bitbucket.org/linuxwolf6/splitwolf#branch=scrubbed"
+  "https://bitbucket.org/linuxwolf6/splitwolf/downloads/lwmp.zip"
+)
+sha256sums=(
+  'SKIP'
+  '13160f7b7fc0dce9ee6e31ebeeb9bbbe324afa5e0c774a5b98e879f771b2b210'
+)
 _installdir="/opt/archrgs/ports/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
-_get_opts_splitwolf=(
-  'splitwolf-wolf3d VERSION_WOLF3D_SHAREWARE=y'
-  'splitwolf-wolf3d_apogee VERSION_WOLF3D_APOGEE=y'
-  'splitwolf-wolf3d_full VERSION_WOLF3D=y'
-  'splitwolf-sod VERSION_SPEAR=y'
-  'splitwolf-sodmp VERSION_SPEAR_MP=y'
-  'splitwolf-spear_demo VERSION_SPEAR_DEMO=y'
-)
 
 pkgver() {
   cd "$pkgname"
@@ -35,34 +36,39 @@ prepare() {
   fi
   mkdir bin
 
-  git submodule init
-  git submodule update
+  git submodule update --init --recursive
+}
+
+_get_opts() {
+  echo 'splitwolf-wolf3d_shareware -DCARMACIZED -DUPLOAD' ##Shareware v1.4
+  echo 'splitwolf-wolf3d_apogee -DCARMACIZED' ##3d Realms & Apogee v1.4 Full
+  echo 'splitwolf-wolf3d_full -DCARMACIZED -DGOODTIMES' ##GT, ID & Activision v1.4 Full
+  echo 'splitwolf-spear_full -DCARMACIZED -DGOODTIMES -DSPEAR' ##Spear of Destiny Full
+  echo 'splitwolf-spear_mission-packs -DCARMACIZED -DGOODTIMES -DSPEAR -DSPEAR_MP' ##Spear of Destiny Mission Packs
+  echo 'splitwolf-spear_shareware -DCARMACIZED -DSPEARDEMO -DSPEAR' ##Spear of Destiny Shareware
 }
 
 build() {
   cd "$pkgname"
 
-  local bin
-  local defs
   local opt
-
-  for opt in "${_get_opts_splitwolf[@]}"; do
-    bin="${opt%% *}"
-    defs="${opt#* }"
-    CFLAGS+=" -DUSE_GPL -Wno-narrowing" \
-    make "$defs" PREFIX="${_installdir%/}" 
-    mv "$bin" "bin/$bin"
-  done
+  while read -r opt; do
+    local bin="${opt%% *}"
+    local defs="${opt#* }"
+    make clean
+    CFLAGS+=" -Wno-narrowing -DVERSIONALREADYCHOSEN $defs" make DATADIR="$HOME/Arch-RGS/roms/ports/wolf3d/"
+    mv split* "bin/$bin"
+  done < <(_get_opts)
 }
 
 package() {
   cd "$pkgname"
 
-  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}/bin"
-  install -Dm644 ./gamecontrollerdb.txt -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./bin/splitwolf* -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./SDL_GameControllerDB/gamecontrollerdb.txt -t "${pkgdir}${_installdir%/}/bin"
+  cp -r ../lwmp "${pkgdir}${_installdir%/}/bin"
 
   for licence in ./license-{id,mame}.txt; do
     install -Dm644 "$licence" "${pkgdir}${_licencedir%/}/$licence"
   done
 }
-

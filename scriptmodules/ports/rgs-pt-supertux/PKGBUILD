@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-supertux
-pkgver=0.6.0.beta.1.r1985.6641f9a56
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="Classic 2D Jump'n'Run Sidescroller Game"
 arch=('x86_64')
@@ -21,15 +21,9 @@ makedepends=(
   'mesa'
   'optipng'
 )
-source=("$pkgname::git+https://github.com/SuperTux/supertux")
+source=("$pkgname::git+https://github.com/SuperTux/supertux#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
-}
 
 prepare() {
   cd "$pkgname"
@@ -39,7 +33,7 @@ prepare() {
   fi
   mkdir build
 
-  git submodule update --init
+  git submodule update --init --recursive
 }
 
 build() {
@@ -57,4 +51,3 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
-

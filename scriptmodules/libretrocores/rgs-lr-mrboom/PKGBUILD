@@ -28,7 +28,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  git submodule init
   git submodule update --init --recursive
 }
 
@@ -44,4 +43,3 @@ package() {
   install -Dm644 ./mrboom_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

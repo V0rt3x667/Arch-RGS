@@ -64,11 +64,11 @@ function configure_rgs-em-retroarch() {
   config="$(mktemp)"
   cp "$md_inst/etc/retroarch.cfg" "$config"
 
-  ##QUERY ES A/B KEY SWAP CONFIGURATION
+  ##Query EmulationStation A/B Key Swap Configuration
   local es_swap="false"
   getAutoConf "es_swap_a_b" && es_swap="true"
 
-  ##CONFIGURE DEFAULT OPTIONS
+  ##Configure Default Options
   iniConfig " = " '"' "$config"
   iniSet "cache_directory" "/tmp/retroarch"
   iniSet "system_directory" "$biosdir"
@@ -82,11 +82,11 @@ function configure_rgs-em-retroarch() {
   iniSet "global_core_options" "true"
   iniSet "video_fullscreen" "true"
 
-  ##ENABLE HOTKEY ("Select" BUTTON)
+  ##Enable Hotkey ("Select" Button)
   iniSet "input_enable_hotkey" "nul"
   iniSet "input_exit_emulator" "escape"
 
-  ##CONFIGURE DEFAULT DIRECTORIES
+  ##Configure Default Directories
   iniSet "video_filter_dir" "$md_inst/filters/video"
   iniSet "audio_filter_dir" "$md_inst/filters/audio"
   iniSet "libretro_info_path" "$md_inst/info"
@@ -94,20 +94,20 @@ function configure_rgs-em-retroarch() {
   iniSet "overlay_directory" "$configdir/all/retroarch/overlay"
   iniSet "assets_directory" "$configdir/all/retroarch/assets"
 
-  ##ENABLE & CONFIGURE REWIND FEATURE
+  ##Enable & Configure Rewind Feature
   iniSet "rewind_enable" "false"
   iniSet "rewind_buffer_size" "10"
   iniSet "rewind_granularity" "2"
   iniSet "input_rewind" "r"
 
-  ##ENABLE GPU SCREENSHOTS
+  ##Enable Gpu Screenshots
   iniSet "video_gpu_screenshot" "true"
 
-  ##ENABLE & CONFIGURE SHADERS
+  ##Enable & Configure Shaders
   iniSet "input_shader_next" "m"
   iniSet "input_shader_prev" "n"
 
-  ##CONFIGURE KEYBOARD MAPPINGS
+  ##Configure Keyboard Mappings
   iniSet "input_player1_a" "x"
   iniSet "input_player1_b" "z"
   iniSet "input_player1_y" "a"
@@ -121,18 +121,18 @@ function configure_rgs-em-retroarch() {
   iniSet "input_player1_up" "up"
   iniSet "input_player1_down" "down"
 
-  ##INPUT SETTINGS
+  ##Input Settings
   iniSet "input_autodetect_enable" "true"
   iniSet "auto_remaps_enable" "true"
   iniSet "input_joypad_driver" "udev"
   iniSet "all_users_control_menu" "true"
 
-  ##HIDE ONLINE UPDATER MENU OPTIONS & RESTART OPTION
+  ##Hide Online Updater Menu Options & Restart Option
   iniSet "menu_show_core_updater" "false"
   iniSet "menu_show_online_updater" "false"
   iniSet "menu_show_restart_retroarch" "false"
 
-  ##DISABLE UNNECESSARY MENU TABS
+  ##Disable Unnecessary Menu Tabs
   iniSet "xmb_show_add" "false"
   iniSet "xmb_show_history" "false"
   iniSet "xmb_show_images" "false"
@@ -306,4 +306,3 @@ function _set_config_option_rgs-em-retroarch() {
     iniSet "$option" "$value"
   fi
 }
-

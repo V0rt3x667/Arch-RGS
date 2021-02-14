@@ -91,7 +91,7 @@ function archrgs_callModule() {
   local md_flags="${__mod_flags[$md_idx]}"
   local md_build="$__builddir"
   local md_inst="$(archrgs_getInstallPath $md_idx)"
-  local md_data="$scriptdir/scriptmodules/$md_type/$md_id"
+  local md_data="$scriptdir/scriptmodules/$md_type/$md_id/data"
   local md_mode="install"
 
   ##SET MD_CONF_ROOT TO $CONFIGDIR AND TO $CONFIGDIR/PORTS FOR PORTS

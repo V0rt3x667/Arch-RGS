@@ -5,7 +5,10 @@ pkgrel=1
 pkgdesc="Abuse SDL Port"
 arch=('x86_64')
 url="https://github.com/Xenoveritas/abuse"
-license=('custom:Abuse' 'custom:WTFPL')
+license=(
+  'custom:Abuse'
+  'custom:WTFPL'
+)
 depends=('sdl2_mixer')
 makedepends=(
   'cmake'
@@ -38,10 +41,9 @@ prepare() {
 
   sed -e "s|ASSETDIR \"share/games/abuse\"|ASSETDIR "data"|g" -i ./CMakeLists.txt
 
-  cd "$srcdir/assets"
+  cd "$srcdir/abuse_assets"
 
-  tar --zstd -xf ./abuse_assets.tar.zst && \
-  cp -r ./abuse_assets/data $srcdir/$pkgname
+  cp -r ./data "$srcdir/$pkgname"
 }
 
 build() {
@@ -61,4 +63,3 @@ package() {
   install -Dm644 ../COPYING "${pkgdir}${_licencedir%/}/LICENCE"
   install -Dm644 ../COPYING.WTFPL "${pkgdir}${_licencedir%/}/LICENCE.WTFPL"
 }
-

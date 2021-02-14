@@ -18,8 +18,7 @@ function remove_rgs-pt-openttd() {
 }
 
 function configure_rgs-pt-openttd() {
-  moveConfigDir "$home/.config/rgs-pt-openttd" "$md_conf_root/openttd"
+  moveConfigDir "$home/.openttd" "$md_conf_root/openttd"
 
   addPort "$md_id" "openttd" "OpenTTD" "$md_inst/bin/openttd"
 }
-

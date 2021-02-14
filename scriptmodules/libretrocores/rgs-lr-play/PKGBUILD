@@ -31,7 +31,6 @@ prepare() {
   fi
   mkdir build
 
-  git submodule init
   git submodule update --init --recursive
 }
 
@@ -53,4 +52,3 @@ package() {
   install -Dm644 ./Source/ui_libretro/play_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 ../License.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

@@ -2,7 +2,7 @@
 pkgname=rgs-pt-giana
 pkgver=1.10
 pkgrel=1
-pkgdesc="Giana's Return Unofficial Sequel to the Mario Clone Great Giana Sisters"
+pkgdesc="Giana's Return - Unofficial Sequel to Great Giana Sisters"
 arch=('x86_64')
 url="http://www.gianas-return.de"
 license=('custom:Freeware')
@@ -27,4 +27,3 @@ package() {
   install -Dm644 ./*.txt -t "${pkgdir}${_installdir%/}/doc"
   install -Dm644 ./LICENCE "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

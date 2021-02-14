@@ -437,13 +437,6 @@ function uninstall_setup() {
   done
   rm -rfv "$rootdir"
   dialog --defaultno --yesno "Do you want to remove all the files from $datadir - this includes all your installed ROMs, BIOS files and custom splashscreens." 22 76 >/dev/tty 2>&1 && rm -rfv "$datadir"
-  if dialog --defaultno --yesno "Do you want to remove all the system packages that Arch-RGS depends on? \n\nWARNING: this will remove packages like SDL even if they were installed before you installed Arch-RGS - it will also remove any package configurations - such as those in /etc/samba for Samba.\n\nIf unsure choose No (selected by default)." 22 76 >/dev/tty 2>&1; then
-    clear
-    ##REMOVE ALL DEPENDENCIES
-    for idx in "${__mod_idx[@]}"; do
-      archrgs_isInstalled "$idx" && archrgs_callModule "$idx" depends remove
-    done
-  fi
   printMsgs "dialog" "Arch-RGS has been uninstalled."
 }
 
@@ -536,4 +529,3 @@ function gui_setup() {
   joy2keyStop
   clear
 }
-

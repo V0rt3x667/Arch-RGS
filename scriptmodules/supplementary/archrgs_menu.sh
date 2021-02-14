@@ -9,11 +9,11 @@ archrgs_module_desc="Arch-RGS Configuration Menu for EmulationStation"
 archrgs_module_section="core"
 
 function _update_hook_archrgs_menu() {
-  ##SHOW AS INSTALLED WHEN UPGRADING
+  ##Show As Installed When Upgrading
   if ! archrgs_isInstalled "$md_idx" && [[ -f "$home/.emulationstation/gamelists/archrgs/gamelist.xml" ]]; then
     mkdir -p "$md_inst"
-    ##STOP OLDER SCRIPTS REMOVING WHEN LAUNCHING FROM THE ARCHRGS MENU IN ES
-    ##DUE TO NOT USING EXEC OR EXITING AFTER RUNNING ARCHRGS-SETUP FROM THIS MODULE
+    ##Stop Older Scripts Removing When Launching From The Archrgs Menu In Es
+    ##Due To Not Using Exec Or Exiting After Running Archrgs-Setup From This Module
     touch "$md_inst/.archrgs"
   fi
 }
@@ -31,10 +31,10 @@ function configure_archrgs_menu() {
 
   local rgsdir="$home/Arch-RGS/archrgs_menu"
   mkdir -p "$rgsdir"
-  cp -Rv "$md_data/icons" "$rgsdir"
+  cp -Rv "$scriptdir/scriptmodules/$md_type/$md_id/icons" "$rgsdir"
   chown -R "$user:$user" "$rgsdir"
 
-  ##ADD THE GAMESLIST AND ICONS
+  ##Add The Gameslist And Icons
   local files=(
     'bluetooth'
     'configedit'
@@ -145,3 +145,4 @@ function launch_archrgs_menu() {
   joy2keyStop
   clear
 }
+

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-sdlpop
-pkgver=1.21.r6.ad52f87
+pkgver=1.21.r51.13098cf
 pkgrel=1
 pkgdesc="Open-Source Port of Prince of Persia"
 arch=('x86_64')
@@ -31,4 +31,3 @@ package() {
 
   cp -r ./{data,doc,mods} "${pkgdir}${_installdir%/}"
 }
-

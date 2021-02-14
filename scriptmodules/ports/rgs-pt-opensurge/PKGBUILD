@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-opensurge
-pkgver=0.5.1.2.r116.b5f2288
+pkgver=0.5.1.2.r121.863d55a
 pkgrel=1
 pkgdesc="Fun 2D Retro Platformer & Game Engine"
 arch=('x86_64')
@@ -53,6 +53,7 @@ build() {
 
   cd "$srcdir/$pkgname/build"
 
+  LDFLAGS+=" -Wl,-rpath='${_installdir%/}/lib'" \
   cmake .. \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
@@ -75,4 +76,3 @@ package() {
 
   rm -r "${pkgdir}/usr"
 }
-

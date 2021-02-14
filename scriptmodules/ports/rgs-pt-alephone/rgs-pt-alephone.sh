@@ -24,14 +24,17 @@ function _game_data_rgs-pt-alephone() {
 
   if [[ ! -f "$romdir/ports/alephone/Marathon/Shapes.shps" ]]; then
     downloadAndExtract "$release_url/data-marathon/archive/master.zip" "$romdir/ports/alephone"
+    mv "$romdir/ports/alephone/data-marathon-master" "$romdir/ports/alephone/Marathon"
   fi
 
   if [[ ! -f "$romdir/ports/alephone/Marathon 2/Shapes.shpA" ]]; then
     downloadAndExtract "$release_url/data-marathon-2/archive/master.zip" "$romdir/ports/alephone"
+    mv "$romdir/ports/alephone/data-marathon-2-master" "$romdir/ports/alephone/Marathon 2"
   fi
 
   if [[ ! -f "$romdir/ports/alephone/Marathon Infinity/Shapes.shpA" ]]; then
     downloadAndExtract "$release_url/data-marathon-infinity/archive/master.zip" "$romdir/ports/alephone"
+    mv "$romdir/ports/alephone/data-marathon-infinity-master" "$romdir/ports/alephone/Marathon Infinity"
   fi
 
   chown -R "$user:$user" "$romdir/ports/alephone"
@@ -48,4 +51,3 @@ function configure_rgs-pt-alephone() {
 
   [[ "$md_mode" == "install" ]] && _game_data_rgs-pt-alephone
 }
-

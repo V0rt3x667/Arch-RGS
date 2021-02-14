@@ -18,8 +18,7 @@ function remove_rgs-pt-lincity-ng() {
 }
 
 function configure_rgs-pt-lincity-ng() {
-  addPort "$md_id" "lincity-ng" "LinCity-NG" "$md_inst/bin/lincity-ng"
+  addPort "$md_id" "lincity-ng" "LinCity-NG" "$md_inst/bin/lincity-ng -g -f"
 
   moveConfigDir "$home/.lincity-ng" "$md_conf_root/lincity-ng"
 }
-

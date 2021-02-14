@@ -51,7 +51,7 @@ do
 done
 echo "Your games are extracted and ready to be played. Your originals are stored safely in $BORROMDIR/original/ but they won't be needed anymore. Everything within it can be deleted."
 _EOF_
-  chmod +x "$md_inst/extract.sh"
+  chmod +x "$md_inst/bin/extract.sh"
 
   local dir
   for dir in ScreenShots Logs Saves; do
@@ -61,4 +61,3 @@ _EOF_
 
   ln -snf "$romdir/ports/openbor" "$md_inst/Paks"
 }
-

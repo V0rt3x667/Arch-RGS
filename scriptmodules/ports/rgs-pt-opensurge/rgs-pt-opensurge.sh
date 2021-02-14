@@ -20,6 +20,5 @@ function remove_rgs-pt-opensurge() {
 function configure_rgs-pt-opensurge() {
   addPort "$md_id" "opensurge" "Open Surge" "$md_inst/bin/opensurge --fullscreen"
 
-  moveConfigDir "$home/.config/opensurge2d"  "$md_conf_root/opensurge"
+  moveConfigDir "$home/.config/opensurge2d" "$md_conf_root/opensurge"
 }
-

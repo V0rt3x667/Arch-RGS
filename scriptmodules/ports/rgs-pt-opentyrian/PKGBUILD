@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-opentyrian
-pkgver=2.1.20130907.r115.822c719
+pkgver=2.1.20130907.r119.650e1f7
 pkgrel=1
 pkgdesc="Port of the Classic DOS Game Tyrian"
 url="https://github.com/opentyrian/opentyrian/wiki"
@@ -31,4 +31,3 @@ package() {
   install -Dm644 ./{COPYING,NEWS,README} -t "${pkgdir}${_installdir%/}/share/doc"
   install -Dm644 ./linux/man/opentyrian.6 -t "${pkgdir}${_installdir%/}/share/man/man6"
 }
-

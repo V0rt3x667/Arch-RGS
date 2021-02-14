@@ -25,7 +25,7 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  make SUBTARGET=arcade -f Makefile.libretro
+  make SUBTARGET=arcade PYTHON_EXECUTABLE=python -f Makefile.libretro
 }
 
 package() {
@@ -34,4 +34,3 @@ package() {
   install -Dm644 ./mamearcade_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 ./docs/LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

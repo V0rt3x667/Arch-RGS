@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-vvvvvv
-pkgver=2.2.r1159.70e82df
+pkgver=2.2.r1299.74740c5
 pkgrel=1
 pkgdesc="2D Puzzle Game"
 arch=('x86_64')
@@ -48,4 +48,3 @@ package() {
   install -Dm755 ./VVVVVV -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ../LICENSE.md "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

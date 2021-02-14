@@ -21,6 +21,5 @@ function remove_rgs-pt-cdogs-sdl() {
 function configure_rgs-pt-cdogs-sdl() {
   moveConfigDir "$home/.config/cdogs-sdl" "$md_conf_root/cdogs-sdl"
 
-  addPort "$md_id" "cdogs-sdl" "C-Dogs SDL" "pushd $md_inst; $md_inst/cdogs-sdl; popd"
+  addPort "$md_id" "cdogs-sdl" "C-Dogs SDL" "pushd $md_inst; $md_inst/cdogs-sdl --fullscreen; popd"
 }
-

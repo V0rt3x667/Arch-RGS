@@ -21,7 +21,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  git submodule init
   git submodule update --init --recursive
 }
 
@@ -36,4 +35,3 @@ package() {
 
   install -Dm644 ./freechaf_libretro.so -t "${pkgdir}${_installdir%/}"
 }
-

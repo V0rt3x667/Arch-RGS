@@ -25,7 +25,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  git submodule init
   git submodule update --init --recursive
 
   if [[ -d build ]]; then
@@ -50,4 +49,3 @@ package() {
   install -Dm644 ./lib/ppsspp_libretro.so -t "${pkgdir}${_installdir%/}"
   cp -r ./assets "${pkgdir}${_installdir%/}"
 }
-

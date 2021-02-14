@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-bombermaaan
-pkgver=2.0.2.2144
+pkgver=2.1.2.2187
 pkgrel=1
 pkgdesc="Bomberman Clone"
 arch=('x86_64')
@@ -11,7 +11,7 @@ makedepends=(
   'cmake'
   'git'
 )
-source=("$pkgname::git+https://github.com/bjaraujo/Bombermaaan#tag=v2.0.2.2144")
+source=("$pkgname::git+https://github.com/bjaraujo/Bombermaaan#tag=v2.1.2.2187")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
 
@@ -47,4 +47,3 @@ package() {
   cp -r ../trunk/levels "${pkgdir}${_installdir%/}"
   cp -r ../trunk/res/{images,sounds} "${pkgdir}${_installdir%/}"
 }
-

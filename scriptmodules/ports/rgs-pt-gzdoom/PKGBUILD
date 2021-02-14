@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-gzdoom
-pkgver=4.4.2
+pkgver=4.5.0
 pkgrel=1
 pkgdesc="Advanced DOOM Port"
 arch=('x86_64')
@@ -9,18 +9,19 @@ license=('GPL3')
 depends=(
   'alsa-lib'
   'libjpeg-turbo'
+  'openal'
   'sdl2'
 )
 makedepends=(
   'cmake'
   'desktop-file-utils'
-  'fluidsynth>=2'
+  'fluidsynth'
   'git'
   'gtk3'
 )
 provides=('gzdoom=$pkgver' 'libzmusic.so' 'libzmusiclite.so')
 source=(
-  "$pkgname::git+https://github.com/coelckers/gzdoom#tag=g4.5.0"
+  "$pkgname::git+https://github.com/coelckers/gzdoom#tag=g$pkgver"
   "git+https://github.com/coelckers/ZMusic#tag=1.1.3"
 )
 sha256sums=(
@@ -29,13 +30,11 @@ sha256sums=(
 )
 _installdir="/opt/archrgs/ports/$pkgname"
 
-pkgver() {
+prepare() {
   cd "$pkgname"
 
-  printf "%s" "$(git describe --tags | sed 's/^g//')"
-}
+  git submodule update --init --recursive
 
-prepare() {
   cd ${srcdir}/ZMusic/source
 
   sed 's/\/sounds/\/soundfonts/g' -i ./mididevices/music_fluidsynth_mididevice.cpp
@@ -62,6 +61,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DNO_FMOD=OFF \
     -DZMUSIC_INCLUDE_DIR="${srcdir}/ZMusic/include" \
     -DZMUSIC_LIBRARIES="${srcdir}/ZMusic/build/source/libzmusic.so"
   make

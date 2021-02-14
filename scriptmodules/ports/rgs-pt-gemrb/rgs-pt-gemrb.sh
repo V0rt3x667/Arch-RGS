@@ -118,8 +118,7 @@ CD1=$romdir/ports/planescape/data/
 CachePath=$romdir/ports/cache/
 _EOF_
 
-  for game in 'baldursgate1' 'baldursgate2' 'icewind1' 'icewind2' 'planetscape'; do
+  for game in 'baldursgate1' 'baldursgate2' 'icewind1' 'icewind2' 'planescape'; do
     chown "$user:$user" "$md_conf_root/${game}/GemRB.cfg"
   done
 }
-

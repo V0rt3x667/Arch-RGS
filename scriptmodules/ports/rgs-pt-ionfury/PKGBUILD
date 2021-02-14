@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-ionfury
-pkgver=r9270.014a74970
+pkgver=r9297.2bb6cbcae
 pkgrel=1
 pkgdesc="Commercial FPS Game Based On EDuke32 Source Port"
 arch=('x86_64')
@@ -42,4 +42,3 @@ package() {
   install -Dm755 ./{fury,mapster32} -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ./package/common/buildlic.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

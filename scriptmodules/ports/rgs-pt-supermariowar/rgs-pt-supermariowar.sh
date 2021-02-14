@@ -18,8 +18,7 @@ function remove_rgs-pt-supermariowar() {
 }
 
 function configure_rgs-pt-supermariowar() {
-  addPort "$md_id" "supermariowar" "Super Mario War" "$md_inst/smw $md_inst/data"
+  addPort "$md_id" "supermariowar" "Super Mario War" "$md_inst/bin/smw $md_inst/share/data"
 
   moveConfigDir "$home/.smw" "$md_conf_root/supermariowar"
 }
-

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-hatari
-pkgver=2.2.1
+pkgver=2.3.1
 pkgrel=1
 pkgdesc="Atari ST, STE, TT & Falcon Emulator"
 arch=('x86_64')
@@ -18,11 +18,11 @@ makedepends=(
   'systemd'
 )
 source=(
-  "https://download.tuxfamily.org/hatari/$pkgver/hatari-$pkgver.tar.bz2"
+  "$pkgname::git+https://git.tuxfamily.org/hatari/hatari.git#tag=v$pkgver"
   "http://www.kryoflux.com/download/spsdeclib_5.1_source.zip"
 )
 sha256sums=(
-  '11afef30a274be84696588583d5a1d65c8046934670f718c311c956ef7106f60'
+  'SKIP'
   'e60b756fa68c5fe073a28c618a0ec06220ef185e2a3c59e4a8d001c930f693d1'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
@@ -31,19 +31,12 @@ prepare() {
   unzip -o ./capsimg_source_linux_macosx.zip
   chmod u+x ./capsimg_source_linux_macosx/CAPSImg/configure
 
-  cd "hatari-$pkgver"
+  cd "$pkgname"
 
   if [[ -d build ]]; then
     rm -rf build
   fi
   mkdir build
-
-  ##Use CAPSImage 5
-  sed -i "s/CAPSIMAGE_VERSION 4/CAPSIMAGE_VERSION 5/" ./cmake/FindCapsImage.cmake
-
-  ##CAPSImage 5.1 Add Missing Types
-  sed -i 's/CapsLong/Sint32/g' ./src/floppy_ipf.c
-  sed -i 's/CapsULong/Uint32/g' ./src/floppy_ipf.c
 }
 
 build() {
@@ -54,25 +47,25 @@ build() {
   make
 
   ##Copy CAPSImg Header Files
-  install -Dm644 ../LibIPF/*.h -t "$srcdir/hatari-$pkgver/src/includes/caps5"
-  install -Dm644 ../Core/CommonTypes.h -t "$srcdir/hatari-$pkgver/src/includes/caps5"
+  install -Dm644 ../LibIPF/*.h -t "$srcdir/$pkgname/src/includes/caps"
+  install -Dm644 ../Core/CommonTypes.h -t "$srcdir/$pkgname/src/includes/caps"
 
-  cd "$srcdir/hatari-$pkgver/build"
+  cd "$srcdir/$pkgname/build"
 
   rm -f ../CMakeCache.txt
-  ##Remove __cdecl
-  CFLAGS+=" -D__cdecl=''" LDFLAGS+=" -Wl,-rpath='${_installdir%/}/bin'" \
+
+  LDFLAGS+=" -Wl,-rpath='${_installdir%/}/bin'" \
   cmake .. \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
-    -DCAPSIMAGE_INCLUDE_DIR="$srcdir/hatari-$pkgver/src/includes/caps5" \
+    -DCAPSIMAGE_INCLUDE_DIR="$srcdir/$pkgname/src/includes" \
     -DCAPSIMAGE_LIBRARY="$srcdir/capsimg_source_linux_macosx/CAPSImg/libcapsimage.so.5.1" \
     -DENABLE_SDL2=1
   make
 }
 
 package() {
-  cd "hatari-$pkgver/build"
+  cd "$pkgname/build"
 
   make DESTDIR="$pkgdir" install
 
@@ -80,4 +73,3 @@ package() {
 
   ln -s "${_installdir%/}/bin/libcapsimage.so.5.1" "${pkgdir}${_installdir%/}/bin/libcapsimage.so.5"
 }
-

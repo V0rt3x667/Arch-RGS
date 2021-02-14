@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-alephone
-pkgver=0
+pkgver=1.4pre1.20201026
 pkgrel=1
 pkgdesc="Marathon 2 Game Engine"
 arch=('x86_64')
@@ -22,7 +22,7 @@ makedepends=(
   'icoutils'
   'mesa'
 )
-source=("$pkgname::git+https://github.com/Aleph-One-Marathon/alephone#tag=release-20200904")
+source=("$pkgname::git+https://github.com/Aleph-One-Marathon/alephone#tag=release-20201026")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
 
@@ -46,4 +46,3 @@ package() {
 
   make PREFIX="${_installdir%/}" DESTDIR="${pkgdir}" install
 }
-

@@ -24,12 +24,11 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  make PREFIX="${_installdir%/}"
+  make PREFIX="$_installdir"
 }
 
 package() {
   cd "$pkgname"
 
-  make PREFIX="${pkgdir}" install
+  make PREFIX="${pkgdir}${_installdir%/}" install
 }
-

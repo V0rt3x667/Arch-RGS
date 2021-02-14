@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-openbor
-pkgver=r7087.e7614649
+pkgver=r7096.b8a2cef9
 pkgrel=1
 pkgdesc="2D Side Scrolling Game Engine"
 arch=('x86_64')
@@ -14,8 +14,8 @@ depends=(
   'sdl2'
 )
 makedepends=(
-  'gcc9'
   'git'
+  'yasm'
 )
 source=("$pkgname::git+https://github.com/DCurrent/openbor")
 sha256sums=('SKIP')
@@ -31,22 +31,22 @@ pkgver() {
 prepare() {
   cd "$pkgname/engine"
 
-  #Disable Abort On Warnings & Errors
-  sed 's/-Werror//' -i Makefile
+  ##Fix Locale Warning
+  sed 's|en_US.UTF-8|C|g' -i ./version.sh
 
-  #Fix Locale Warning
-  sed 's|en_US.UTF-8|C|g' -i version.sh
+  ##Disable Abort On Warnings & Errors
+  sed 's|-Werror||g' -i ./Makefile
 }
 
 build() {
   cd "$pkgname/engine"
 
+  CFLAGS+=" -fcommon"
   ./version.sh
-  make SDKPATH=/usr LNXDEV=/usr/bin BUILD_LINUX=1 GCC_TARGET="$CARCH" CC=gcc-9 LDFLAGS="$LDFLAGS"
+  make SDKPATH=/usr LNXDEV=/usr/bin BUILD_LINUX=1 GCC_TARGET="$CARCH"
 
-  cd "$srcdir/$pkgname/tools/borpak/source"
-
-  sh ./build.sh lin
+  cd ../tools/borpak/source
+  sh build.sh lin
 }
 
 package() {
@@ -57,4 +57,3 @@ package() {
   install -Dm755 ./tools/borpak/source/borpak -t "${pkgdir}${_installdir%/}/bin/"
   install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

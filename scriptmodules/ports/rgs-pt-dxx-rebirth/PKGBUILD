@@ -1,8 +1,8 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-dxx-rebirth
-pkgver=0.59.100.r1888.295619e63
+pkgver=0.59.100.r1918.0d70c3831
 pkgrel=1
-pkgdesc="Descent 1 & Descent 2 Game Engine"
+pkgdesc="Descent 1 & 2 Game Engine"
 arch=('x86_64')
 url="http://www.dxx-rebirth.com"
 license=('GPL3' 'custom:Parallax')
@@ -48,4 +48,3 @@ package() {
   install -Dm644 ./d2x-rebirth/RELEASE-NOTES.txt "${pkgdir}${_installdir%/}/share/doc/D2X-RELEASE-NOTES"
   install -Dm644 ./COPYING.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

@@ -18,11 +18,10 @@ function remove_rgs-pt-cgenius() {
 }
 
 function configure_rgs-pt-cgenius() {
-  addPort "$md_id" "cgenius" "Commander Genius" "pushd $md_inst; ./bin/CGeniusExe dir=%ROM%; popd"
+  addPort "$md_id" "cgenius" "Commander Genius" "$md_inst/bin/CGeniusExe dir=%ROM%"
 
   mkRomDir "ports/cgenius"
 
   moveConfigDir "$home/.CommanderGenius" "$md_conf_root/cgenius"
   moveConfigDir "$md_conf_root/cgenius/games" "$romdir/ports/cgenius"
 }
-

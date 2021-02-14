@@ -9,20 +9,20 @@ arch=('x86_64')
 depends=(
   'flac'
   'libutf8proc'
-  'lua53' 
+  'lua53'
   'portaudio'
-  'portmidi' 
-  'qt5-base'
+  'portmidi'
   'pugixml'
+  'qt5-base'
   'sdl2_ttf'
 )
 makedepends=(
   'asio'
   'glm'
   'libxinerama'
-  'nasm' 
-  'python' 
-  'rapidjson' 
+  'nasm'
+  'python'
+  'rapidjson'
 )
 _latestver=$(wget -qO- https://api.github.com/repos/mamedev/mame/releases/latest | grep -m 1 tag_name | cut -d\" -f4)
 source=("$pkgname::git+https://github.com/mamedev/mame#tag=${_latestver}")
@@ -61,7 +61,8 @@ build() {
     BUILDDIR=./build \
     ARCHOPTS=-flifetime-dse=1 \
     NOWERROR=1 \
-    TOOLS=1
+    TOOLS=1 \
+    PYTHON_EXECUTABLE=python
 }
 
 package() {
@@ -96,4 +97,3 @@ package() {
   cp -ar ./{artwork,bgfx,docs,plugins,language,ctrlr,keymaps,hash} "${pkgdir}${_installdir%/}"
   install -Dm644 ./COPYING "${pkgdir}${_licencedir%/}/LICENCE"
 }
-

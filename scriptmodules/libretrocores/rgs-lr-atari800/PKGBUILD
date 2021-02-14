@@ -20,8 +20,8 @@ pkgver() {
 
 build() {
   cd "$pkgname"
-  
-  CFLAGS+=" -DDEFAULT_CFG_NAME=\\\".libretro-atari800.cfg\\\"" make
+
+  make CFLAGS+=" -DDEFAULT_CFG_NAME=\\\".libretro-atari800.cfg\\\""
 }
 
 package() {
@@ -29,4 +29,3 @@ package() {
 
   install -Dm644 ./atari800_libretro.so -t "${pkgdir}${_installdir%/}"
 }
-

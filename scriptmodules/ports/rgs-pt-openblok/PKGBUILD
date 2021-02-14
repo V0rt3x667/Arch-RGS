@@ -28,7 +28,6 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  git submodule init
   git submodule update --init --recursive
 
   if [[ -d build ]]; then
@@ -53,4 +52,3 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
-

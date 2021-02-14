@@ -36,7 +36,7 @@ _EOF_
 }
 
 function restart_samba() {
-  systemctl restart samba
+  systemctl restart smb
 }
 
 function install_shares_samba() {
@@ -49,7 +49,7 @@ function install_shares_samba() {
 
 function remove_shares_samba() {
   local name
-  for name in roms bios configs splashscreens; do
+  for name in roms bios configs; do
     remove_share_samba "$name"
   done
   restart_samba
@@ -93,4 +93,3 @@ function gui_samba() {
     fi
   done
 }
-

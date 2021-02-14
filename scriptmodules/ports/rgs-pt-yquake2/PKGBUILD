@@ -1,8 +1,8 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-yquake2
-pkgver=7.45
+pkgver=7.45.r163.g2fae58d5
 pkgrel=1
-pkgdesc="Yamagi Quake II Client"
+pkgdesc="Yamagi Quake II Client Including Ground Zero, The Reckoning & Capture The Flag"
 url="http://www.yamagi.org/quake2"
 arch=('x86_64')
 license=('GPL2')
@@ -11,8 +11,18 @@ makedepends=(
   'cmake'
   'git'
 )
-source=("$pkgname::git+https://github.com/yquake2/yquake2#tag=QUAKE2_7_45")
-sha256sums=('SKIP')
+source=(
+  "$pkgname::git+https://github.com/yquake2/yquake2"
+  "$pkgname-rogue::git+https://github.com/yquake2/rogue"
+  "$pkgname-xatrix::git+https://github.com/yquake2/xatrix"
+  "$pkgname-ctf::git+https://github.com/yquake2/ctf"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
 _installdir="/opt/archrgs/ports/$pkgname"
 
 pkgver() {
@@ -23,7 +33,7 @@ pkgver() {
 
 prepare() {
   cd "$pkgname"
-  
+
   if [[ -d build ]]; then
     rm -rf build
   fi
@@ -36,8 +46,13 @@ build() {
   cmake .. \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DSYSTEMWIDE_SUPPORT=ON
+    -DSYSTEMWIDE_SUPPORT=OFF
   make
+
+  for dir in "$pkgname-rogue" "$pkgname-xatrix" "$pkgname-ctf"; do
+    cd "$srcdir/$dir"
+    make
+  done
 }
 
 package() {
@@ -48,5 +63,13 @@ package() {
   install -Dm644 ../stuff/yq2.cfg -t "${pkgdir}${_installdir%/}/share/doc"
   install -Dm644 ../doc/*.md -t "${pkgdir}${_installdir%/}/share/doc"
   install -Dm644 ../stuff/icon/Quake2.* -t "${pkgdir}${_installdir%/}/share/pixmaps"
-}
 
+  cd "$srcdir/$pkgname-rogue"
+  install -Dm644 ./release/game.so -t "${pkgdir}${_installdir%/}/bin/rogue"
+
+  cd "$srcdir/$pkgname-xatrix"
+  install -Dm644 ./release/game.so -t "${pkgdir}${_installdir%/}/bin/xatrix"
+
+  cd "$srcdir/$pkgname-ctf"
+  install -Dm644 ./release/game.so -t "${pkgdir}${_installdir%/}/bin/ctf"
+}

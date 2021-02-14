@@ -12,7 +12,7 @@ function onstart_rgs-em-retroarch_joystick() {
     input_joypad_driver="udev"
   fi
 
-  _rgs-em-retroarch_select_hotkey=1
+  _retroarch_select_hotkey=1
 
   _atebitdo_hack=0
   getAutoConf "8bitdo_hack" && _atebitdo_hack=1
@@ -25,10 +25,10 @@ function onstart_rgs-em-retroarch_joystick() {
 function onstart_rgs-em-retroarch_keyboard() {
   iniConfig " = " '"' "$configdir/all/retroarch.cfg"
 
-  _rgs-em-retroarch_select_hotkey=1
+  _retroarch_select_hotkey=1
 
   declare -Ag retroarchkeymap
-  ##SDL CODES FROM https://wiki.libsdl.org/SDLKeycodeLookup
+  ##SDL Codes From https://wiki.libsdl.org/SDLKeycodeLookup
   retroarchkeymap["1073741904"]="left"
   retroarchkeymap["1073741903"]="right"
   retroarchkeymap["1073741906"]="up"
@@ -134,7 +134,7 @@ function onstart_rgs-em-retroarch_keyboard() {
   retroarchkeymap["121"]="y"
   retroarchkeymap["122"]="z"
 
-  ##SPECIAL CASE FOR DISABLED HOTKEY
+  ##Special Case For Disabled Hotkey
   retroarchkeymap["0"]="nul"
 }
 
@@ -220,7 +220,7 @@ function map_rgs-em-retroarch_joystick() {
     ;;
   hotkeyenable)
     keys=("input_enable_hotkey")
-    _rgs-em-retroarch_select_hotkey=0
+    _retroarch_select_hotkey=0
     if [[ "$input_type" == "key" && "$input_id" == "0" ]]; then
       return
     fi
@@ -251,7 +251,7 @@ function map_rgs-em-retroarch_joystick() {
       type="btn"
       value="$input_id"
 
-      ##WORKAROUND FOR MISMATCHED CONTROLLER MAPPINGS
+      ##Workaround For Mismatched Controller Mappings
       iniGet "input_driver"
       if [[ "$ini_value" == "udev" ]]; then
         case "$DEVICE_NAME" in
@@ -264,8 +264,8 @@ function map_rgs-em-retroarch_joystick() {
       fi
       ;;
     esac
-    if [[ "$input_name" == "select" && "$_rgs-em-retroarch_select_hotkey" -eq 1 ]]; then
-      _rgs-em-retroarch_select_type="$type"
+    if [[ "$input_name" == "select" && "$_retroarch_select_hotkey" -eq 1 ]]; then
+      _retroarch_select_type="$type"
     fi
     key+="_$type"
     iniSet "$key" "$value"
@@ -330,7 +330,7 @@ function map_rgs-em-retroarch_keyboard() {
     ;;
   hotkeyenable)
     keys=("input_enable_hotkey")
-    _rgs-em-retroarch_select_hotkey=0
+    _retroarch_select_hotkey=0
     ;;
   *)
     return
@@ -343,15 +343,15 @@ function map_rgs-em-retroarch_keyboard() {
 }
 
 function onend_rgs-em-retroarch_joystick() {
-  ##IF $_rgs-em-retroarch_select_hotkey IS SET HERE, THEN THERE WAS NO HOTKEYENABLE BUTTON
-  ##IN THE CONFIGURATION, SO WE SHOULD USE THE SELECT BUTTON AS HOTKEY ENABLE IF SET
-  if [[ "$_rgs-em-retroarch_select_hotkey" -eq 1 ]]; then
-    iniGet "input_select_${_rgs-em-retroarch_select_type}"
-    [[ -n "$ini_value" ]] && iniSet "input_enable_hotkey_${_rgs-em-retroarch_select_type}" "$ini_value"
+  ##If $_retroarch_select_hotkey Is Set Here, Then There Was No Hotkeyenable Button
+  ##In The Configuration, So We Should Use The Select Button As Hotkey Enable If Set
+  if [[ "$_retroarch_select_hotkey" -eq 1 ]]; then
+    iniGet "input_select_${_retroarch_select_type}"
+    [[ -n "$ini_value" ]] && iniSet "input_enable_hotkey_${_retroarch_select_type}" "$ini_value"
   fi
 
-  ##HOTKEY SANITY CHECK
-  ##REMOVE HOTKEYS IF THERE IS NO HOTKEY ENABLE BUTTON
+  ##Hotkey Sanity Check
+  ##Remove Hotkeys If There Is No Hotkey Enable Button
   if ! grep -q "input_enable_hotkey" /tmp/tempconfig.cfg; then
     local key
     for key in input_state_slot_decrease input_state_slot_increase input_reset input_menu_toggle input_load_state input_save_state input_exit_emulator; do
@@ -359,14 +359,14 @@ function onend_rgs-em-retroarch_joystick() {
     done
   fi
 
-  ##DISABLE ANY AUTO CONFIGS FOR THE SAME DEVICE TO AVOID DUPLICATES
+  ##Disable Any Auto Configs For The Same Device To Avoid Duplicates
   local file
   local dir="$configdir/all/retroarch-joypads"
   while read -r file; do
     mv "$file" "$file.bak"
   done < <(grep -Fl "\"$DEVICE_NAME\"" "$dir/"*.cfg 2>/dev/null)
 
-  ##SANITISE FILENAME
+  ##Sanitise Filename
   file="${DEVICE_NAME//[\?\<\>\\\/:\*\|]/}.cfg"
 
   if [[ -f "$dir/$file" ]]; then
@@ -376,13 +376,13 @@ function onend_rgs-em-retroarch_joystick() {
 }
 
 function onend_rgs-em-retroarch_keyboard() {
-  if [[ "$_rgs-em-retroarch_select_hotkey" -eq 1 ]]; then
+  if [[ "${_retroarch_select_hotkey}" -eq 1 ]]; then
     iniGet "input_player1_select"
     iniSet "input_enable_hotkey" "$ini_value"
   fi
 
-  ##HOTKEY SANITY CHECK
-  ##REMOVE HOTKEYS IF THERE IS NO HOTKEY ENABLE BUTTON
+  ##Hotkey Sanity Check
+  ##Remove Hotkeys If There Is No Hotkey Enable Button
   iniGet "input_enable_hotkey"
   if [[ -z "$ini_value" || "$ini_value" == "nul" ]]; then
     iniSet "input_state_slot_decrease" ""

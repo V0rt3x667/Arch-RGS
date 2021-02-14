@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-ags
-pkgver=3.5.0.27
+pkgver=3.5.0.29
 pkgrel=1
 pkgdesc="Graphical Adventure Game Engine"
 arch=('x86_64')
@@ -14,7 +14,6 @@ depends=(
 )
 makedepends=(
   'cmake'
-  'gcc9'
   'wxgtk'
 )
 source=("https://github.com/adventuregamestudio/ags/archive/v.$pkgver.tar.gz")
@@ -35,8 +34,6 @@ build() {
   cd ags-v."$pkgver"/build
 
   cmake .. \
-    -DCMAKE_C_COMPILER=/usr/bin/cc-9 \
-    -DCMAKE_CXX_COMPILER=/usr/bin/c++-9 \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}"
   make
@@ -48,4 +45,3 @@ package() {
   install -Dm755 ./ags -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ../License.txt "${pkgdir}${_licencedir%/}/LICENSE"
 }
-

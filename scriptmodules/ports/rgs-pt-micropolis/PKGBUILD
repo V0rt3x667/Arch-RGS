@@ -1,12 +1,16 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-micropolis
-pkgver=r2.7462ab9
+pkgver=r28.fedc734
 pkgrel=1
 pkgdesc="SimCity Port"
 arch=('x86_64')
 url="https://www.donhopkins.com/home/micropolis"
 license=('GPL3')
-depends=('sdl_mixer' 'libxpm')
+depends=(
+  'inetutils'
+  'libxpm'
+  'sdl_mixer'
+)
 makedepends=('git')
 source=(
   "https://www.donhopkins.com/home/micropolis/micropolis-activity-source.tgz"
@@ -33,10 +37,6 @@ prepare() {
 build() {
   cd micropolis-activity
 
-  make
-
-  cd ..
-
   make PREFIX="${_installdir%/}"
 }
 
@@ -45,4 +45,3 @@ package() {
 
   make PREFIX="${_installdir%/}" DESTDIR="${pkgdir}" LIBEXECDIR="${_installdir%/}/lib" install
 }
-

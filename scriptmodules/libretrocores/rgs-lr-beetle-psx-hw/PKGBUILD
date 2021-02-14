@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-beetle-psx-hw
-pkgver=2479
+pkgver=2491
 pkgrel=1
 pkgdesc="Libretro Core - Sony PlayStation"
 arch=('x86_64')
@@ -34,4 +34,3 @@ package() {
  
   install -Dm644 ./mednafen_psx_hw_libretro.so -t "${pkgdir}${_installdir%/}"
 }
-

@@ -1,12 +1,13 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-gemrb
-pkgver=0.8.7
+pkgver=0.8.7.r351.7ae2fe110
 pkgrel=1
 pkgdesc="Port of Bioware's Infinity Engine"
 arch=('x86_64')
 url="http://www.gemrb.org"
 license=('GPL2')
 depends=(
+  'glew'
   'libvorbis'
   'openal'
   'python2'
@@ -42,6 +43,8 @@ build() {
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2/ \
+    -DDISABLE_WERROR=1 \
+    -DOPENGL_BACKEND=OpenGL \
     -DSDL_BACKEND=SDL2 \
     -DUSE_SDLMIXER=OFF
   make
@@ -52,4 +55,3 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
-

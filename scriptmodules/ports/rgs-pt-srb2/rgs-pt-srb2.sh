@@ -20,6 +20,5 @@ function remove_rgs-pt-srb2() {
 function configure_rgs-pt-srb2() {
   addPort "$md_id" "srb2" "Sonic Robo Blast 2" "pushd $md_inst; ./lsdlsrb2; popd"
 
-  moveConfigDir "$home/.srb2"  "$md_conf_root/$md_id"
+  moveConfigDir "$home/.srb2" "$md_conf_root/srb2"
 }
-

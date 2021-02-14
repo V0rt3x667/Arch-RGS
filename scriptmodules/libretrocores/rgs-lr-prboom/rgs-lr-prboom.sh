@@ -5,7 +5,7 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="rgs-lr-prboom"
-archrgs_module_desc="PrBoom (Doom, Doom II, Final Doom and Doom IWAD Mods) Libretro Core"
+archrgs_module_desc="PrBoom (Doom, Doom II, Final Doom & Doom IWAD Mods) Libretro Core"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/libretro-prboom/master/COPYING"
 archrgs_module_section="libretrocores"
 
@@ -19,12 +19,12 @@ function remove_rgs-lr-prboom() {
 
 function game_data_rgs-lr-prboom() {
   if [[ ! -f "$romdir/ports/doom/doom1.wad" ]]; then
-    ##Download doom 1 shareware
+    ##Download Doom 1 Shareware
     wget -nv -O "$romdir/ports/doom/doom1.wad" "$__archive_url/doom1.wad"
   fi
 
   if [[ ! -f "$romdir/ports/doom/freedoom1.wad" ]]; then
-    ##Download freedoom
+    ##Download Freedoom
     downloadAndExtract "https://github.com/freedoom/freedoom/releases/download/v0.12.1/freedoom-0.12.1.zip" "$romdir/ports/doom/" -j -LL
   fi
 
@@ -93,4 +93,3 @@ function configure_rgs-lr-prboom() {
   cp $md_inst/prboom.wad "$romdir/ports/doom"
   chown "$user:$user" "$romdir/ports/doom/prboom.wad"
 }
-

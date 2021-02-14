@@ -27,7 +27,7 @@ function game_data_rgs-pt-openjazz() {
 }
 
 function configure_rgs-pt-openjazz() {
-  addPort "$md_id" "openjazz" "Jazz Jackrabbit" "$md_inst/bin/OpenJazz HOMEDIR $romdir/ports/jazz"
+  addPort "$md_id" "openjazz" "Jazz Jackrabbit" "$md_inst/bin/OpenJazz -f HOMEDIR $romdir/ports/jazz"
 
   mkRomDir "ports/jazz"
 
@@ -37,4 +37,3 @@ function configure_rgs-pt-openjazz() {
 
   [[ "$md_mode" == "install" ]] && game_data_rgs-pt-openjazz
 }
-

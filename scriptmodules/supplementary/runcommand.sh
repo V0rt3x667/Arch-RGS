@@ -9,7 +9,7 @@ archrgs_module_desc="The 'runcommand' Launch Script"
 archrgs_module_section="core"
 
 function _update_hook_runcommand() {
-  ##MAKE SURE THE RUNCOMMAND IS ALWAYS UPDATED WHEN UPDATING ARCHRGS-SETUP
+  ##Make Sure The Runcommand Is Always Updated When Updating Archrgs-Setup
   archrgs_isInstalled "$md_idx" && install_bin_runcommand
 }
 
@@ -18,8 +18,8 @@ function depends_runcommand() {
 }
 
 function install_bin_runcommand() {
-    cp "$md_data/runcommand.sh" "$md_inst/"
-    cp "$md_data/joy2key.py" "$md_inst/"
+    cp "$scriptdir/scriptmodules/$md_type/$md_id/runcommand.sh" "$md_inst/"
+    cp "$scriptdir/scriptmodules/$md_type/$md_id/joy2key.py" "$md_inst/"
     chmod a+x "$md_inst/runcommand.sh"
     chmod a+x "$md_inst/joy2key.py"
     python3 -m compileall "$md_inst/joy2key.py"
@@ -34,7 +34,7 @@ function install_bin_runcommand() {
     fi
     if [[ ! -f "$configdir/all/runcommand-launch-dialog.cfg" ]]; then
         dialog --create-rc "$configdir/all/runcommand-launch-dialog.cfg"
-        chown $user:$user "$configdir/all/runcommand-launch-dialog.cfg"
+        chown "$user:$user" "$configdir/all/runcommand-launch-dialog.cfg"
     fi
     md_ret_require="$md_inst/runcommand.sh"
 }
@@ -99,4 +99,3 @@ function gui_runcommand() {
     esac
   done
 }
-

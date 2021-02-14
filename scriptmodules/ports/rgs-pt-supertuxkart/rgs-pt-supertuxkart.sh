@@ -18,6 +18,7 @@ function remove_rgs-pt-supertuxkart() {
 }
 
 function configure_rgs-pt-supertuxkart() {
-  addPort "$md_id" "supertuxkart" "SuperTuxKart" "$md_inst/bin/supertuxkart"
-}
+  addPort "$md_id" "supertuxkart" "SuperTuxKart" "$md_inst/bin/supertuxkart -f"
 
+  moveConfigDir $home/.local/share/supertuxkart "$md_conf_root/supertuxkart"
+}

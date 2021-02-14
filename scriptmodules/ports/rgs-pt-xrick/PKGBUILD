@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-xrick
+pkgver=r2.b54e9ef
+pkgrel=1
+pkgdesc="Rick Dangerous Port"
+arch=('x86_64')
+url="http://www.bigorno.net/xrick"
+license=('custom:')
+depends=(
+  'sdl'
+  'zlib'
+)
+makedepends=('git')
+source=("$pkgname::git+https://github.com/HerbFargus/xrick")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  ##CHANGE DATA PATH
+  sed "s|"data.zip"|${_installdir}/share/$pkgname/data.zip|" -i ./src/xrick.c
+
+  ##APPEND ARCHLINUX BUILD FLAGS & ADD -fcommon TO ALLOW BUILDING UNDER GCC10
+  sed "s|CFLAGS=|CFLAGS+=-fcommon |;s|LDFLAGS=|LDFLAGS+=|" -i ./Makefile
+
+  ##CUT & PAST RELEVANT PARAGRAPHS INTO LICENCE FILE
+  sed -n '3,27p' ./README > ./LICENCE
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./xrick -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm644 ./{data.zip,KeyCodes} -t "${pkgdir}${_installdir%/}/share/$pkgname"
+  install -Dm644 ./xrick.6.gz -t "${pkgdir}${_installdir%/}/share/man/man6/xrick.6.gz"
+  install -Dm644 ./LICENCE "${pkgdir}${_licencedir%/}/LICENCE"
+}

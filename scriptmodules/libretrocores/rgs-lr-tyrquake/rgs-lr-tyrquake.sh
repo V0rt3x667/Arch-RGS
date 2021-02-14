@@ -41,16 +41,19 @@ function _add_games_rgs-lr-tyrquake() {
 
   declare -A games=(
     ['id1']="Quake"
-    ['hipnotic']="Quake Mission Pack 1 (hipnotic)"
-    ['rogue']="Quake Mission Pack 2 (rogue)"
-    ['dopa']="Quake Episode 5 (dopa)"
+    ['hipnotic']="Quake Mission Pack 1 - Scourge of Armagon"
+    ['rogue']="Quake Mission Pack 2 - Dissolution of Eternity"
+    ['dopa']="Quake Episode 5 - Dimension of the Past"
 )
 
   for dir in "${!games[@]}"; do
     pak="$romdir/ports/quake/$dir/pak0.pak"
-    if [[ -f "$pak" ]]; then
+  if [[ -f "$pak" ]]; then
+    addPort "$md_id" "quake" "${games[$dir]}" "$cmd" "$pak"
+    if [[ "$md_id" =~ "rgs-pt-tyrquake" ]]; then
       addPort "$md_id" "quake" "${games[$dir]}" "$cmd" "$pak"
     fi
+  fi
   done
 }
 
@@ -69,4 +72,3 @@ function configure_rgs-lr-tyrquake() {
 
   ensureSystemretroconfig "ports/quake"
 }
-

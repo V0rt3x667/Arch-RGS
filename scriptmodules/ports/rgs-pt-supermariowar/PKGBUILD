@@ -34,7 +34,7 @@ prepare() {
   fi
   mkdir build
 
-  git submodule update --init
+  git submodule update --init --recursive
 
   sed -n '46p' README.md > LICENCE
 }
@@ -59,4 +59,3 @@ package() {
   install -dm755 "${pkgdir}${_installdir%/}/share/data"
   cp -r ../data "${pkgdir}${_installdir%/}/share"
 }
-
