@@ -7,7 +7,7 @@
 archrgs_module_id="rgs-fe-attractmode"
 archrgs_module_desc="Attract Mode - Graphical Front-End for Command Line Emulators"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/mickelson/attract/master/License.txt"
-archrgs_module_section="exp"
+archrgs_module_section="frontends"
 archrgs_module_flags="frontend"
 
 function _get_configdir_rgs-fe-attractmode() {
@@ -136,7 +136,7 @@ function configure_rgs-fe-attractmode() {
   mkUserDir "$md_conf_root/all/attractmode/emulators"
 
   cat >/usr/bin/attract <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 "$md_inst/bin/attract" "\$@"
 _EOF_
   chmod +x "/usr/bin/attract"

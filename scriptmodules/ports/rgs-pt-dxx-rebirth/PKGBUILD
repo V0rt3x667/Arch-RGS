@@ -1,11 +1,14 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-dxx-rebirth
-pkgver=0.59.100.r1918.0d70c3831
+pkgver=0.59.100.r2134.09946a1d9
 pkgrel=1
 pkgdesc="Descent 1 & 2 Game Engine"
 arch=('x86_64')
 url="http://www.dxx-rebirth.com"
-license=('GPL3' 'custom:Parallax')
+license=(
+  'custom:Parallax'
+  'GPL3'
+)
 depends=(
   'glu'
   'physfs'

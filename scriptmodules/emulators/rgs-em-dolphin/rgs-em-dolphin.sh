@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-dolphin"
 archrgs_module_desc="Dolphin - Nintendo Gamecube, Wii & Triforce Emulator"
-archrgs_module_help="ROM Extensions: .gcm .iso .wbfs .ciso .gcz\n\nCopy your gamecube roms to $romdir/gc and Wii roms to $romdir/wii"
+archrgs_module_help="ROM Extensions: .gcm .iso .wbfs .ciso .gcz .rvz .wad .wbfs\n\nCopy your gamecube roms to $romdir/gc and Wii roms to $romdir/wii"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/dolphin-emu/dolphin/master/license.txt"
 archrgs_module_section="emulators"
 

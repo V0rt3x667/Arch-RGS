@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-cdogs-sdl
-pkgver=0.10.2
+pkgver=0.11.0
 pkgrel=1
 pkgdesc="Enhanced SDL Port of C-Dogs (Cyberdogs 2)"
 arch=('x86_64')
@@ -43,3 +43,4 @@ package() {
   cp -r ./{data,doc,dogfights,graphics,missions,music,sounds} "${pkgdir}${_installdir%/}"
   cp -r ../missionpack/{dogfights,missions} "${pkgdir}${_installdir%/}"
 }
+

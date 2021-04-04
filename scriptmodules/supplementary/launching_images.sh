@@ -21,7 +21,7 @@ function depends_launching_images() {
 }
 
 function install_bin_launching_images() {
-  install -Dm755 "$md_data"/{generate-launching-images.sh,material.cfg} -t "$md_inst"
+  install -Dm755 "$md_data"/{generate-launching-images.sh, material.cfg} -t "$md_inst"
 }
 
 function _show_images_launching_images() {
@@ -214,7 +214,7 @@ function _load_config_launching_images() {
       'no_logo=' \
       'solid_bg_color=' \
       'system=' \
-      'logo_belt=' \
+      'logo_belt='
   )"
 }
 
@@ -400,6 +400,7 @@ function gui_launching_images() {
           _show_images_launching_images "$choice"
         done
         ;;
+ 
       esac
     else
       break

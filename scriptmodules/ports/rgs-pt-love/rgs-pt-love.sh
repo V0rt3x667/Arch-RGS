@@ -35,7 +35,11 @@ function configure_rgs-pt-love() {
 
   mkRomDir "love"
 
-  addEmulator 1 "$md_id" "love" "$md_inst/bin/love %ROM%"
+  if [[ "$md_id" == rgs-pt-love-legacy ]]; then
+    addEmulator 0 "$md_id" "love" "$md_inst/bin/love %ROM%"
+  else
+    addEmulator 1 "$md_id" "love" "$md_inst/bin/love %ROM%"
+  fi
   addSystem "love"
 
   [[ "$md_mode" == "install" ]] && game_data_rgs-pt-love

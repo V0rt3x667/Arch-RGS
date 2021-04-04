@@ -32,7 +32,7 @@ function configure_rgs-em-dosbox-x() {
   rm -f "$romdir/pc/$launcher_name"
   if [[ "$md_mode" == "install" ]]; then
     cat > "$romdir/pc/$launcher_name" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 
   params=("\$@")
   if [[ -z "\${params[0]}" ]]; then

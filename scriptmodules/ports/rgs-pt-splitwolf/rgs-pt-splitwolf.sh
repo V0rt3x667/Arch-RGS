@@ -51,7 +51,7 @@ function configure_rgs-pt-splitwolf() {
     game_data_rgs-pt-ecwolf
     chown -R "$user:$user" "$romdir/ports/wolf3d"
     cat > "$md_inst/bin/splitwolf.sh" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 
 function get_md5sum() {
   local file="\$1"

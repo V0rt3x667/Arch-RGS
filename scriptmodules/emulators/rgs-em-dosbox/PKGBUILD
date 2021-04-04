@@ -1,6 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-dosbox
-pkgver=0.74.2.r4390
+pkgver=0.74.3
+$_pkgver="$(echo $pkgver | sed -r 's/[.]+/-/2')"
 pkgrel=1
 pkgdesc="DOS Emulator"
 arch=('x86_64')
@@ -17,15 +18,9 @@ makedepends=(
   'mesa-libgl'
   'subversion'
 )
-source=("$pkgname::svn+https://svn.code.sf.net/p/dosbox/code-0/dosbox/trunk")
+source=("https://sourceforge.net/projects/dosbox/files/dosbox/$_pkgver/dosbox-$_pkgver.tar.gz/download")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf %s "$(sed 's/-/./' ./VERSION).r$(svnversion ./)"
-}
 
 build() {
   cd "$pkgname"

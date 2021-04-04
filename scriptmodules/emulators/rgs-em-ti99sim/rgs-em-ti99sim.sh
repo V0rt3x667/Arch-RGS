@@ -33,7 +33,7 @@ function configure_rgs-em-ti99sim() {
   local file
   file="$md_inst/bin/ti99sim.sh"
   cat >"$file" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 pushd "$md_inst/bin"
 ./ti99sim-sdl "\$@"
 popd

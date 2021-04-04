@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-ags
-pkgver=3.5.0.29
+pkgver=3.5.0.31
 pkgrel=1
 pkgdesc="Graphical Adventure Game Engine"
 arch=('x86_64')
@@ -14,24 +14,24 @@ depends=(
 )
 makedepends=(
   'cmake'
-  'wxgtk'
+  'wxgtk2'
 )
-source=("https://github.com/adventuregamestudio/ags/archive/v.$pkgver.tar.gz")
-sha256sums=('f8940e390510ebddc872ae032bc65351581a67bf9bb64a0c5d8e996615baf819')
+source=("$pkgname::git+https://github.com/adventuregamestudio/ags/#tag=v.$pkgver")
+sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
 
 prepare() {
-  cd ags-v."$pkgver"
+  cd "$pkgname"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {
-  cd ags-v."$pkgver"/build
+  cd "$pkgname/build"
 
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
@@ -40,8 +40,9 @@ build() {
 }
 
 package() {
-  cd ags-v."$pkgver"/build
+  cd "$pkgname/build"
 
   install -Dm755 ./ags -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ../License.txt "${pkgdir}${_licencedir%/}/LICENSE"
 }
+

@@ -11,10 +11,7 @@ depends=(
   'sdl'
   'vde2'
 )
-makedepends=(
-  'gcc9'
-  'git'
-)
+makedepends=('git')
 source=("$pkgname::git+https://github.com/cebix/macemu")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
@@ -30,7 +27,7 @@ build() {
 
   sed -i "/I_PUSH/d" sshpty.c
 
-  ./autogen.sh CC=/usr/bin/cc-9 CXX=/usr/bin/c++-9 \
+  ./autogen.sh \
     --prefix="$_installdir" \
     --enable-sdl-video \
     --enable-sdl-audio \

@@ -1,0 +1,101 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-raze
+pkgver=.0.9.1_beta
+pkgrel=1
+_zmusicver=1.1.6
+pkgdesc="Build Engine Port"
+arch=('x86_64')
+url="https://github.com/coelckers/Raze"
+license=(
+  'custom:Build Engine'
+  'GPL2'
+)
+depends=(
+  'fluidsynth'
+  'gtk3'
+  'libjpeg-turbo'
+  'libsndfile'
+  'libvpx'
+  'mpg123'
+  'openal'
+  'sdl2'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+provides=(
+  'raze=$pkgver'
+  'libzmusic.so'
+  'libzmusiclite.so'
+)
+source=(
+  "$pkgname::git+https://github.com/coelckers/Raze#tag=$pkgver"
+  "git+https://github.com/coelckers/ZMusic#tag=$_zmusicver"
+  "01_fix_file_paths.patch"
+)
+sha256sums=(
+  'SKIP'
+  'SKIP'
+  'SKIP'
+)
+_installdir="/opt/archrgs/ports/$pkgname"
+_licencedir="/usr/share/licenses/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+
+  git submodule update --init --recursive
+
+  patch -Np2 -i ../01_fix_file_paths.patch
+
+  cd "$srcdir/ZMusic/source"
+
+  sed 's/\/sounds/\/soundfonts/g' -i ./mididevices/music_fluidsynth_mididevice.cpp
+
+  for dir in "$pkgname" ZMusic; do
+    cd "${srcdir}/$dir"
+    if [[ -d ./build ]]; then
+      rm -rf ./build
+    fi
+    mkdir ./build
+  done
+}
+
+build() {
+  cd "$srcdir/ZMusic/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DDYN_FLUIDSYNTH=OFF \
+    -DDYN_MPG123=OFF \
+    -DDYN_SNDFILE=OFF
+  make
+
+  cd "$srcdir/$pkgname/build"
+
+  LDFLAGS+=" -Wl,-rpath='${_installdir%/}'"
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DDYN_GTK=OFF \
+    -DDYN_OPENAL=OFF \
+    -DZMUSIC_INCLUDE_DIR="${srcdir}/ZMusic/include" \
+    -DZMUSIC_LIBRARIES="${srcdir}/ZMusic/build/source/libzmusic.so"
+  make
+}
+
+package() {
+  cd "${srcdir}/$pkgname/build"
+
+  install -Dm755 ./raze -t "${pkgdir}/${_installdir%/}"
+  install -Dm644 ./raze.pk3 -t "${pkgdir}/${_installdir%/}"
+  install -Dm644 ./soundfonts/raze.sf2 -t "${pkgdir}/${_installdir%/}/soundfonts"
+  install -Dm644 ../build-doc/buildlic.txt "${pkgdir}${_licencedir%/}/LICENCE"
+
+  cd "${srcdir}/ZMusic/build"
+
+  install -Dm644 ./source/libzmusic* -t "${pkgdir}/${_installdir%/}"
+}
+

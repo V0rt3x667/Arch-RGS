@@ -6,10 +6,7 @@ pkgdesc="Quake I Source Port"
 arch=('x86_64')
 url="http://disenchant.net/tyrquake"
 license=('GPL2')
-depends=(
-  'libglvnd'
-  'libpulse'
-)
+depends=('libglvnd')
 makedepends=('git')
 source=(
   "$pkgname::git://disenchant.net/tyrquake#tag=v$pkgver" 
@@ -43,3 +40,4 @@ package() {
   install -Dm644 ./icons/*.png -t "${pkgdir}${_installdir%/}/share/icons"
   install -Dm644 ./man/*.6 -t "${pkgdir}${_installdir%/}/share/man"
 }
+

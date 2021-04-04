@@ -90,6 +90,7 @@ function hasFlag() {
   local string="$1"
   local flag="$2"
   [[ -z "$string" || -z "$flag" ]] && return 1
+
   if [[ "$string" =~ (^| )$flag($| ) ]]; then
     return 0
   else
@@ -118,6 +119,7 @@ function addLineToFile() {
   else
     sed -i --follow-symlinks '$a\' "$2"
   fi
+
   echo "$1" >>"$2"
 }
 
@@ -142,7 +144,7 @@ function hasPackage() {
   local pkg="$1"
 
   for pkg in $pkg; do
-    if [[ $pkg = base-devel ]]; then
+    if [[ "$pkg" == base-devel ]]; then
       pacman -Qg "$pkg" &>/dev/null
     else
       pacman -Q "$pkg" &>/dev/null
@@ -187,14 +189,13 @@ function pacmanRemove() {
 function pacmanPkg() {
   PKGBUILD="$1"
   for pkg in $PKGBUILD; do
-    cd "$scriptdir/scriptmodules/$md_type/$pkg" || exit
-    sudo -u "$user" \
-      BUILDDIR="$__builddir" \
-      PKGDEST="$__builddir/$pkg" \
-      SRCDEST="$__builddir/$pkg" \
-      SRCPKGDEST="$__builddir/$pkg" \
-      PACKAGER="archrgs.project <archrgs.project@gmail.com>" \
-      makepkg -csi --noconfirm
+    su -l "$user" -c 'cd '"$scriptdir/scriptmodules/$md_type/$pkg"' && \
+    BUILDDIR='"$__builddir"' \
+    PKGDEST='"$__builddir/$pkg"' \
+    SRCDEST='"$__builddir/$pkg"' \
+    SRCPKGDEST='"$__builddir/$pkg"' \
+    PACKAGER="archrgs.project <archrgs.project@gmail.com>" \
+    makepkg -csi --noconfirm'
   done
 }
 
@@ -221,7 +222,7 @@ function getDepends() {
       pacman -R --noconfirm "${packages[@]}"
       return 0
     fi
-    echo "Did not find needed package(s): ${packages[@]}. I am trying to install them now."
+    printMsgs "console" "Did not find needed package(s): ${packages[@]}. Trying to install them now."
     pacmanInstall "${packages[@]}"
     for required in "${packages[@]}"; do
       if [[ ${#failed[@]} -eq 0 ]]; then
@@ -242,18 +243,19 @@ function getDepends() {
 ## @param commit specific commit to checkout (optional - requires branch to be set)
 ## @param depth depth parameter for git. (optional)
 ## @brief Git clones or pulls a repository.
-## @details depth parameter will default to 1 (shallow clone) so long as __persistent_repos isn't set.
+## @details depth parameter will default to 1 (shallow clone).
 ## A depth parameter of 0 will do a full clone with all history.
 function gitPullOrClone() {
   local dir="$1"
+  [[ -z "$dir" ]] && dir="$md_build"
   local repo="$2"
   local branch="$3"
-  [[ -z "$branch" ]] && branch="master"
   local commit="$4"
   local depth="$5"
-  
 
-  if [[ -z "$depth" && "$__persistent_repos" -ne 1 && -z "$commit" ]]; then
+  [[ -z "$repo" ]] && return 1
+  [[ -z "$branch" ]] && branch="master"
+  if [[ -z "$depth" && -z "$commit" ]]; then
     depth=1
   else
     depth=0
@@ -262,7 +264,7 @@ function gitPullOrClone() {
   if [[ -d "$dir/.git" ]]; then
     pushd "$dir" >/dev/null || exit
     runCmd git checkout "$branch"
-    runCmd git pull
+    runCmd git pull --ff-only
     runCmd git submodule update --init --recursive
     popd >/dev/null || exit
   else
@@ -302,11 +304,10 @@ function setupDirectories() {
   mkUserDir "$home/.local"
   mkUserDir "$home/.local/share"
 
-  ##Make Sure We Have inifuncs.sh in Place and Updated
+  ##Make Sure inifuncs.sh is in Place and Updated
   mkdir -p "$rootdir/lib"
-  local helper_libs=(inifuncs.sh archivefuncs.sh)
-
-  for helper in "${helper_libs[@]}"; do
+  local helper
+  for helper in inifuncs.sh archivefuncs.sh; do
     if [[ ! -f "$rootdir/lib/$helper" || "$rootdir/lib/$helper" -ot "$scriptdir/scriptmodules/$helper" ]]; then
       cp --preserve=timestamps "$scriptdir/scriptmodules/$helper" "$rootdir/lib/$helper"
     fi
@@ -358,7 +359,7 @@ function moveConfigDir() {
   local from="$1"
   local to="$2"
 
-  ##If we are in remove mode - remove the symlink
+  ##If We Are In Remove Mode - Remove The Symlink
   if [[ "$md_mode" == "remove" ]]; then
     [[ -h "$from" ]] && rm -f "$from"
     return
@@ -383,17 +384,17 @@ function moveConfigFile() {
   local to="$2"
 
   ##If We Are in Remove Mode, Remove the Symlink
-  if [[ "$md_mode" == "remove" && -L "$from" ]]; then
+  if [[ "$md_mode" == "remove" && -h "$from" ]]; then
     rm -f "$from"
     return
   fi
 
   ##Move Old File
-  if [[ -f "$from" && ! -L "$from" ]]; then
+  if [[ -f "$from" && ! -h "$from" ]]; then
     mv "$from" "$to"
   fi
   ln -sf "$to" "$from"
-  ##Set Ownership to $user
+  ##Set Ownership Of The Link To $user
   chown -h "$user:$user" "$from"
 }
 
@@ -433,7 +434,7 @@ function dirIsEmpty() {
 function copyDefaultConfig() {
   local from="$1"
   local to="$2"
-  ##IF THE DESTINATION EXISTS AND IS DIFFERENT THEN COPY THE CONFIG AS NAME .rgs-dist
+  ##If The Destination Exists And Is Different Then Copy The Config As Name .rgs-dist
   if [[ -f "$to" ]]; then
     if ! diffFiles "$from" "$to"; then
       to+=".rgs-dist"
@@ -456,29 +457,17 @@ function copyDefaultConfig() {
 function renameModule() {
   local from="$1"
   local to="$2"
-  ##MOVE FROM OLD LOCATION AND UPDATE emulators.cfg
+  ##Move From Old Location And Update emulators.cfg
   if [[ -d "$rootdir/$md_type/$from" ]]; then
     rm -rf "$rootdir/$md_type/$to"
     mv "$rootdir/$md_type/$from" "$rootdir/$md_type/$to"
-    ##REPLACE ANY DEFAULT = "$from"
+    ##Replace Any Default = "$from"
     sed -i --follow-symlinks "s/\"$from\"/\"$to\"/g" "$configdir"/*/emulators.cfg
-    ##REPLACE ANY $from = "cmdline"
+    ##Replace Any $from = "cmdline"
     sed -i --follow-symlinks "s/^$from\([ =]\)/$to\1/g" "$configdir"/*/emulators.cfg
-    ##REPLACE ANY PATHS WITH /$from/
+    ##Replace Any Paths WITH /$from/
     sed -i --follow-symlinks "s|/$from/|/$to/|g" "$configdir"/*/emulators.cfg
   fi
-}
-
-## @fn addUdevInputRules()
-## @brief Creates a udev rule to adjust input device permissions.
-## @details Creates a udev rule in `/etc/udev/rules.d/99-input.rules` to
-## make everything in `/dev/input` it writable by any user in group `input`.
-function addUdevInputRules() {
-  if [[ ! -f /etc/udev/rules.d/99-input.rules ]]; then
-    echo 'SUBSYSTEM=="input", GROUP="input", MODE="0660"' >/etc/udev/rules.d/99-input.rules
-  fi
-  ##REMOVE OLD 99-evdev.rules
-  rm -f /etc/udev/rules.d/99-evdev.rules
 }
 
 ## @fn iniFileEditor()
@@ -489,9 +478,11 @@ function addUdevInputRules() {
 ## @details Some arrays need to be configured before calling this, which are
 ## used to display what can be edited and the options available.
 ##
-## The first array is `$ini_titles` which provides the titles for each entry.
+## The first array is `$ini_titles` which provides the titles for each
+## entry.
 ##
-## The second array is `$ini_descs` which contains a help description for each entry.
+## The second array is `$ini_descs` which contains a help description for each
+## entry.
 ##
 ## The third array is `$ini_options` which contains multiple space separated
 ## strings in each element to control how each entry should be managed.
@@ -524,11 +515,13 @@ function addUdevInputRules() {
 ## correspond to the ratios. The user is shown the ratios, but the ini configuration
 ## is set to the id (4:3 = 0, 16:9 = 1, 16:10 = 2).
 ##
-##  ini_options=('_function_ _video_fullscreen_configedit')
-## The function `_video_fullscreen_configedit` is called with *get* or *set* to manage this entry.
+##   ini_options=('_function_ _video_fullscreen_configedit')
+## The function `_video_fullscreen_configedit` is called with *get* or *set*
+## to manage this entry.
 ##
-##  ini_options=("video_shader _file_ *.*p $rootdir/emulators/retroarch/shader")
-## The key `video_shader` will be able to be set to a list of files in `$rootdir/emulators/retroarch/shader` that match the wildcard `*.*p`
+##   ini_options=("video_shader _file_ *.*p $rootdir/emulators/retroarch/shader")
+## The key `video_shader` will be able to be set to a list of files in
+## `$rootdir/emulators/retroarch/shader` that match the wildcard `*.*p`
 ##
 ## For more examples you can check out the code in supplementary/configedit.sh
 function iniFileEditor() {
@@ -811,6 +804,122 @@ function applyPatch() {
   return 0
 }
 
+## @fn runCurl()
+## @params ... commandline arguments to pass to curl
+## @brief Run curl with chosen parameters and handle curl errors
+## @details Runs curl with the provided parameters, whilst also capturing the output and extracting
+## any error message, which is stored in the global variable __NET_ERRMSG. Function returns the return
+## code provided by curl. The environment variable __curl_opts can be set to override default curl
+## parameters, eg - timeouts etc.
+## @retval curl return value
+function runCurl() {
+    local params=("$@")
+    # add any user supplied curl opts - timeouts can be overridden as curl uses the last parameters given
+    [[ -z "$__curl_opts" ]] && params+=($__curl_opts)
+
+    local cmd_err
+    local ret
+
+    # get the last non zero exit status (ignoring tee)
+    set -o pipefail
+
+    # set up additional file descriptor for stdin
+    exec 3>&1
+
+    # capture stderr - while passing both stdout and stderr to terminal
+    # curl like wget outputs the progress meter to stderr, so we will extract the error line later
+    cmd_err=$(curl "${params[@]}" 2>&1 1>&3 | tee /dev/stderr)
+    ret="$?"
+
+    # remove stdin copy
+    exec 3>&-
+
+    set +o pipefail
+
+    # if there was an error, extract it and put in __NET_ERRMSG
+    if [[ "$ret" -ne 0 ]]; then
+        # as we also capture the curl progress output, extract the last line which contains the error
+        __NET_ERRMSG="${cmd_err##*$'\n'}"
+    else
+        __NET_ERRMSG=""
+    fi
+    return "$ret"
+}
+
+## @fn download()
+## @param url url of file
+## @param dest destination name (optional), use - for stdout
+## @brief Download a file
+## @details Download a file - if the dest parameter is omitted, the file will be downloaded to the current directory.
+## If the destination name is a hyphen (-), then the file will be outputted to stdout, for piping to another command
+## or retrieving the contents directly to a variable. If the destination is a folder, extract with the basename from
+## the url to the destination folder.
+## @retval 0 on success
+function download() {
+    local url="$1"
+    local dest="$2"
+    local file="${url##*/}"
+
+    # if no destination, get the basename from the url
+    [[ -z "$dest" ]] && dest="${PWD}/$file"
+
+    # if the destination is a folder, download to that with filename from url
+    [[ -d "$dest" ]] && dest="$dest/$file"
+
+    local params=(--location)
+    if [[ "$dest" == "-" ]]; then
+        params+=(-s)
+    else
+        printMsgs "console" "Downloading $url to $dest ..."
+        params+=(-o "$dest")
+    fi
+    params+=(--connect-timeout 10 --speed-limit 1 --speed-time 60)
+    # add the url
+    params+=("$url")
+
+    local ret
+    runCurl "${params[@]}"
+    ret="$?"
+
+    # if download failed, remove file, log error and return error code
+    if [[ "$ret" -ne 0 ]]; then
+        # remove dest if not set to stdout and exists
+        [[ "$dest" != "-" && -f "$dest" ]] && rm "$dest"
+        md_ret_errors+=("URL $url failed to download.\n\n$__NET_ERRMSG")
+    fi
+    return "$ret"
+}
+
+## @fn downloadAndVerify()
+## @param url url of file
+## @param dest destination file (optional)
+## @brief Download a file and a corresponding .asc signature and verify the contents
+## @details Download a file and a corresponding .asc signature and verify the contents.
+## The .asc file will be downloaded to verify the file, but will be removed after downloading.
+## If the dest parameter is omitted, the file will be downloaded to the current directory
+## @retval 0 on success
+function downloadAndVerify() {
+    local url="$1"
+    local dest="$2"
+    local file="${url##*/}"
+
+    # if no destination, get the basename from the url (supported by GNU basename)
+    [[ -z "$dest" ]] && dest="${PWD}/$file"
+
+    local cmd_out
+    local ret=1
+    if download "${url}.asc" "${dest}.asc"; then
+        if download "$url" "$dest"; then
+            cmd_out="$(gpg --verify "${dest}.asc" 2>&1)"
+            ret="$?"
+            if [[ "$ret" -ne 0 ]]; then
+                md_ret_errors+=("$dest failed signature check:\n\n$cmd_out")
+            fi
+        fi
+    fi
+    return "$ret"
+}
+
 ## @fn downloadAndExtract()
 ## @param url url of archive
 ## @param dest destination folder for the archive
@@ -825,37 +934,31 @@ function downloadAndExtract() {
   local opts=("$@")
 
   local ext="${url##*.}"
-  local cmd=(tar -xv)
-  local is_tar=1
-
-  local ret
-  case "$ext" in
-  gz | tgz)
-    cmd+=(-z)
-    ;;
-  bz2)
-    cmd+=(-j)
-    ;;
-  xz)
-    cmd+=(-J)
-    ;;
-  exe|zip)
-    is_tar=0
-    local tmp="$(mktemp -d)"
     local file="${url##*/}"
-    runCmd wget -q -O"$tmp/$file" "$url"
-    runCmd unzip "${opts[@]}" -o "$tmp/$file" -d "$dest"
-    rm -rf "$tmp"
-    ret=$?
-  esac
 
-  if [[ "$is_tar" -eq 1 ]]; then
+    local temp="$(mktemp -d)"
+    ##Download File, Removing Temporary Folder And Returning On Error
+    if ! download "$url" "$temp/$file"; then
+        rm -rf "$temp"
+        return 1
+    fi
+
     mkdir -p "$dest"
-    cmd+=(-C "$dest" "${opts[@]}")
-    runCmd "${cmd[@]}" < <(wget -q -O- "$url")
+
+    local ret
+    case "$ext" in
+        exe|zip)
+            runCmd unzip "${opts[@]}" -o "$temp/$file" -d "$dest"
+            ;;
+        *)
+            tar -xvf "$temp/$file" -C "$dest" "${opts[@]}"
+            ;;
+    esac
     ret=$?
-  fi
-  return $ret
+
+    rm -rf "$temp"
+
+    return $ret
 }
 
 ## @fn joy2keyStart()
@@ -871,7 +974,7 @@ function downloadAndExtract() {
 ## @details Arguments are curses capability names or hex values starting with '0x'
 ## see: http://pubs.opengroup.org/onlinepubs/7908799/xcurses/terminfo.html
 function joy2keyStart() {
-  ##DO NOT START ON SSH SESSIONS (CHECK FOR BRACKET IN OUTPUT IP / NAME IN BRACKETS OVER A SSH CONNECTION)
+  ##Do Not Start On SSH Sessions (Check For Bracket In Output Ip / Name In Brackets Over A Ssh Connection)
   [[ "$(who -m)" == *\(* ]] && return
 
   local params=("$@")
@@ -879,13 +982,13 @@ function joy2keyStart() {
     params=(kcub1 kcuf1 kcuu1 kcud1 0x0a 0x20 0x1b)
   fi
 
-  ##GET THE FIRST JOYSTICK DEVICE (IF NOT ALREADY SET)
+  ##Get The First Joystick Device (If Not Already Set)
   [[ -c "$__joy2key_dev" ]] || __joy2key_dev="/dev/input/jsX"
 
-  ##IF NO JOYSTICK DEVICE, OR JOY2KEY IS ALREADY RUNNING EXIT
+  ##If No Joystick Device, Or Joy2key Is Already Running Exit
   [[ -z "$__joy2key_dev" ]] || pgrep -f joy2key.py >/dev/null && return 1
 
-  ##IF joy2key.py IS INSTALLED RUN IT WITH CURSOR KEYS FOR AXIS/DPAD, AND ENTER + SPACE FOR BUTTONS 0 AND 1
+  ##If joy2key.py Is Installed Run It With Cursor Keys For Axis/Dpad, And Enter + Space For Buttons 0 And 1
   if "$scriptdir/scriptmodules/supplementary/runcommand/joy2key.py" "$__joy2key_dev" "${params[@]}" 2>/dev/null; then
     __joy2key_pid=$(pgrep -f joy2key.py)
     return 0
@@ -912,7 +1015,7 @@ function joy2keyStop() {
 function getPlatformConfig() {
   local key="$1"
   local conf
-  for conf in "$configdir/all/archrgs_platforms.cfg" "$scriptdir/archrgs_platforms.cfg"; do
+  for conf in "$configdir/all/platforms.cfg" "$scriptdir/platforms.cfg"; do
     [[ ! -f "$conf" ]] && continue
     iniConfig "=" '"' "$conf"
     iniGet "$key"
@@ -1011,8 +1114,12 @@ function delSystem() {
 ## Can also optionally take a game parameter which can be used to create multiple launch
 ## scripts for different games using the same engine - eg for quake
 ##
-##  addPort "rgs-lr-tyrquake" "quake" "Quake" "$emudir/retroarch/retroarch -L $md_inst/tyrquake_libretro.so --config $md_conf_root/quake/retroarch.cfg %ROM%" ##  "$romdir/ports/quake/id1/pak0.pak"
-##  addPort "rgs-lr-tyrquake" "quake" "Quake Mission Pack 2 (rogue)" "$emudir/retroarch/etroarch -L $md_inst/tyrquake_libretro.so --config $md_conf_root/quake/##  retroarch.cfg %ROM%" "$romdir/ports/quake/id1/rogue/pak0.pak"
+## addPort "rgs-lr-tyrquake" "quake" "Quake" "$emudir/rgs-em-retroarch/bin/retroarch -L $md_inst/tyrquake_libretro.so
+## --config $md_conf_root/quake/retroarch.cfg %ROM%" "$romdir/ports/quake/id1/pak0.pak"
+##
+## addPort "rgs-lr-tyrquake" "quake" "Quake Mission Pack 2 (rogue)" "$emudir/rgs-em-retroarch/bin/retroarch 
+## -L $md_inst/tyrquake_libretro.so --config $md_conf_root/quake/retroarch.cfg %ROM%" 
+## "$romdir/ports/quake/id1/rogue/pak0.pak"
 ##
 ## Would add an entry in $configdir/ports/quake/emulators.cfg for rgs-lr-tyrquake (setting it to default if no default set)
 ## and create a launch script in $romdir/ports for each game.
@@ -1045,7 +1152,7 @@ function addPort() {
   mkUserDir "$romdir/ports"
 
   cat >"$file" <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 "$rootdir/supplementary/runcommand/runcommand.sh" 0 _PORT_ "$port" "$game"
 _EOF_
 
@@ -1150,41 +1257,47 @@ function dkmsManager() {
   local kernel="$(uname -r)"
   local ver
 
-  case "$mode" in
-  install)
-    if dkms status | grep -q "^$module_name"; then
-      dkmsManager remove "$module_name" "$module_ver"
-    fi
-    if [[ "$__chroot" -eq 1 ]]; then
-      kernel="$(ls -1 /lib/modules | tail -n -1)"
-    fi
-    ln -sf "$md_inst" "/usr/src/${module_name}-${module_ver}"
-    dkms install --force -m "$module_name" -v "$module_ver" -k "$kernel"
-    if dkms status | grep -q "^$module_name"; then
-      md_ret_error+=("Failed to install $md_id")
-      return 1
-    fi
-    ;;
-  remove)
-    for ver in $(dkms status "$module_name" | cut -d"," -f2 | cut -d":" -f1); do
-      dkms remove -m "$module_name" -v "$ver" --all
-      rm -f "/usr/src/${module_name}-${ver}"
-    done
-    dkmsManager unload "$module_name" "$module_ver"
-    ;;
-  reload)
-    dkmsManager unload "$module_name" "$module_ver"
-    ##NO REASON TO LOAD MODULES IN CHROOT
-    if [[ "$__chroot" -eq 0 ]]; then
-      modprobe "$module_name"
-    fi
-    ;;
-  unload)
-    if [[ -n "$(lsmod | grep ${module_name/-/_})" ]]; then
-      rmmod "$module_name"
-    fi
-    ;;
-  esac
+    case "$mode" in
+        install)
+            if dkms status | grep -q "^$module_name"; then
+                dkmsManager remove "$module_name" "$module_ver"
+            fi
+            ln -sf "$md_inst" "/usr/src/${module_name}-${module_ver}"
+            dkms install --no-initrd --force -m "$module_name" -v "$module_ver" -k "$kernel"
+            if ! dkms status "$module_name/$module_ver" -k "$kernel" | grep -q installed; then
+                # Force building for any kernel that has source/headers
+                local k_ver
+                while read k_ver; do
+                    if [[ -d "$(realpath /lib/modules/$k_ver/build)" ]]; then
+                        dkms install --no-initrd --force -m "$module_name/$module_ver" -k "$k_ver"
+                    fi
+                done < <(ls -r1 /lib/modules)
+            fi
+            if ! dkms status "$module_name/$module_ver" | grep -q installed; then
+                md_ret_errors+=("Failed to install $md_id")
+                return 1
+            fi
+            ;;
+        remove)
+            for ver in $(dkms status "$module_name" | cut -d"," -f2 | cut -d":" -f1); do
+                dkms remove -m "$module_name" -v "$ver" --all
+                rm -f "/usr/src/${module_name}-${ver}"
+            done
+            dkmsManager unload "$module_name" "$module_ver"
+            ;;
+        reload)
+            dkmsManager unload "$module_name" "$module_ver"
+            # No reason to load modules in chroot
+            if [[ "$__chroot" -eq 0 ]]; then
+                modprobe "$module_name"
+            fi
+            ;;
+        unload)
+            if [[ -n "$(lsmod | grep ${module_name/-/_})" ]]; then
+                rmmod "$module_name"
+            fi
+            ;;
+    esac
 }
 
 ## @fn getIPAddress()
@@ -1207,5 +1320,35 @@ function getIPAddress() {
 
   ##IF AN EXTERNAL ROUTE WAS FOUND, REPORT ITS SOURCE ADDRESS
   [[ -n "$ip_route" ]] && grep -oP "src \K[^\s]+" <<<"$ip_route"
+}
+
+## @fn isConnected()
+## @brief Simple check to see if there is a connection to the Internet.
+## @details Uses the getIPAddress function to check if we have a route to the Internet. Also sets
+## __NET_ERRMSG with an error message for use in packages / setup to display to the user if not.
+## @retval 0 on success
+## @retval 1 on failure
+function isConnected() {
+    local ip="$(getIPAddress)"
+    if [[ -z "$ip" ]]; then
+        __NET_ERRMSG="Not connected to the Internet"
+        return 1
+    fi
+    return 0
+}
+
+## @fn signFile()
+## @param file path to file to sign
+## @brief signs file with $__gpg_signing_key
+## @details signs file with $__gpg_signing_key creating corresponding .asc file in the same folder
+function signFile() {
+    local file="$1"
+    local cmd_out
+    cmd_out=$(gpg --default-key "$__gpg_signing_key" --detach-sign --armor --yes "$1" 2>&1)
+    if [[ "$?" -ne 0 ]]; then
+        md_ret_errors+=("Failed to sign $1\n\n$cmd_out")
+        return 1
+    fi
+    return 0
 }
 

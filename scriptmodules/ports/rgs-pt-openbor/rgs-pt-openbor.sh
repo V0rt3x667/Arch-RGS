@@ -5,7 +5,7 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="rgs-pt-openbor"
-archrgs_module_desc="OpenBOR - Beat 'em Up Game Engine"
+archrgs_module_desc="OpenBOR - Beat 'Em Up Game Engine"
 archrgs_module_help="OpenBOR games need to be extracted to function properly. Place your pak files in $romdir/ports/openbor and then run $rootdir/ports/openbor/extract.sh. When the script is done, your original pak files will be found in $romdir/ports/openbor/originals and can be deleted."
 archrgs_module_licence="BSD https://raw.githubusercontent.com/rofl0r/openbor/master/LICENSE"
 archrgs_module_section="ports"
@@ -24,7 +24,7 @@ function configure_rgs-pt-openbor() {
   mkRomDir "ports/openbor"
 
   cat >"$md_inst/bin/openbor.sh" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 pushd "$md_inst/bin"
 ./OpenBOR "\$@"
 popd
@@ -32,7 +32,7 @@ _EOF_
   chmod +x "$md_inst/bin/openbor.sh"
 
   cat >"$md_inst/bin/extract.sh" <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 PORTDIR="$md_inst/bin"
 BORROMDIR="$romdir/ports/openbor"
 mkdir \$BORROMDIR/original/
@@ -61,3 +61,4 @@ _EOF_
 
   ln -snf "$romdir/ports/openbor" "$md_inst/Paks"
 }
+

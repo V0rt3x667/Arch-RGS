@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-openbor
-pkgver=r7096.b8a2cef9
+pkgver=r7099.2b7f9ac6
 pkgrel=1
 pkgdesc="2D Side Scrolling Game Engine"
 arch=('x86_64')
@@ -57,3 +57,4 @@ package() {
   install -Dm755 ./tools/borpak/source/borpak -t "${pkgdir}${_installdir%/}/bin/"
   install -Dm644 ./LICENSE "${pkgdir}${_licencedir%/}/LICENCE"
 }
+

@@ -64,7 +64,7 @@ function configure_archrgs_menu() {
   local descs=(
     'Register and connect to bluetooth devices. Unregister and remove devices, and display registered and connected devices.'
     'Change common RetroArch options, and manually edit RetroArch configs, global configs, and non-RetroArch configs.'
-    'Install, uninstall, or update EmulationStation themes. Most themes can be previewed at https://github.com/retropie/ RetroPie-Setup/wiki/themes.'
+    'Install, uninstall, or update EmulationStation themes. Most themes can be previewed at https://github.com/retropie/RetroPie-Setup/wiki/themes.'
     'Basic ASCII file manager for linux allowing you to browse, copy, delete, and move files.'
     'Launches the RetroArch GUI so you can change RetroArch options. Note: Changes will not be saved unless you have enabled the "Save Configuration On Exit" option.'
     'Set up RetroArch Netplay options, choose host or client, port, host IP, delay frames, and your nickname.'

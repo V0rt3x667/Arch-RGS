@@ -38,7 +38,7 @@ function configure_rgs-em-reicast() {
   install -Dm755 "$md_data/reicast.sh" -t "$md_inst/bin"
 
   cat > "$romdir/dreamcast/+Start Reicast.sh" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
   $md_inst/bin/reicast.sh
 _EOF_
   chmod a+x "$romdir/dreamcast/+Start Reicast.sh"

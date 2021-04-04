@@ -93,7 +93,7 @@ function configure_rgs-em-mame() {
     rm "$temp_ini_hiscore"
   fi
 
-  addEmulator 0 "$md_id" "arcade" "$md_inst/bin/mame %BASENAME%"
+  addEmulator 1 "$md_id" "arcade" "$md_inst/bin/mame %BASENAME%"
   addEmulator 1 "$md_id" "$system" "$md_inst/bin/mame %BASENAME%"
 
   addSystem "arcade"

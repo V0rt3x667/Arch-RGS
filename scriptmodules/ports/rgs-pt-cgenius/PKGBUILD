@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-cgenius
-pkgver=2.7.5
+pkgver=2.7.8
 pkgrel=1
 pkgdesc="Modern Interpreter for the Commander Keen Games (Vorticon and Galaxy Games)"
 arch=('x86_64')
@@ -23,10 +23,10 @@ _installdir="/opt/archrgs/ports/$pkgname"
 prepare() {
   cd "$pkgname"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {
@@ -36,6 +36,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DAPPDIR="${_installdir%/}/bin" \
     -DSHAREDIR="${_installdir%/}/share" \
+    -DUSE_BOOST=no \
     -DUSE_SDL2=yes \
     -DNOTYPESAVE=on
   make
@@ -46,3 +47,4 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
+

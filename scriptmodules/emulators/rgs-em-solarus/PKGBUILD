@@ -2,7 +2,7 @@
 pkgname=rgs-em-solarus
 pkgver=1.6.4
 pkgrel=1
-pkgdesc="Open-source Game Engine for Action-RPGs"
+pkgdesc="Open-Source Game Engine for Action-RPGs"
 arch=('x86_64')
 url="http://www.solarus-games.org"
 license=('GPL3')
@@ -24,10 +24,10 @@ _installdir="/opt/archrgs/emulators/$pkgname"
 prepare() {
   cd "$srcdir/solarus-release-$pkgver"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {

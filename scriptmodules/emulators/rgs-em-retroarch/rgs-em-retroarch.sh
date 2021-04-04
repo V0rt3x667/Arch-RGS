@@ -25,6 +25,7 @@ function update_shaders_glsl_rgs-em-retroarch() {
   chown -R "$user:$user" "$configdir/all/retroarch/shaders"
 }
 
+
 function update_shaders_slang_rgs-em-retroarch() {
   local dir
   dir="$configdir/all/retroarch/shaders/slang_shaders"

@@ -73,3 +73,4 @@ package() {
   cd "$srcdir/$pkgname-ctf"
   install -Dm644 ./release/game.so -t "${pkgdir}${_installdir%/}/bin/ctf"
 }
+

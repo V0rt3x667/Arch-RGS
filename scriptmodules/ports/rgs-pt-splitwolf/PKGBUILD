@@ -72,3 +72,4 @@ package() {
     install -Dm644 "$licence" "${pkgdir}${_licencedir%/}/$licence"
   done
 }
+

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-openblok
-pkgver=r836.5405047
+pkgver=0.8.3
 pkgrel=1
 pkgdesc="Open-Source Falling Block Game"
 arch=('x86_64')
@@ -15,15 +15,9 @@ makedepends=(
   'cmake'
   'git'
 )
-source=("$pkgname::git+https://github.com/mmatyas/openblok")
+source=("$pkgname::git+https://github.com/mmatyas/openblok#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
 
 prepare() {
   cd "$pkgname"
@@ -52,3 +46,4 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
+

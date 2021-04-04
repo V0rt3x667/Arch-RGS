@@ -18,7 +18,7 @@ function remove_rgs-pt-tyrquake() {
 }
 
 function add_games_rgs-pt-tyrquake() {
-  add_games_rgs-lr-tyrquake "$md_inst/bin/tyr-glquake -basedir $romdir/ports/quake -game %QUAKEDIR%"
+  _add_games_rgs-lr-tyrquake "$md_inst/bin/tyr-glquake -f -basedir $romdir/ports/quake -game %QUAKEDIR%"
 }
 
 function configure_rgs-pt-tyrquake() {
@@ -30,3 +30,4 @@ function configure_rgs-pt-tyrquake() {
 
   moveConfigDir "$home/.tyrquake" "$md_conf_root/quake/tyrquake"
 }
+

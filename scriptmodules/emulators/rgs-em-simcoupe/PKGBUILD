@@ -18,10 +18,10 @@ _installdir="/opt/archrgs/emulators/$pkgname"
 prepare() {
   cd "simcoupe-$pkgver"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {

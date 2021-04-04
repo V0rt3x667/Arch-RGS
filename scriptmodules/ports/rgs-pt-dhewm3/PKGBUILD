@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-pt-dhewm3
+pkgver=1.5.1
+pkgrel=1
+pkgdesc="Doom 3 Game Engine"
+arch=('x86_64')
+url="https://github.com/dhewm/dhewm3"
+license=('GPL3')
+depends=(
+  'curl'
+  'libjpeg'
+  'libvorbis'
+  'openal'
+  'sdl2'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/dhewm/dhewm3#tag=$pkgver")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/ports/$pkgname"
+
+prepare() {
+  cd "$pkgname/neo"
+
+  if [[ -d ./build ]]; then
+    rm -rf ./build
+  fi
+  mkdir ./build
+}
+
+build() {
+  cd "$pkgname/neo/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DREPRODUCIBLE_BUILD=1 \
+    -DD3XP=1 \
+    -DDEDICATED=1
+  make
+}
+
+package() {
+  cd "$pkgname/neo/build"
+
+  make DESTDIR="$pkgdir" install
+}
+

@@ -25,13 +25,13 @@ pkgver() {
 prepare() {
   cd "$pkgname"
 
-  ##CHANGE DATA PATH
+  ##Change Data Path
   sed "s|"data.zip"|${_installdir}/share/$pkgname/data.zip|" -i ./src/xrick.c
 
-  ##APPEND ARCHLINUX BUILD FLAGS & ADD -fcommon TO ALLOW BUILDING UNDER GCC10
+  ##Append ArchLinux Build Flags & Add -fcommon To Allow Building Under GCC10
   sed "s|CFLAGS=|CFLAGS+=-fcommon |;s|LDFLAGS=|LDFLAGS+=|" -i ./Makefile
 
-  ##CUT & PAST RELEVANT PARAGRAPHS INTO LICENCE FILE
+  ##Cut & Past Relevant Paragraphs Into Licence File
   sed -n '3,27p' ./README > ./LICENCE
 }
 
@@ -49,3 +49,4 @@ package() {
   install -Dm644 ./xrick.6.gz -t "${pkgdir}${_installdir%/}/share/man/man6/xrick.6.gz"
   install -Dm644 ./LICENCE "${pkgdir}${_licencedir%/}/LICENCE"
 }
+

@@ -1,0 +1,89 @@
+--- ./a/source/core/gameconfigfile.cpp	2021-03-15 23:07:18.081404000 +0000
++++ ./b/source/core/gameconfigfile.cpp	2021-03-30 00:02:30.846917612 +0100
+@@ -76,8 +76,8 @@
+ 	if (!SetSection ("GameSearch.Directories"))
+ 	{
+ 		SetSection ("GameSearch.Directories", true);
+-		SetValueForKey ("Path", ".", true);
+-		SetValueForKey ("Path", "./*", true);
++		SetValueForKey("Path", ".", true);
++		SetValueForKey("Path", "./*", true);
+ #ifdef __APPLE__
+ 		SetValueForKey ("Path", user_docs + "/*", true);
+ 		SetValueForKey ("Path", user_app_support + "/EDuke32", true);
+@@ -95,23 +95,19 @@
+ 		SetValueForKey ("Path", "$PROGDIR", true);
+ 		SetValueForKey ("Path", "$PROGDIR/*", true);
+ #else
+-		SetValueForKey ("Path", "$HOME/" GAME_DIR "/*", true);
++		SetValueForKey("Path", "$HOME/" GAME_DIR "/*", true);
+ 		// Arch Linux likes them in /usr/share/raze
+ 		// Debian likes them in /usr/share/games/raze
+ 		// I assume other distributions don't do anything radically different
+-		SetValueForKey ("Path", "/opt/raze", true);
+-		SetValueForKey ("Path", "/usr/share/games/raze", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/raze", true);
+-		SetValueForKey ("Path", "/usr/share/games/jfduke3d", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/jfduke3d", true);
+-		SetValueForKey ("Path", "/usr/share/games/eduke32", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/eduke32", true);
+-		SetValueForKey ("Path", "/usr/share/games/nblood", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/nblood", true);
+-		SetValueForKey("Path", "/usr/share/games/jfsw", true);
+-		SetValueForKey("Path", "/usr/local/share/games/jfsw", true);
+-		SetValueForKey("Path", "/usr/share/games/voidsw", true);
+-		SetValueForKey("Path", "/usr/local/share/games/voidsw", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/blood/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/duke3d/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/exhumed/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/nam/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/redneck/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/rrragain/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/sw/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/ww2gi/*", true);
++		SetValueForKey("Path", "/usr/share/games/raze", true);
+ 
+ #endif
+ 		SetValueForKey ("Path", "$STEAM", true); // also covers GOG.
+@@ -130,14 +126,17 @@
+ 		SetValueForKey ("Path", "$PROGDIR", true);
+ 		SetValueForKey ("Path", "$GAMEDIR", true);
+ #else
+-		SetValueForKey ("Path", "$HOME/" GAME_DIR, true);
+-		SetValueForKey ("Path", SHARE_DIR, true);
+-		SetValueForKey ("Path", "/usr/share/games/jfduke3d", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/jfduke3d", true);
+-		SetValueForKey ("Path", "/usr/share/games/eduke32", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/eduke32", true);
+-		SetValueForKey ("Path", "/usr/share/games/nblood", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/nblood", true);
++		SetValueForKey("Path", "$HOME/" GAME_DIR, true);
++		SetValueForKey("Path", SHARE_DIR, true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/blood/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/duke3d/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/exhumed/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/nam/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/redneck/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/rrragain/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/sw/*", true);
++		SetValueForKey("Path", "$HOME/Arch-RGS/roms/ports/ww2gi/*", true);
++		SetValueForKey("Path", "/usr/share/games/raze", true);
+ #endif
+ 	}
+ 
+@@ -153,11 +152,11 @@
+ #elif !defined(__unix__)
+ 		SetValueForKey("Path", "$PROGDIR/soundfonts", true);
+ #else
++		SetValueForKey("Path", ".", true);
++		SetValueForKey("Path", "./*", true);
+ 		SetValueForKey("Path", "$HOME/" GAME_DIR "/soundfonts", true);
+-		SetValueForKey("Path", "/usr/local/share/" GAME_DIR "/soundfonts", true);
+-		SetValueForKey("Path", "/usr/local/share/games/" GAME_DIR "/soundfonts", true);
+-		SetValueForKey("Path", "/usr/share/" GAME_DIR "/soundfonts", true);
+-		SetValueForKey("Path", "/usr/share/games/" GAME_DIR "/soundfonts", true);
++		SetValueForKey("Path", "/usr/share/soundfonts", true);
++		SetValueForKey("Path", "/usr/share/games/raze/soundfonts", true);
+ #endif
+ 	}
+ 

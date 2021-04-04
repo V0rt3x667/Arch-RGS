@@ -60,3 +60,4 @@ package() {
   install -Dm755 ./uqm -t "${pkgdir}${_installdir%/}/bin"
   cp -r ./content "${pkgdir}${_installdir%/}"
 }
+

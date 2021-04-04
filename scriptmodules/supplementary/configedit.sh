@@ -65,7 +65,7 @@ function _joypad_index_configedit() {
         options+=("$i" "$value")
       done
 
-      local cmd=(dialog --backtitle "$__backtitle" --menu "Choose a player to adjust" 22 76 16)
+      local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Choose a player to adjust" 22 76 16)
       local choice
       choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
       [[ -z "$choice" ]] && return
@@ -78,7 +78,7 @@ function _joypad_index_configedit() {
         ((i++))
       done
 
-      local cmd=(dialog --backtitle "$__backtitle" --menu "Choose a Gamepad" 22 76 16)
+      local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Choose a Gamepad" 22 76 16)
       local choice
       choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
       [[ -z "$choice" ]] && continue
@@ -247,7 +247,7 @@ function choose_config_configedit() {
   local path="$1"
   local include="$2"
   local exclude="$3"
-  local cmd=(dialog --backtitle "$__backtitle" --menu "Which configuration would you like to edit" 22 76 16)
+  local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Which configuration would you like to edit" 22 76 16)
   local configs=()
   local options=()
   local config
@@ -269,7 +269,7 @@ function choose_config_configedit() {
 
 function basic_menu_configedit() {
   while true; do
-    local cmd=(dialog --backtitle "$__backtitle" --menu "Which platform do you want to adjust" 22 76 16)
+    local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Which platform do you want to adjust" 22 76 16)
     local configs=()
     local options=()
     local config
@@ -302,7 +302,7 @@ function basic_menu_configedit() {
 
 function advanced_menu_configedit() {
   while true; do
-    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option" 22 76 16)
+    local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Choose an option" 22 76 16)
     local options=(
       1 "Configure Libretro options"
       2 "Manually edit RetroArch configurations"
@@ -347,7 +347,7 @@ function advanced_menu_configedit() {
 
 function gui_configedit() {
   while true; do
-    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option" 22 76 16)
+    local cmd=(dialog --backtitle "$__backtitle" --cancel-label "Exit" --menu "Choose an option" 22 76 16)
     local options
     local choice
     local file="-"

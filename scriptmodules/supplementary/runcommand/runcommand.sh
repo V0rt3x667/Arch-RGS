@@ -713,6 +713,8 @@ function show_launch() {
     images+=(
       "$HOME/Arch-RGS/roms/$SYSTEM/images/${ROM_BN}-image"
       "$HOME/.emulationstation/downloaded_images/$SYSTEM/${ROM_BN}-image"
+      "$HOME/.emulationstation/downloaded_media/$SYSTEM/screenshots/${ROM_BN}"
+      "$HOME/Arch-RGS/roms/$SYSTEM/media/screenshots/${ROM_BN}"
     )
   fi
 
@@ -748,7 +750,7 @@ function show_launch() {
         --no-menus \
         --quiet \
         --slideshow-delay "$IMAGE_DELAY" \
-        "$image" &&>/dev/null  
+        "$image"
       IMG_PID=$!
       sleep "$IMAGE_DELAY"
     fi

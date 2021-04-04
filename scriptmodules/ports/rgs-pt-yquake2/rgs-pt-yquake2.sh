@@ -24,8 +24,8 @@ function add_games_rgs-pt-yquake2() {
   local pak
   declare -A games=(
     ['baseq2/pak0']="Quake II"
-    ['rogue/pak0']="Quake II - Ground Zero"
-    ['xatrix/pak0']="Quake II - The Reckoning"
+    ['xatrix/pak0']="Quake II - Mission Pack 1 - The Reckoning"
+    ['rogue/pak0']="Quake II - Mission Pack 2 - Ground Zero"
     ['ctf/pak0']="Quake II - Third Wave Capture The Flag"
 )
 
@@ -40,7 +40,7 @@ function add_games_rgs-pt-yquake2() {
 function game_data_rgs-pt-yquake2() {
   local unwanted
 
-  if [[ ! -f "$romdir/ports/quake2/baseq2/pak1.pak" && ! -f "$romdir/ports/quake2/baseq2/pak0.pak" ]]; then
+  if [[ ! -f "$romdir/ports/quake2/baseq2/pak0.pak" && ! -f "$romdir/ports/quake2/baseq2/pak1.pak" ]]; then
     ##Get Shareware Game Data
     downloadAndExtract "https://deponie.yamagi.org/quake2/idstuff/q2-314-demo-x86.exe" "$romdir/ports/quake2/baseq2" -j -LL
   fi
@@ -59,5 +59,7 @@ function configure_rgs-pt-yquake2() {
   moveConfigDir "$home/.yq2" "$md_conf_root/quake2/yquake2"
 
   [[ "$md_mode" == "install" ]] && game_data_rgs-pt-yquake2
-  add_games_rgs-pt-yquake2 "$md_inst/bin/quake2 -datadir $romdir/ports/quake2 +set r_mode -1 +set vid_fullscreen 1 +set vid_renderer gl3 +set r_vsync 1 +set game %ROM%"
+
+  add_games_rgs-pt-yquake2 "$md_inst/bin/quake2 -datadir $romdir/ports/quake2 +set vid_fullscreen 1 +set vid_renderer gl3 +set r_vsync 1 +set game %ROM%"
 }
+

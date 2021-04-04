@@ -3,7 +3,7 @@ index 6a88c3108e..2f5c23656a 100644
 --- a/retroarch.c
 +++ b/retroarch.c
 @@ -4727,7 +4727,8 @@ int generic_menu_entry_action(
-                   entry->label, entry->type, i, entry->entry_idx);
+                   entry->label, entry->type, i, entry->entry_id);
           break;
        case MENU_ACTION_SEARCH:
 -         menu_input_dialog_start_search();

@@ -1,0 +1,32 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-lr-dosbox-pure
+pkgver=0
+pkgrel=1
+pkgdesc="Libretro Core - MS-DOS"
+arch=('x86_64')
+url="https://github.com/libretro/dosbox-pure"
+license=('GPL2')
+depends=('gcc-libs')
+makedepends=('git')
+source=("$pkgname::git+https://github.com/libretro/dosbox-pure")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/libretrocores/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  git rev-list --count HEAD
+}
+
+build() {
+  cd "$pkgname"
+
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm644 ./dosbox_pure_libretro.so -t "${pkgdir}${_installdir%/}"
+}
+

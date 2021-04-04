@@ -16,7 +16,7 @@ function _get_input_cfg_rgs-fe-emulationstation() {
 
 function _update_hook_rgs-fe-emulationstation() {
   ##Make Sure The Input Configuration Scripts And Launch Script Are Always Up To Date
-  if archrgs_isInstalled "$md_idx"; then
+  if archrgs_isInstalled "$md_id"; then
     copy_inputscripts_rgs-fe-emulationstation
     install_launch_rgs-fe-emulationstation
   fi
@@ -129,7 +129,7 @@ function init_input_rgs-fe-emulationstation() {
   local es_config
   es_config="$(_get_input_cfg_rgs-fe-emulationstation)"
   
-  ##If There Is No Es Config (Or Empty File) Create It With Initial Inputlist Element
+  ##If There Is No ES Config (Or Empty File) Create It With Initial Inputlist Element
   if [[ ! -s "$es_config" ]]; then
     echo "<inputList />" >"$es_config"
   fi
@@ -156,7 +156,7 @@ function copy_inputscripts_rgs-fe-emulationstation() {
 
 function install_launch_rgs-fe-emulationstation() {
   cat >/usr/bin/emulationstation <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ \$(id -u) -eq 0 ]]; then
     echo "emulationstation should not be run as root. If you used 'sudo emulationstation' please run without sudo."
@@ -272,3 +272,4 @@ function gui_rgs-fe-emulationstation() {
     esac
   done
 }
+

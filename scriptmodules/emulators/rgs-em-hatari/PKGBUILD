@@ -73,3 +73,4 @@ package() {
 
   ln -s "${_installdir%/}/bin/libcapsimage.so.5.1" "${pkgdir}${_installdir%/}/bin/libcapsimage.so.5"
 }
+

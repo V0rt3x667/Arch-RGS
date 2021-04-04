@@ -24,15 +24,13 @@ function configure_rgs-em-openmsx() {
   mkRomDir "msx2"
 
   addEmulator 1 "$md_id" "msx" "$md_inst/bin/openmsx %ROM%"
-  addEmulator 1 "$md_id-msx2" "msx" "$md_inst/bin/openmsx -m 'Boosted_MSX2_EN' %ROM%"
-  addEmulator 0 "$md_id-msx2+" "msx" "$md_inst/bin/openmsx -m 'Boosted_MSX2+_JP' %ROM%"
-  addEmulator 0 "$md_id-msx-turbor" "msx" "$md_inst/bin/openmsx -m 'Panasonic_FS-A1GT' %ROM%"
+  addEmulator 1 "$md_id-msx2" "msx" "$md_inst/bin/openmsx -machine 'Boosted_MSX2_EN' %ROM%"
+  addEmulator 0 "$md_id-msx2-plus" "msx" "$md_inst/bin/openmsx -machine 'Boosted_MSX2+_JP' %ROM%"
+  addEmulator 0 "$md_id-msx-turbor" "msx" "$md_inst/bin/openmsx -machine 'Panasonic_FS-A1GT' %ROM%"
   addSystem "msx"
   addSystem "msx2"
 
   [[ $md_mode == "remove" ]] && return
-
-
 
   ##Add a Minimal Configuration
   local config

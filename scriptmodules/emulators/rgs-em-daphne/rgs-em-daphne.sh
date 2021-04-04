@@ -38,7 +38,7 @@ function configure_rgs-em-daphne() {
   [[ "$md_mode" == "remove" ]] && return
 
   cat >"$md_inst/bin/daphne.sh" <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 dir="\$1"
 name="\${dir##*/}"
 name="\${name%.*}"

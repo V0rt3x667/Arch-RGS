@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-gemrb
-pkgver=0.8.7.r351.7ae2fe110
+pkgver=0.8.7
 pkgrel=1
 pkgdesc="Port of Bioware's Infinity Engine"
 arch=('x86_64')
@@ -17,23 +17,17 @@ makedepends=(
   'cmake'
   'git'
 )
-source=("$pkgname::git+https://github.com/gemrb/gemrb")
+source=("$pkgname::git+https://github.com/gemrb/gemrb#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^v//;s/\([^-]*-\)g/r\1/;s/-/./g')"
-}
 
 prepare() {
   cd "$pkgname"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {
@@ -42,6 +36,7 @@ build() {
   cmake .. \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
+    -DLAYOUT="home" \
     -DFREETYPE_INCLUDE_DIRS=/usr/include/freetype2/ \
     -DDISABLE_WERROR=1 \
     -DOPENGL_BACKEND=OpenGL \
@@ -55,3 +50,4 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
+

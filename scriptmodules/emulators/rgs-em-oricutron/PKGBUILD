@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-oricutron
-pkgver=1.2.1
+pkgver=1.2.4
 _pkgver="$(echo $pkgver | sed -r 's/[.]+/_/g')"
 pkgrel=1
 pkgdesc="Tangerine Computer Systems Oric-1, Atmos, Stratos, Telestrat & Pravetz 8D Emulator"
@@ -27,10 +27,10 @@ prepare() {
 
   patch -Np1 -i ../01_Fix_CMake_Lists.patch
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {

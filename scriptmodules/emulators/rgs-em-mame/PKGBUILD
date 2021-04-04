@@ -97,3 +97,4 @@ package() {
   cp -ar ./{artwork,bgfx,docs,plugins,language,ctrlr,keymaps,hash} "${pkgdir}${_installdir%/}"
   install -Dm644 ./COPYING "${pkgdir}${_licencedir%/}/LICENCE"
 }
+

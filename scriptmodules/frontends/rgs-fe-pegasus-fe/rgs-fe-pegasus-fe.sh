@@ -7,7 +7,7 @@
 archrgs_module_id="rgs-fe-pegasus-fe"
 archrgs_module_desc="Pegasus - Cross Platform Customizable Graphical Frontend (Latest Alpha Release)"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/mmatyas/pegasus-frontend/master/LICENSE.md"
-archrgs_module_section="exp"
+archrgs_module_section="frontends"
 archrgs_module_flags="frontend"
 
 function install_bin_rgs-fe-pegasus-fe() {
@@ -19,16 +19,16 @@ function remove_rgs-fe-pegasus-fe() {
 }
 
 function configure_rgs-fe-pegasus-fe() {
-  ##CREATE LAUNCHER SCRIPT
+  ##Create Launcher Script
   cat >/usr/bin/pegasus-fe <<_EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 
   if [[ \$(id -u) -eq 0 ]]; then
     echo "Pegasus should not be run as root. If you used 'sudo pegasus-fe' please run without sudo."
     exit 1
   fi
 
-##SAVE CURRENT TTY/VT NUMBER FOR USE WITH X SO IT CAN BE LAUNCHED ON THE CORRECT TTY
+##Save Current TTY/VT Number For Use With X So It Can Be Launched On The Correct TTY
 tty=\$(tty)
 export TTY="\${tty:8:1}"
 

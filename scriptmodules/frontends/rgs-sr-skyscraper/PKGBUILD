@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-sr-skyscraper
-pkgver=3.6.1.r2653.5375320
+pkgver=3.6.9
 pkgrel=1
 pkgdesc="Powerful & Versatile Game Scraper"
 arch=("x86_64")
@@ -8,16 +8,9 @@ url="https://github.com/muldjord/skyscraper"
 license=('GPL3')
 depends=('qt5-base')
 makedepends=('git')
-_latestver="$(wget -qO- https://api.github.com/repos/muldjord/skyscraper/releases/latest | grep -m 1 tag_name | cut -d\" -f4)"
-source=("$pkgname::git+https://github.com/muldjord/skyscraper#tag=${_latestver}")
+source=("$pkgname::git+https://github.com/muldjord/skyscraper#tag=$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/frontends/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s.r%s.%s" "$_latestver" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
 
 prepare() {
   cd "$pkgname"

@@ -40,7 +40,7 @@ function configure_rgs-em-linapple-pie() {
   local file
   file="$md_inst/linapple.sh"
   cat >"$file" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 pushd "$romdir/apple2"
 $md_inst/bin/linapple "\$@"
 popd

@@ -26,16 +26,16 @@ function game_data_quake3() {
 }
 
 function configure_rgs-pt-ioquake3() {
-  local launcher
-  launcher=("$md_inst/ioquake3.x86_64" "$md_inst/ioq3ded.x86_64")
-
-  addPort "$md_id" "quake3" "Quake III Arena" "${launcher[*]}"
-
   mkRomDir "ports/quake3"
+
+  addPort "$md_id" "quake3" "Quake III Arena" "$md_inst/ioquake3.x86_64"
+  addPort "$md_id" "quake3" "Quake III Team Arena" "$md_inst/ioq3ded.x86_64"
+
+  [[ "$md_mode" == "remove" ]] && return
+
+  game_data_quake3
 
   moveConfigDir "$md_inst/baseq3" "$romdir/ports/quake3"
   moveConfigDir "$home/.q3a" "$md_conf_root/ioquake3"
-
-  [[ "$md_mode" == "install" ]] && game_data_quake3
 }
 

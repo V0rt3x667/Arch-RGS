@@ -82,3 +82,4 @@ package() {
   install -Dm644 ./patch111/patchdat/data1/* -t "${pkgdir}${_installdir%/}/patchdat/data1"
   install -Dm644 ./patch111/patchdat.txt -t "${pkgdir}${_installdir%/}/share/doc"
 }
+

@@ -27,7 +27,7 @@ function configure_rgs-em-zesarux() {
   mkUserDir "$md_conf_root/zxspectrum"
 
   cat > "$romdir/zxspectrum/+Start ZEsarUX.sh" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 "$md_inst/bin/zesarux" "\$@"
 _EOF_
   chmod +x "$romdir/zxspectrum/+Start ZEsarUX.sh"

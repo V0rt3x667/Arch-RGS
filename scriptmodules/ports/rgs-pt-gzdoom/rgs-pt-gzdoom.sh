@@ -23,11 +23,22 @@ function add_games_rgs-pt-gzdoom() {
 
   launcher_prefix="DOOMWADDIR=$romdir/ports/doom"
 
-  _add_games_rgs-lr-prboom "$launcher_prefix $md_inst/bin/gzdoom -iwad %ROM% +fullscreen 1"
+  _add_games_rgs-lr-prboom "$md_inst/gzdoom -iwad %ROM% +vid_renderer 1 +vid_fullscreen 1"
 }
 
 function configure_rgs-pt-gzdoom() {
-  mkRomDir "ports/doom"
+  local dir
+  dir=(
+    'doom'
+    'chex'
+    'heretic'
+    'hexen'
+    'hacx'
+    'strife' 
+)
+  for d in "${dir[@]}"; do
+    mkRomDir "ports/${d}"
+  done
 
   moveConfigDir "$home/.config/gzdoom" "$md_conf_root/doom"
 

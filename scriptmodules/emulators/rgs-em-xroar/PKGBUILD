@@ -4,7 +4,7 @@ pkgver=0.36.2
 pkgrel=1
 pkgdesc="Dragon Data Dragon 32 & 64 & Tandy Colour Computer (CoCo) 1 & 2 Emulator"
 arch=('x86_64')
-license=('GPL2')
+license=('GPL3')
 url="https://www.6809.org.uk/xroar"
 depends=(
   'alsa-lib'

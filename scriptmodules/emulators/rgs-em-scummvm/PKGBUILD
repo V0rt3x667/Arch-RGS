@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-scummvm
-pkgver=2.3.0.r10055.04c6113655
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="Virtual Machine for Graphical Point-and-Click Adventure Games"
 arch=('x86_64')
@@ -24,15 +24,9 @@ makedepends=(
   'git'
   'mesa'
 )
-source=("$pkgname::git+https://github.com/scummvm/scummvm")
+source=("$pkgname::git+https://github.com/scummvm/scummvm#tag=v2.2.0")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^desc\///; s/git//g; s/\([^-]*-\)g/r\1/; s/-/./g')"
-}
 
 build() {
   cd "$pkgname"

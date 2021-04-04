@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-jumpnbump
-pkgver=1.60.r31.b407dee
+pkgver=1.60.r33.5744738
 pkgrel=1
 pkgdesc="Jump 'n' Bump Play Cute Bunnies Jumping On Each Other's Heads"
 arch=('x86_64')

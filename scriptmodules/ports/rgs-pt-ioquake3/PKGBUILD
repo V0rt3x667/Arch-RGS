@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-ioquake3
-pkgver=r3345.b3885353
+pkgver=r3347.05180e32
 pkgrel=1
 pkgdesc="Quake 3 Arena Port"
 arch=('x86_64')
@@ -29,3 +29,4 @@ package() {
 
   make COPYDIR="${pkgdir}${_installdir%/}" copyfiles
 }
+

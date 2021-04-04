@@ -1,16 +1,21 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-ionfury
-pkgver=r9297.2bb6cbcae
+pkgver=r9310.b7d4ae3a5
 pkgrel=1
 pkgdesc="Commercial FPS Game Based On EDuke32 Source Port"
 arch=('x86_64')
 url="http://eduke32.com"
-license=('GPL2' 'custom:Build Engine')
+license=(
+  'GPL2'
+  'custom:Build Engine'
+)
 depends=(
   'alsa-lib'
   'flac'
+  'gtk2'
   'libvorbis'
-  'sdl2'
+  'libvpx'
+  'sdl2_mixer'
 )
 makedepends=(
   'git'
@@ -33,7 +38,9 @@ build() {
 
   make \
     FURY=1 \
-    PREFIX="${_installdir%/}"
+    PREFIX="${_installdir%/}" \
+    PACKAGE_REPOSITORY=1 \
+    SDL_TARGET=2
 }
 
 package() {
@@ -42,3 +49,4 @@ package() {
   install -Dm755 ./{fury,mapster32} -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ./package/common/buildlic.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
+

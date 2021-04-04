@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-caprice32
-pkgver=r864.584d4ab
+pkgver=4.6.0
 pkgrel=1
 pkgdesc="Amstrad CPC 464, 664 & 6128 Emulator"
 arch=('x86_64')
@@ -12,7 +12,7 @@ depends=(
 )
 makedepends=('git')
 source=(
-  "$pkgname::git+https://github.com/ColinPitrat/caprice32"
+  "$pkgname::git+https://github.com/ColinPitrat/caprice32#tag=v$pkgver"
   "http://softpres.org/_media/files:ipflib42_linux-x86_64.tar.gz"
 )
 sha256sums=(
@@ -20,12 +20,6 @@ sha256sums=(
   'ea139673e29a36dc3be7ba916628b5c8a03353bd68be4d346daed803d472ddf3'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
 
 prepare() {
   cd "$pkgname"

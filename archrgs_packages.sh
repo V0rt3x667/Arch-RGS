@@ -4,14 +4,14 @@
 #
 # Please see the LICENSE file at the top-level directory of this distribution.
 
-__version="1.7.2-BETA"
+__version="1.8.0-BETA"
 
 [[ "$__debug" -eq 1 ]] && set -x
 
-##ARCHRGS INSTALL LOCATION
+##Archrgs Install Location
 rootdir="/opt/archrgs"
 
-##IF __user IS SET INSTALL FOR THAT USER, ELSE USE SUDO_USER
+##If __user Is Set Install For That User, Else Use sudo_user
 if [[ -n "$__user" ]]; then
   user="$__user"
   if ! id -u "$__user" &>/dev/null; then
@@ -39,7 +39,7 @@ __builddir="$__tmpdir/build"
 
 pkgdir="$scriptdir/packages"
 
-##CHECK IF SUDO IS USED
+##Check If Sudo Is Used
 if [[ "$(id -u)" -ne 0 ]]; then
   echo "Script must be run under sudo from the user you want to install for. Try 'sudo $0'"
   exit 1
@@ -66,7 +66,7 @@ else
 fi
 
 if [[ "${#__ERRMSGS[@]}" -gt 0 ]]; then
-  ##OVERRIDE RETURN CODE IF ERRMSGS IS SET
+  ##Override Return Code If Errmsgs Is Set
   [[ "$rgs_ret" -eq 0 ]] && rgs_ret=1
   printMsgs "console" "Errors:\n${__ERRMSGS[@]}"
 fi
@@ -76,4 +76,3 @@ if [[ "${#__INFMSGS[@]}" -gt 0 ]]; then
 fi
 
 exit $rgs_ret
-

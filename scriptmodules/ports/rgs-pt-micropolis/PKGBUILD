@@ -11,10 +11,9 @@ depends=(
   'libxpm'
   'sdl_mixer'
 )
-makedepends=('git')
 source=(
   "https://www.donhopkins.com/home/micropolis/micropolis-activity-source.tgz"
-  "01_Fix_Build_Issues.patch"
+  "01_fix_build_issues.patch"
 )
 sha256sums=(
   '1b3c72dc3680a34b5fc5a740a6fb5cfc0b8775514da8ab7bb3b2965b20d4f8bc'
@@ -31,17 +30,20 @@ pkgver() {
 prepare() {
   cd micropolis-activity
 
-  patch -Np1 -i ../01_Fix_Build_Issues.patch
+  patch -Np1 -i ../01_fix_build_issues.patch
 }
 
 build() {
-  cd micropolis-activity
+  cd micropolis-activity/src
 
-  make PREFIX="${_installdir%/}"
+  make
 }
 
 package() {
   cd micropolis-activity
 
+  cp ./src/sim/sim ./res/sim
+
   make PREFIX="${_installdir%/}" DESTDIR="${pkgdir}" LIBEXECDIR="${_installdir%/}/lib" install
 }
+

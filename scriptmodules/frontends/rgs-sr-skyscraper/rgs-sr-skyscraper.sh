@@ -7,7 +7,7 @@
 archrgs_module_id="rgs-sr-skyscraper"
 archrgs_module_desc="Skyscraper - Powerful & Versatile Game Scraper"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/muldjord/skyscraper/master/LICENSE"
-archrgs_module_section="exp"
+archrgs_module_section="frontends"
 
 function install_bin_rgs-sr-skyscraper() {
   pacmanPkg rgs-sr-skyscraper
@@ -95,9 +95,9 @@ function _purge_platform_rgs-sr-skyscraper() {
 }
 
 function _get_ver_rgs-sr-skyscraper() {
-  if [[ -f "$md_inst/bin/Skyscraper" ]]; then
-    printf '%s\n' "$("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper' | cut -d' ' -f 3 | tr -d v 2>/dev/null)"
-  fi
+    if [[ -f "$md_inst/bin/Skyscraper" ]]; then
+        echo $("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper'  | cut -d' '  -f 3 | tr -d v 2>/dev/null)
+    fi
 }
 
 ##LIST ANY NON-EMPTY SYSTEMS FOUND IN THE ROM FOLDER
@@ -127,7 +127,7 @@ function configure_rgs-sr-skyscraper() {
 
     local folder
     for folder in $cache_folder import; do
-      mv "$home/.skyscraper/$folder" "$home/.skyscraper-$folder" &&
+      mv "$home/.skyscraper/$folder" "$home/.skyscraper-$folder" && \
         printMsgs "console" "INFO: Moved "$home/.skyscraper/$folder" to "$home/.skyscraper-$folder""
     done
 
@@ -170,11 +170,15 @@ function _init_config_rgs-sr-skyscraper() {
   ##COPY REQUIRED FILES
   cp -rf "$md_inst/share/skyscraper/*" "$scraper_conf_dir"
 
-  ##CREATE THE IMPORT FOLDERS
-  local folder
-  for folder in covers marquees screenshots textual videos wheels; do
-    mkUserDir "$scraper_conf_dir/import/$folder"
-  done
+    # Create the import folders and add the sample files.
+    local folder
+    for folder in covers marquees screenshots textual videos wheels; do
+        mkUserDir "$scraper_conf_dir/import/$folder"
+    done
+
+    # Create the cache folder and add the sample 'priorities.xml' file to it
+    mkdir -p "$scraper_conf_dir/cache"
+    cp -f "$md_inst/share/skyscraper/priorities.xml.example" "$scraper_conf_dir/cache"
 }
 
 ##SCRAPE ONE SYSTEM PASSED AS PARAMETER
@@ -186,8 +190,8 @@ function _scrape_rgs-sr-skyscraper() {
   iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
   eval "$(_load_config_rgs-sr-skyscraper)"
 
-  local -a params=(-i "$romdir/$system" -p "$system")
-  local flags="unattend,skipped,"
+    local -a params=(-p "$system")
+    local flags="unattend,skipped,"
 
   [[ "$download_videos" -eq 1 ]] && flags+="videos,"
 
@@ -268,7 +272,7 @@ function _scrape_chosen_rgs-sr-skyscraper() {
   local choice
 
   for choice in "${choices[@]}"; do
-    choice="${options[choice * 3 - 2]}"
+    choice="${options[choice*3-2]}"
     _scrape_rgs-sr-skyscraper "$choice" "$@"
   done
 }
@@ -293,21 +297,19 @@ function _generate_chosen_rgs-sr-skyscraper() {
   local choices
   local cmd=(dialog --backtitle "$__backtitle" --ok-label "Start" --cancel-label "Back" --checklist " Select platforms for gamelist(s) generation\n\n" 22 60 16)
 
-  choices="($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))"
+  choices=($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))
 
   ##EXIT IF NOTHING WAS CHOSEN OR CANCEL WAS USED
   [[ ${#choices[@]} -eq 0 || $? -eq 1 ]] && return 1
 
   for choice in "${choices[@]}"; do
-    choice="${options[choice * 3 - 2]}"
+    choice="${options[choice*3-2]}"
     _scrape_rgs-sr-skyscraper "$choice" "cache" "$@"
   done
 }
 
 function _load_config_rgs-sr-skyscraper() {
-  printf '%s\n' \
-    "$(
-      loadModuleConfig \
+    echo "$(loadModuleConfig \
         'rom_name=0' \
         'use_rom_folder=0' \
         'download_videos=0' \
@@ -370,12 +372,11 @@ function _gui_advanced_rgs-sr-skyscraper() {
         ;;
 
       HELP*)
-        ##RETAIN CHOICE
+        # Retain choice
         default="${choice/HELP /}"
-        if [[ -n "${help_strings_adv[${default}]}" ]]; then
+        if [[ ! -z "${help_strings_adv[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_adv[${default}]}" 22 65 >&1
-        fi
-        ;;
+    fi
       esac
     else
       break
@@ -515,7 +516,7 @@ function gui_rgs-sr-skyscraper() {
           s_default="Online: ${s_source_names[1]}"
         fi
 
-        local s_cmd=(dialog --title "Select Scraping source" --default-item "$s_default"
+        local s_cmd=(dialog --title "Select Scraping source" --default-item "$s_default" \
           --menu "Choose one of the available scraping sources" 18 50 9)
 
         ##RUN THE SCRAPER SOURCE SELECTION DIALOG
@@ -701,10 +702,9 @@ function _gui_cache_rgs-sr-skyscraper() {
       HELP*)
         ##RETAIN CHOICE
         default="${choice/HELP /}"
-        if [[ -n "${help_strings_cache[${default}]}" ]]; then
+        if [[ ! -z "${help_strings_cache[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_cache[${default}]}" 22 65 >&1
         fi
-        ;;
       esac
     else
       break
@@ -782,4 +782,3 @@ function _gui_generate_rgs-sr-skyscraper() {
     fi
   done
 }
-

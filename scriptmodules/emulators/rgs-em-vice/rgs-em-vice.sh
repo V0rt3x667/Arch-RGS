@@ -25,7 +25,7 @@ function configure_rgs-em-vice() {
   ##Install the VICE Start Script
   mkdir -p "$md_inst/bin"
   cat > "$md_inst/bin/vice.sh" << _EOF_
-#!/bin/bash
+#!/usr/bin/env bash
 
 BIN="\${0%/*}/\$1"
 ROM="\$2"
@@ -52,6 +52,7 @@ _EOF_
   mkRomDir "c64"
 
   addEmulator 0 "$md_id-x64" "c64" "$md_inst/bin/vice.sh x64 %ROM%"
+  addEmulator 0 "$md_id-x64dtv" "c64" "$md_inst/bin/vice.sh x64dtv %ROM%"
   addEmulator 1 "$md_id-x64sc" "c64" "$md_inst/bin/vice.sh x64sc %ROM%"
   addEmulator 0 "$md_id-x128" "c64" "$md_inst/bin/vice.sh x128 %ROM%"
   addEmulator 0 "$md_id-xpet" "c64" "$md_inst/bin/vice.sh xpet %ROM%"

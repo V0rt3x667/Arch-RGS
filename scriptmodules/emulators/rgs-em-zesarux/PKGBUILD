@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-zesarux
-pkgver=9.1.05112020
+pkgver=9.1
 pkgrel=1
 pkgdesc="Sinclair Zx80, Zx81, Z88, Zx Spectrum 16, 48, 128, +2, +2A & ZX-Uno Emulator"
 arch=('x86_64')
@@ -12,15 +12,9 @@ depends=(
   'sdl2'
 )
 makedepends=('git')
-source=("$pkgname::git+https://github.com/chernandezba/zesarux#tag=9.1-05112020")
+source=("$pkgname::git+https://github.com/chernandezba/zesarux#tag=$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --tags | sed 's/^v//; s/\([^-]*-\)g/r\1/; s/-/./g')"
-}
 
 build() {
   cd "$pkgname/src"

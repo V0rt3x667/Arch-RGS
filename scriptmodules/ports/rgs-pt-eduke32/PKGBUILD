@@ -1,20 +1,21 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-eduke32
-pkgver=r9297.2bb6cbcae
+pkgver=r9314.a2d4c2794
 pkgrel=1
 pkgdesc="Duke Nukem 3D Port"
 arch=('x86_64')
 url="http://eduke32.com"
 license=(
-  'GPL2'
   'custom:Build Engine'
+  'GPL2'
 )
 depends=(
   'alsa-lib'
   'flac'
+  'gtk2'
   'libvorbis'
   'libvpx'
-  'sdl2'
+  'sdl2_mixer'
 )
 makedepends=(
   'git'
@@ -35,7 +36,10 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  make PREFIX="${_installdir%/}"
+  make \
+    PREFIX="${_installdir%/}" \
+    PACKAGE_REPOSITORY=1 \
+    SDL_TARGET=2
 }
 
 package() {
@@ -44,3 +48,4 @@ package() {
   install -Dm755 ./{eduke32,mapster32} -t "${pkgdir}${_installdir%/}/bin"
   install -Dm644 ./package/common/buildlic.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
+

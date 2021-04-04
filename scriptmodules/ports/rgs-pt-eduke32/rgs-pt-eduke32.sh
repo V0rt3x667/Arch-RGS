@@ -18,15 +18,20 @@ function remove_rgs-pt-eduke32() {
 }
 
 function game_data_rgs-pt-eduke32() {
-  cd "$_tmpdir"
+  local dest
+  local temp
+
+  dest="$romdir/ports/duke3d"
 
   if [[ "$md_id" == "rgs-pt-eduke32" ]]; then
-    if [[ ! -f "$romdir/ports/duke3d/duke3d.grp" ]]; then
-      wget -O 3dduke13.zip "$__archive_url/3dduke13.zip"
-      unzip -L -o 3dduke13.zip dn3dsw13.shr
-      unzip -L -o dn3dsw13.shr -d "$romdir/ports/duke3d" duke3d.grp duke.rts
-      rm 3dduke13.zip dn3dsw13.shr
-      chown -R $user:$user "$romdir/ports/duke3d"
+    if [[ ! -f "$dest/duke3d.grp" ]]; then
+      mkUserDir "$dest"
+      temp="$(mktemp -d)"
+      download "$__archive_url/3dduke13.zip" "$temp"
+      unzip -L -o "$temp/3dduke13.zip" -d "$temp" dn3dsw13.shr
+      unzip -L -o "$temp/dn3dsw13.shr" -d "$dest" duke3d.grp duke.rts
+      rm -rf "$temp"
+      chown -R "$user:$user" "$dest"
     fi
   fi
 }
@@ -38,12 +43,13 @@ function configure_rgs-pt-eduke32() {
 
   appname="eduke32"
   portname="duke3d"
-  config="$md_conf_root/$portname/settings.cfg"
 
   if [[ "$md_id" == "rgs-pt-ionfury" ]]; then
     appname="fury"
     portname="ionfury"
   fi
+
+  config="$md_conf_root/$portname/settings.cfg"
 
   mkRomDir "ports/$portname"
 
@@ -53,11 +59,6 @@ function configure_rgs-pt-eduke32() {
 
   if [[ "$md_mode" == "install" ]]; then
     game_data_rgs-pt-eduke32
-    touch "$config"
-    iniConfig " " '"' "$config"
-    ##Enforce VSync
-    iniSet "r_swapinterval" "1"
-    chown -R "$user:$user" "$config"
   fi
 }
 

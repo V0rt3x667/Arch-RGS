@@ -39,10 +39,10 @@ prepare() {
 
   patch -p1 -i ../01_Fix_Build.patch
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {

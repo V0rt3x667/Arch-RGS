@@ -13,7 +13,9 @@ __sections[ports]="port"
 __sections[exp]="experimental"
 __sections[driver]="driver"
 __sections[config]="configuration"
+__sections[frontends]="frontend"
 
+__NET_ERRMSG=""
 function archrgs_listFunctions() {
   local idx
   local mod_id
@@ -27,7 +29,7 @@ function archrgs_listFunctions() {
     mod_id=${__mod_id[$idx]};
     printf "%d/%-20s: %-42s :" "$idx" "$mod_id" "${__mod_desc[$idx]}"
     while read mode; do
-      ##SKIP PRIVATE MODULE FUNCTIONS (START WITH AN UNDERSCORE)
+      ##Skip Private Module Functions (Start With An Underscore)
       [[ "$mode" = _* ]] && continue
       mode=${mode//_$mod_id/}
       echo -n " $mode"
@@ -49,8 +51,9 @@ function archrgs_printUsageinfo() {
   echo "install:    install the compiled module"
   echo "configure:  configure the installed module (es_systems.cfg / launch parameters etc)"
   echo "clean:      remove the sources/build folder for the module"
-  echo "help:       get additional help on the module"
-  echo -e "\nThis is a list of valid modules/packages and supported commands:\n"
+  echo "remove:     remove/uninstall the module"
+  echo  "help:       get additional help on the module (available for all modules)"
+  echo -e "\nThis is a list of valid modules/packages and supported functions:\n"
   archrgs_listFunctions
 }
 
@@ -94,8 +97,8 @@ function archrgs_callModule() {
   local md_data="$scriptdir/scriptmodules/$md_type/$md_id/data"
   local md_mode="install"
 
-  ##SET MD_CONF_ROOT TO $CONFIGDIR AND TO $CONFIGDIR/PORTS FOR PORTS
-  ##PORTS IN LIBRETROCORES OR SYSTEMS (AS ES SEES THEM) IN PORTS WILL NEED TO CHANGE IT MANUALLY WITH SETCONFIGROOT
+  ##Set md_conf_root To $configdir And To $configdir/ports For Ports
+  ##Ports In Libretrocores Or Systems (As Es Sees Them) In Ports Will Need To Change It Manually With setconfigroot
   local md_conf_root
   if [[ "$md_type" == "ports" ]]; then
     setConfigRoot "ports"
@@ -103,28 +106,30 @@ function archrgs_callModule() {
     setConfigRoot ""
   fi
 
-  case "$mode" in
-  ##REMOVE SOURCES
-  clean)
-    if [[ "$__persistent_repos" -eq 1 ]] && [[ -d "$md_build/.git" ]]; then
-      git -C "$md_build" reset --hard
-      git -C "$md_build" clean -f -d
-    else
-      rmDirExists "$md_build/$md_id"
-    fi
-    return 0
-    ;;
-  ##ECHO MODULE HELP TO CONSOLE
-  help)
-    printMsgs "console" "$md_desc\n\n$md_help"
-    return 0;
-    ;;
-  esac
+    case "$mode" in
+        ##Remove Sources
+        clean)
+            if [[ "$__persistent_repos" -eq 1 ]]; then
+                if [[ -d "$md_build/.git" ]]; then
+                    git -C "$md_build" reset --hard
+                    git -C "$md_build" clean -f -d
+                fi
+            else
+                rmDirExists "$md_build/$md_id"
+            fi
+            return 0
+            ;;
+        # echo module help to console
+        help)
+            printMsgs "console" "$md_desc\n\n$md_help"
+            return 0;
+            ;;
+    esac
 
-  ##CREATE FUNCTION NAME
+  ##Create Function Name
   function="${mode}_${md_id}"
 
-  ##HANDLE CASES WHERE WE HAVE AUTOMATIC MODULE FUNCTIONS LIKE REMOVE
+  ##Handle Cases Where We Have Automatic Module Functions Like Remove
   if ! fnExists "$function"; then
     if [[ "$mode" == "install" ]] && fnExists "install_bin_${md_id}"; then
       function="install_bin_${md_id}"
@@ -231,7 +236,7 @@ function archrgs_callModule() {
     ;;
   esac
 
-  ##CHECK IF ANY REQUIRED FILES ARE FOUND
+  ##Check If Any Required Files Are Found
   if [[ -n "$md_ret_require" ]]; then
     for file in "${md_ret_require[@]}"; do
       if [[ ! -e "$file" ]]; then
@@ -242,7 +247,7 @@ function archrgs_callModule() {
   fi
 
   if [[ "${#md_ret_errors}" -eq 0 && -n "$md_ret_files" ]]; then
-    ##CHECK FOR EXISTENCE AND COPY ANY FILES AND DIRECTORIES RETURNED
+    ##Check For Existence And Copy Any Files And Directories Returned
     local file
     for file in "${md_ret_files[@]}"; do
       if [[ ! -e "$md_build/$file" ]]; then
@@ -253,7 +258,7 @@ function archrgs_callModule() {
     done
   fi
 
-  ##REMOVE BUILD FOLDER IF EMPTY
+  ##Remove Build Folder If Empty
   [[ -d "$md_build" ]] && find "$md_build" -maxdepth 0 -empty -exec rmdir {} \;
 
   [[ "$pushed" -eq 0 ]] && popd
@@ -271,7 +276,7 @@ function archrgs_callModule() {
     return 1
   fi
 
-  ##SOME INFORMATION MESSAGES WERE RETURNED
+  ##Some Information Messages Were Returned
   if [[ "${#md_ret_info[@]}" -gt 0 ]]; then
     __INFMSGS+=("${md_ret_info[@]}")
   fi
