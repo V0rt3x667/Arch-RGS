@@ -62,6 +62,6 @@ function configure_rgs-pt-dhewm3() {
 
   basedir="$romdir/ports/doom3"
 
-  add_games_rgs-pt-dhewm3 "$md_inst/bin/dhewm3 +set fs_basepath $basedir +set r_fullscreen 1 +set fs_game %ROM%"
+  add_games_rgs-pt-dhewm3 "$md_inst/dhewm3 +set fs_basepath $basedir +set r_fullscreen 1 +set fs_game %ROM%"
 }
 

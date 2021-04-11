@@ -33,10 +33,10 @@ prepare() {
 build() {
   cd "$pkgname/neo/build"
 
+  LDFLAGS+=" -Wl,-rpath='${_installdir%/}'"
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
-    -DCMAKE_INSTALL_LIBDIR=lib \
     -DREPRODUCIBLE_BUILD=1 \
     -DD3XP=1 \
     -DDEDICATED=1
@@ -46,6 +46,7 @@ build() {
 package() {
   cd "$pkgname/neo/build"
 
-  make DESTDIR="$pkgdir" install
+  install -Dm755 ./{dhewm3,dhewm3ded} -t "${pkgdir}/${_installdir%/}"
+  install -Dm644 ./*.so -t "${pkgdir}/${_installdir%/}"
 }
 
