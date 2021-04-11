@@ -41,9 +41,9 @@ function _game_data_rgs-pt-alephone() {
 }
 
 function configure_rgs-pt-alephone() {
-  addPort "$md_id" "marathon" "Aleph One Engine - Marathon" "'$md_inst/bin/alephone' '$romdir/ports/alephone/Marathon/'"
-  addPort "$md_id" "marathon2" "Aleph One Engine - Marathon 2" "'$md_inst/bin/alephone' '$romdir/ports/alephone/Marathon 2/'"
-  addPort "$md_id" "marathoninfinity" "Aleph One Engine - Marathon Infinity" "'$md_inst/bin/alephone' '$romdir/ports/alephone/Marathon Infinity/'"
+  addPort "$md_id" "marathon" "Aleph One Engine - Marathon" "'$md_inst/alephone' '$romdir/ports/alephone/Marathon/'"
+  addPort "$md_id" "marathon2" "Aleph One Engine - Marathon 2" "'$md_inst/alephone' '$romdir/ports/alephone/Marathon 2/'"
+  addPort "$md_id" "marathoninfinity" "Aleph One Engine - Marathon Infinity" "'$md_inst/alephone' '$romdir/ports/alephone/Marathon Infinity/'"
 
   mkRomDir "ports/alephone"
 
@@ -51,3 +51,4 @@ function configure_rgs-pt-alephone() {
 
   [[ "$md_mode" == "install" ]] && _game_data_rgs-pt-alephone
 }
+

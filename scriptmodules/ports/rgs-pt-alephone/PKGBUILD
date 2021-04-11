@@ -1,7 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-alephone
-pkgver=1.3.1.20200904
-_release=release-20200904
+pkgver=1.4
+_release=release-20210408
 pkgrel=1
 pkgdesc="Marathon 2 Game Engine"
 arch=('x86_64')
@@ -23,27 +23,25 @@ makedepends=(
   'icoutils'
   'mesa'
 )
-source=("$pkgname::git+https://github.com/Aleph-One-Marathon/alephone#tag=$_release")
+source=("https://github.com/Aleph-One-Marathon/alephone/archive/refs/tags/$_release.tar.gz")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/ports/$pkgname"
 
-pkgver() {
-  cd "$pkgname/Source_Files/Misc"
-
-  local _ver="$(grep '^#define A1_DISPLAY_VERSION' alephversion.h | cut -d\" -f2)"
-  printf "%s.%s" "$_ver" "$(git describe --tags | sed 's/^release-//;s/\([^-]*-g\)/r\1/;s/-/./g')"
-}
-
 build() {
-  cd "$pkgname"
+  cd "alephone-$_release"
 
-  ./autogen.sh \
-    --prefix="${_installdir%/}"
+  ./autogen.sh
+  ./configure \
+    --prefix="${_installdir%/}" \
+    --bindir="${_installdir%/}" \
+    --libdir="${_installdir%/}" \
+    --datarootdir="${_installdir%/}"
   make
 }
 
 package() {
-  cd "$pkgname"
+  cd "alephone-$_release"
 
   make PREFIX="${_installdir%/}" DESTDIR="${pkgdir}" install
 }
+
