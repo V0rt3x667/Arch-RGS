@@ -1,9 +1,8 @@
-diff --git a/retroarch.c b/retroarch.c
-index 6a88c3108e..2f5c23656a 100644
---- a/retroarch.c
-+++ b/retroarch.c
-@@ -4727,7 +4727,8 @@ int generic_menu_entry_action(
-                   entry->label, entry->type, i, entry->entry_id);
+diff -u a/retroarch.c b/retroarch.c
+--- a/retroarch.c	2021-03-28 21:43:18.000000000 +0100
++++ b/retroarch.c	2021-04-11 14:26:23.460259454 +0100
+@@ -2552,7 +2552,8 @@
+                   entry->label, entry->type, i, entry->entry_idx);
           break;
        case MENU_ACTION_SEARCH:
 -         menu_input_dialog_start_search();
@@ -12,6 +11,3 @@ index 6a88c3108e..2f5c23656a 100644
           break;
        case MENU_ACTION_SCAN:
           if (cbs && cbs->action_scan)
--- 
-2.25.1
-

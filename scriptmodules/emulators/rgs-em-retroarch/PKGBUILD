@@ -37,21 +37,24 @@ source=(
   "core-info::git+https://github.com/libretro/libretro-core-info#tag=v$pkgver"
   "01_disable_search.patch"
   "02_shader_path_config_enable.patch"
+  "03_revert_default_save_paths.patch"
 )
 sha256sums=(
   'SKIP'
   'SKIP'
-  '9a31ab6f9e873ee37fe3be924dadc08f657f227c36c000983370bbf0f2f61608'
-  '1cdcdd233ad5cf6e0ea583f7386dc806255ffb4e8b3879dfdbc2547a8ecb74fe'
+  '8b585ac2afdd4b158ed840237c1736f8a76b10eda77e29e2638615416d38674c'
+  '115921fadc51f8fc742209921ec04e04618987eecc2f39ee8ed7e90f71ddeab4'
+  '4ec07105d2326dd8eeb06d915ba4177f947691991835504c3b9b738813edf91e'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
 
-#prepare() {
-#  cd "$pkgname"
+prepare() {
+  cd "$pkgname"
 
-#  patch -Np1 -i ../01_disable_search.patch
-#  patch -Np1 -i ../02_shader_path_config_enable.patch
-#}
+  patch -Np1 -i ../01_disable_search.patch
+  patch -Np1 -i ../02_shader_path_config_enable.patch
+  patch -Np1 -i ../03_revert_default_save_paths.patch
+}
 
 build() {
   cd "$pkgname"

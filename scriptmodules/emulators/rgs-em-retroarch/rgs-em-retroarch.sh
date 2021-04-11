@@ -53,13 +53,12 @@ function update_assets_rgs-em-retroarch() {
 function configure_rgs-em-retroarch() {
   [[ "$md_mode" == "remove" ]] && return
 
-  addUdevInputRules
-
   moveConfigDir "$home/.config/retroarch" "$configdir/all/retroarch"
   moveConfigDir "$configdir/all/retroarch-joypads" "$configdir/all/retroarch/autoconfig"
   moveConfigDir "$md_inst/assets" "$configdir/all/retroarch/assets"
   moveConfigDir "$md_inst/overlays" "$configdir/all/retroarch/overlay"
   moveConfigDir "$md_inst/shader" "$configdir/all/retroarch/shaders"
+  moveConfigDir "$md_inst/filters" "$configdir/all/retroarch/filters"
 
   local config
   config="$(mktemp)"
@@ -101,7 +100,7 @@ function configure_rgs-em-retroarch() {
   iniSet "rewind_granularity" "2"
   iniSet "input_rewind" "r"
 
-  ##Enable Gpu Screenshots
+  ##Enable GPU Screenshots
   iniSet "video_gpu_screenshot" "true"
 
   ##Enable & Configure Shaders
@@ -139,34 +138,34 @@ function configure_rgs-em-retroarch() {
   iniSet "xmb_show_images" "false"
   iniSet "xmb_show_music" "false"
 
-  ##SWAP A/B BUTTONS BASED ON ES CONFIGURATION
+  ##Swap A/B Buttons Based On ES Configuration
   iniSet "menu_swap_ok_cancel_buttons" "$es_swap"
 
-  ##ENABLE menu_unified_Controls BY DEFAULT
+  ##Enable menu_unified_Controls By Default
   iniSet "menu_unified_controls" "true"
 
-  ##DISABLE 'Press Twice to Quit'
+  ##Disable 'Press Twice to Quit'
   iniSet "quit_press_twice" "false"
 
-  ##ENABLE VIDEO SHADERS
+  ##Enable Video Shaders
   iniSet "video_shader_enable" "true"
 
   copyDefaultConfig "$config" "$configdir/all/retroarch.cfg"
   rm "$config"
 
-  ##FORCE MENU_UNIFIED_CONTROLS
+  ##Force Menu_Unified_Controls
   _set_config_option_rgs-em-retroarch "menu_unified_controls" "true"
 
-  ##DISABLE `quit_press_twice` ON EXISTING CONFIGS
+  ##Disable `quit_press_twice` On Existing Configs
   _set_config_option_rgs-em-retroarch "quit_press_twice" "false"
 
-  ##ENABLE VIDEO SHADERS ON EXISTING CONFIGS
+  ##Enable Video Shaders On Existing Configs
   _set_config_option_rgs-em-retroarch "video_shader_enable" "true"
 
-  ##KEEP ALL CORE OPTIONS IN A SINGLE FILE
+  ##Keep All Core Options In A Single File
   _set_config_option_rgs-em-retroarch "global_core_options" "true"
 
-  ##REMAPPING HACK FOR 8bitdo FIRMWARE
+  ##Remapping Hack For 8bitdo Firmware
   addAutoConf "8bitdo_hack" 0
 }
 
@@ -245,7 +244,7 @@ function gui_rgs-em-retroarch() {
     local name
     local dir
     local i=1
-    names=(shaders_glsl shaders_slang overlay assets)
+    names=(Shaders-GLSL Shaders-Slang Overlay Assets)
     dirs=(shaders/glsl_shaders shaders/slang_shaders overlay assets)
     for name in "${names[@]}"; do
       if [[ -d "$configdir/all/retroarch/${dirs[i-1]}/.git" ]]; then
@@ -256,8 +255,8 @@ function gui_rgs-em-retroarch() {
       ((i++))
     done
     options+=(
-      5 "Configure keyboard for use with RetroArch"
-      6 "Configure keyboard hotkey behaviour for RetroArch"
+      5 "Configure Keyboard For Use With Retroarch"
+      6 "Configure Keyboard Hotkey Behaviour For Retroarch"
     )
     local cmd
     local choice
@@ -268,7 +267,7 @@ function gui_rgs-em-retroarch() {
       name="${names[choice-1]}"
       dir="${dirs[choice-1]}"
       options=(1 "Install/Update $name" 2 "Uninstall $name")
-      cmd=(dialog --backtitle "$__backtitle" --menu "Choose an option for $dir" 12 40 06)
+      cmd=(dialog --backtitle "$__backtitle" --menu "Choose An Option For $dir" 12 40 06)
       choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
       case "$choice" in
       1)
@@ -295,7 +294,7 @@ function gui_rgs-em-retroarch() {
   done
 }
 
-##ADDS A Retroarch GLOBAL CONFIG OPTION IN $configdir/all/retroarch.cfg
+##Adds A Retroarch Global Config Option In $configdir/all/retroarch.cfg
 function _set_config_option_rgs-em-retroarch() {
   local option
   local value
@@ -307,3 +306,4 @@ function _set_config_option_rgs-em-retroarch() {
     iniSet "$option" "$value"
   fi
 }
+
