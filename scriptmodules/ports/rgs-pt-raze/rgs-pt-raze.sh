@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash -x
 
 # This file is part of the Arch-RGS project.
 #
@@ -21,34 +21,41 @@ function remove_rgs-pt-raze() {
 function add_games_rgs-pt-raze() {
   local cmd="$1"
   local file
+  local game
+  local grp
 
   declare -A games=(
     ['blood/blood.rff']="Blood"
-    ['blood/cryptic/cryptic.ini']="Blood - Cryptic Passage"
+    ['blood/cryptic.ini']="Blood - Cryptic Passage"
     ['duke3d/duke3d.grp']="Duke Nukem 3D"
-    ['duke3d/dukedc/dukedc.grp']="Duke Nukem 3D - Duke It Out in D.C."
-    ['duke3d/vacation/vacation.grp']="Duke Nukem 3D - Duke Caribbean - Life's a Beach"
-    ['duke3d/nwinter/nwinter.grp']="Duke Nukem 3D - Nuclear Winter"
-    ['exhumed/stuff.dat']="Exhumed - PowerSlave"
-    ['nam/nam.grp']="NAM"
+    ['duke3d/dukedc.grp']="Duke Nukem 3D - Duke It Out in D.C."
+    ['duke3d/vacation.grp']="Duke Nukem 3D - Duke Caribbean - Life's a Beach"
+    ['duke3d/nwinter.grp']="Duke Nukem 3D - Duke - Nuclear Winter"
+    ['exhumed/stuff.dat']="Exhumed (AKA PowerSlave)"
+    ['nam/nam.grp']="NAM (AKA Napalm)"
+    ['nam/napalm.grp']="Napalm (AKA NAM)"
     ['redneck/redneck.grp']="Redneck Rampage"
     ['redneck/game66.con']="Redneck Rampage - Suckin' Grits on Route 66"
-    ['rrragain/redneck.grp']="Redneck Rampage - Redneck Rampage Rides Again"
-    ['sw/sw.grp']="Shadow Warrior"
-    ['sw/wt.grp']="Shadow Warrior - Wanton Destruction"
-    ['sw/td.grp']="Shadow Warrior - Twin Dragon"
+    ['redneckrides/redneck.grp']="Redneck Rampage - Redneck Rampage Rides Again"
+    ['shadow/sw.grp']="Shadow Warrior"
+    ['shadow/td.grp']="Shadow Warrior - Twin Dragon"
+    ['shadow/wt.grp']="Shadow Warrior - Wanton Destruction"
     ['ww2gi/ww2gi.grp']="World War II GI"
     ['ww2gi/platoonl.dat']="World War II GI - Platoon Leader"
 )
 
   for game in "${!games[@]}"; do
-    file="$romdir/ports/$game"
-    if [[ "${game}" != blood/cryptic/cryptic.ini && "${game}" != redneck/game66.con ]] && [[ -f "$file" ]]; then
-      addPort "$md_id" "${game%%/*}" "${games[$game]}" "$cmd -game_dir $romdir/ports/${game%%/*}" "$file"
-    elif [[ "${game}" == blood/cryptic/cryptic.ini ]] && [[ -f "$file" ]]; then
-      addPort "$md_id" "cryptic" "${games[$game]}" "$cmd -cryptic -game_dir $romdir/ports/blood/cryptic" "$romdir/ports/blood/blood.rff"
-    elif [[ "${game}" == redneck/game66.con ]] && [[ -f "$file" ]]; then
-      addPort "$md_id" "route66" "${games[$game]}" "$cmd -route66 -game_dir $romdir/ports/redneck" "$romdir/ports/redneck/redneck.grp"
+    file="$romdir/ports/raze/${game}"
+    grp="${game#*/}"
+    ##Add Games Which Do Not Require Additional Parameters
+    if [[ "${game}" != blood/cryptic.ini && "${game}" != redneck/game66.con && -f "$file" ]]; then
+      addPort "$md_id" "${game#*/}" "${games[$game]}" "$cmd -iwad $grp"
+    ##Add Blood: Cryptic Passage
+    elif [[ "${game}" == blood/cryptic.ini && -f "$file" ]]; then
+      addPort "$md_id" "${game#*/}" "${games[$game]}" "$cmd -cryptic"
+    ##Add Redneck Rampage: Suckin' Grits on Route 66
+    elif [[ "${game}" == redneck/game66.con && -f "$file" ]]; then
+      addPort "$md_id" "${game#*/}" "${games[$game]}" "$cmd -route66"
     fi
   done
 }
@@ -61,19 +68,19 @@ function configure_rgs-pt-raze() {
     'exhumed'
     'nam'
     'redneck'
-    'rrragain'
-    'sw'
+    'redneckrides'
+    'shadow'
     'ww2gi' 
 )
 
   for d in "${dir[@]}"; do
-    mkRomDir "ports/${d}"
+    mkRomDir "ports/raze/${d}"
   done
 
   moveConfigDir "$home/.config/raze" "$md_conf_root/raze"
 
   [[ "$md_mode" == "install" ]]
 
-  add_games_rgs-pt-raze "$md_inst/raze -iwad %ROM% +vid_renderer 1 +vid_fullscreen 1"
+  add_games_rgs-pt-raze "$md_inst/raze +vid_renderer 1 +vid_fullscreen 1"
 }
 

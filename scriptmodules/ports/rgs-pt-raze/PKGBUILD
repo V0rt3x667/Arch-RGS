@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-raze
-pkgver=.0.9.1_beta
+pkgver=1.0.3
 pkgrel=1
 _zmusicver=1.1.6
 pkgdesc="Build Engine Port"
@@ -25,7 +25,7 @@ makedepends=(
   'git'
 )
 provides=(
-  'raze=$pkgver'
+  'raze'
   'libzmusic.so'
   'libzmusiclite.so'
 )
@@ -47,7 +47,7 @@ prepare() {
 
   git submodule update --init --recursive
 
-  patch -Np2 -i ../01_fix_file_paths.patch
+  patch -Np1 -i ../01_fix_file_paths.patch
 
   cd "$srcdir/ZMusic/source"
 
@@ -79,6 +79,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DINSTALL_PK3_PATH="${_installdir%/}" \
     -DDYN_GTK=OFF \
     -DDYN_OPENAL=OFF \
     -DZMUSIC_INCLUDE_DIR="${srcdir}/ZMusic/include" \
