@@ -19,19 +19,6 @@ function remove_rgs-lr-fbneo() {
 }
 
 function configure_rgs-lr-fbneo() {
-  local dir
-
-  for dir in arcade fba neogeo; do
-      mkRomDir "$dir"
-        ensureSystemretroconfig "$dir"
-  done
-
-  #Create samples directory
-  mkUserDir "$biosdir/fbneo/samples"
-
-  #Set core options
-  setRetroArchCoreOption "fbneo-diagnostic-input" "Hold Start"
-
   addEmulator 0 "$md_id" "arcade" "$md_inst/fbneo_libretro.so"
   addEmulator 0 "$md_id-neocd" "arcade" "$md_inst/fbneo_libretro.so --subsystem neocd"
   addEmulator 1 "$md_id" "neogeo" "$md_inst/fbneo_libretro.so"
@@ -49,11 +36,15 @@ function configure_rgs-lr-fbneo() {
   addEmulator 0 "$md_id-cv" "coleco" "$md_inst/fbneo_libretro.so --subsystem cv"
   addEmulator 0 "$md_id-msx" "msx" "$md_inst/fbneo_libretro.so --subsystem msx"
   addEmulator 0 "$md_id-spec" "zxspectrum" "$md_inst/fbneo_libretro.so --subsystem spec"
+  addEmulator 0 "$md_id-fds" "fds" "$md_inst/fbneo_libretro.so --subsystem fds"
+  addEmulator 0 "$md_id-nes" "nes" "$md_inst/fbneo_libretro.so --subsystem nes"
+  addEmulator 0 "$md_id-ngp" "ngp" "$md_inst/fbneo_libretro.so --subsystem ngp"
+  addEmulator 0 "$md_id-ngpc" "ngpc" "$md_inst/fbneo_libretro.so --subsystem ngp"
 
   addSystem "arcade"
   addSystem "neogeo"
   addSystem "fba"
-    
+
   addSystem "pcengine"
   addSystem "gamegear"
   addSystem "mastersystem"
@@ -62,11 +53,28 @@ function configure_rgs-lr-fbneo() {
   addSystem "coleco"
   addSystem "msx"
   addSystem "zxspectrum"
+  addSystem "fds"
+  addSystem "nes"
+  addSystem "ngp"
+  addSystem "ngpc"
 
   [[ "$md_mode" == "remove" ]] && return
 
-  #Copy hiscore.dat
-  install -Dm755 "$md_inst/data/hiscore.dat" "$biosdir/fbneo/"
-  chown "$user":"$user" "$biosdir/fbneo/hiscore.dat"
+  local dir
+  for dir in arcade fba neogeo; do
+    mkRomDir "$dir"
+    ensureSystemretroconfig "$dir"
+  done
+
+  ##Create Samples Directory
+  mkUserDir "$biosdir/fbneo"
+  mkUserDir "$biosdir/fbneo/samples"
+
+  ##Copy hiscore.dat
+  cp "$md_inst/data/hiscore.dat" "$biosdir/fbneo/"
+  chown "$user:$user" "$biosdir/fbneo/hiscore.dat"
+
+  ##Set Core Options
+  setRetroArchCoreOption "fbneo-diagnostic-input" "Hold Start"
 }
 

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-fbneo
-pkgver=10458
+pkgver=11577
 pkgrel=1
 pkgdesc="Libretro Core - Final Burn Neo"
 arch=('x86_64')

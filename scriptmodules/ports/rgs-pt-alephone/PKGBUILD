@@ -24,7 +24,7 @@ makedepends=(
   'mesa'
 )
 source=("https://github.com/Aleph-One-Marathon/alephone/archive/refs/tags/$_release.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('c9e034b11ad2a847dbbaed250353eb56b6de12ae3e7d033a5b8cd5bdbd4813b3')
 _installdir="/opt/archrgs/ports/$pkgname"
 
 build() {
