@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-pokemini
-pkgver=113
+pkgver=147
 pkgrel=1
 pkgdesc="Libretro Core - Pokémon-Mini"
 arch=('x86_64')

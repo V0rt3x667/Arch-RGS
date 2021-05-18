@@ -1,8 +1,8 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-raze
-pkgver=1.0.3
+pkgver=1.1.2
 pkgrel=1
-_zmusicver=1.1.6
+_zmusicver=1.1.7
 pkgdesc="Build Engine Port"
 arch=('x86_64')
 url="https://github.com/coelckers/Raze"

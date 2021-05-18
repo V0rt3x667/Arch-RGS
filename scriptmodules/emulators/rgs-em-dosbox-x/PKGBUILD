@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-dosbox-x
-pkgver=0
+pkgver=0.83.13
 pkgrel=1
 pkgdesc="DOS Emulator Includes Additional Patches & Features"
 arch=('x86_64')
@@ -16,15 +16,9 @@ depends=(
   'sdl2_net'
 )
 makedepends=('git')
-source=("$pkgname::git+https://github.com/joncampbell123/dosbox-x#tag=dosbox-x-v0.83.6")
-sha256sums=('SKIP')
+source=("https://github.com/joncampbell123/dosbox-x/archive/refs/tags/dosbox-x-v$pkgver.tar.gz")
+sha256sums=('8e7a5d30ae7ec70fa853663368badf5bafe3b4018629196115ffaa95f4771f27')
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^dosbox.x.v//;s/_/./;s/\([^-]*-g\)/r\1/;s/-/./g')"
-}
 
 build() {
   cd "$pkgname"

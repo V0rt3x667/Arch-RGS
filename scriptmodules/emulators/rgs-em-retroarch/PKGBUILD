@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-retroarch
-pkgver=1.9.1
+pkgver=1.9.2
 pkgrel=1
 pkgdesc="Frontend for the Libretro API"
 arch=('x86_64')
@@ -42,9 +42,9 @@ source=(
 sha256sums=(
   'SKIP'
   'SKIP'
-  '8b585ac2afdd4b158ed840237c1736f8a76b10eda77e29e2638615416d38674c'
-  '115921fadc51f8fc742209921ec04e04618987eecc2f39ee8ed7e90f71ddeab4'
-  '4ec07105d2326dd8eeb06d915ba4177f947691991835504c3b9b738813edf91e'
+  '4340865535afe441ad52a5f663c5b8ac39dba78a77fc3b1b780c4829878f9d8c'
+  '7d83f5c442634c63dced54fe4f442a9ee961e9924f08672b5ddc2365103a8af3'
+  'a85f7f7538ec28eafd77f206e1b7335318ec5e56303e872e2044efb9b535636a'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
 

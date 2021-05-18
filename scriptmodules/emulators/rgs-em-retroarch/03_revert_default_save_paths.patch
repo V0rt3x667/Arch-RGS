@@ -1,7 +1,8 @@
-diff -u a/frontend/drivers/platform_unix.c b/frontend/drivers/platform_unix.c
---- a/frontend/drivers/platform_unix.c	2021-03-28 21:43:18.000000000 +0100
-+++ b/frontend/drivers/platform_unix.c	2021-04-11 14:31:43.069257372 +0100
-@@ -1907,12 +1907,6 @@
+diff --git a/frontend/drivers/platform_unix.c b/frontend/drivers/platform_unix.c
+index d48cc12fe3..f32c25c2bc 100644
+--- a/frontend/drivers/platform_unix.c
++++ b/frontend/drivers/platform_unix.c
+@@ -1907,12 +1907,6 @@ static void frontend_unix_get_env(int *argc,
           "thumbnails", sizeof(g_defaults.dirs[DEFAULT_DIR_THUMBNAILS]));
     fill_pathname_join(g_defaults.dirs[DEFAULT_DIR_LOGS], base_path,
           "logs", sizeof(g_defaults.dirs[DEFAULT_DIR_LOGS]));

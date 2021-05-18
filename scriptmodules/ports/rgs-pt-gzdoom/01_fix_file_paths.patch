@@ -1,0 +1,43 @@
+--- a/src/gameconfigfile.cpp	2021-04-05 20:04:50.247488000 +0100
++++ b/src/gameconfigfile.cpp	2021-04-06 01:31:05.792253990 +0100
+@@ -114,13 +114,7 @@
+ 		SetValueForKey ("Path", "$PROGDIR", true);
+ #else
+ 		SetValueForKey ("Path", "$HOME/" GAME_DIR, true);
+-		// Arch Linux likes them in /usr/share/doom
+-		// Debian likes them in /usr/share/games/doom
+-		// I assume other distributions don't do anything radically different
+-		SetValueForKey ("Path", "/usr/local/share/doom", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/doom", true);
+ 		SetValueForKey ("Path", "/usr/share/doom", true);
+		SetValueForKey ("Path", "/usr/share/games/doom", true);
+ #endif
+ 	}
+ 
+@@ -137,11 +131,7 @@
+ 		SetValueForKey ("Path", "$PROGDIR", true);
+ #else
+ 		SetValueForKey ("Path", "$HOME/" GAME_DIR, true);
+-		SetValueForKey ("Path", SHARE_DIR, true);
+-		SetValueForKey ("Path", "/usr/local/share/doom", true);
+-		SetValueForKey ("Path", "/usr/local/share/games/doom", true);
+ 		SetValueForKey ("Path", "/usr/share/doom", true);
+		SetValueForKey ("Path", "/usr/share/games/doom", true);
+ #endif
+ 		SetValueForKey ("Path", "$DOOMWADDIR", true);
+ 	}
+@@ -163,16 +153,12 @@
+ 		SetValueForKey("Path", "$PROGDIR/soundfonts", true);
+ 		SetValueForKey("Path", "$PROGDIR/fm_banks", true);
+ #else
+-		SetValueForKey("Path", "$HOME/" GAME_DIR "/soundfonts", true);
+-		SetValueForKey("Path", "$HOME/" GAME_DIR "/fm_banks", true);
+-		SetValueForKey("Path", "/usr/local/share/doom/soundfonts", true);
+-		SetValueForKey("Path", "/usr/local/share/doom/fm_banks", true);
+-		SetValueForKey("Path", "/usr/local/share/games/doom/soundfonts", true);
+-		SetValueForKey("Path", "/usr/local/share/games/doom/fm_banks", true);
++		SetValueForKey("Path", "/usr/share/soundfonts", true);
++		SetValueForKey("Path", "/usr/share/fm_banks", true);
+ #endif
+ 	}
+ 

@@ -22,10 +22,10 @@ function configure_rgs-lr-mame() {
   local system
   
   for system in arcade mame-libretro; do
-      mkRomDir "$system"
-      ensureSystemretroconfig "$system"
-      addEmulator 0 "$md_id" "$system" "$md_inst/mamearcade_libretro.so"
-      addSystem "$system"
+    mkRomDir "$system"
+    ensureSystemretroconfig "$system"
+    addEmulator 0 "$md_id" "$system" "$md_inst/mamearcade_libretro.so"
+    addSystem "$system"
   done
 }
 

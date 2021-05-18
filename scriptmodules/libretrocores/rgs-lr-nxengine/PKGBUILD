@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-nxengine
-pkgver=558
+pkgver=578
 pkgrel=1
 pkgdesc="Libretro Core - NXEngine (Cave Story)"
 arch=('x86_64')

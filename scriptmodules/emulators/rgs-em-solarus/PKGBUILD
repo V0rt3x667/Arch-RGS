@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-solarus
-pkgver=1.6.4
+pkgver=1.6.5
 pkgrel=1
 pkgdesc="Open-Source Game Engine for Action-RPGs"
 arch=('x86_64')
@@ -18,7 +18,7 @@ depends=(
 )
 makedepends=('cmake')
 source=("https://gitlab.com/solarus-games/solarus/-/archive/release-$pkgver/solarus-release-$pkgver.tar.gz")
-sha256sums=('d8448461c347ed1e97170d161cae99a4c68bbe7a6342f0bd658b4bbb69d4da34')
+sha256sums=('e9cd1d3aa0d5d4963a806f13b266ec7ac52430c342025d5d5d4624b1ddc0c991')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 prepare() {

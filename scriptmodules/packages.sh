@@ -138,7 +138,7 @@ function archrgs_callModule() {
     fi
   fi
 
-  ##THESE CAN BE RETURNED BY A MODULE
+  ##These Can Be Returned By A Module
   local md_ret_require=()
   local md_ret_files=()
   local md_ret_errors=()
@@ -372,7 +372,7 @@ function archrgs_registerModuleDir() {
     depth=2
   fi
   for module in $(find "$scriptdir/scriptmodules/$2" -maxdepth "$depth" -name "*.sh" | sort); do
-    archrgs_registerModule $module_idx "$module" "$module_dir"
+    archrgs_registerModule "$module_idx" "$module" "$module_dir"
     ((module_idx++))
   done
 }

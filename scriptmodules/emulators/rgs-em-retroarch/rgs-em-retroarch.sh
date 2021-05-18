@@ -244,7 +244,7 @@ function gui_rgs-em-retroarch() {
     local name
     local dir
     local i=1
-    names=(Shaders-GLSL Shaders-Slang Overlay Assets)
+    names=(shaders_glsl shaders_slang overlay assets)
     dirs=(shaders/glsl_shaders shaders/slang_shaders overlay assets)
     for name in "${names[@]}"; do
       if [[ -d "$configdir/all/retroarch/${dirs[i-1]}/.git" ]]; then

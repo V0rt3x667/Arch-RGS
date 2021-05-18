@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-stella
-pkgver=6.5.2
+pkgver=6.5.3
 pkgrel=1
 pkgdesc="Atari 2600 VCS Emulator"
 arch=('x86_64')

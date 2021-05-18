@@ -2,7 +2,7 @@
 pkgname=rgs-pt-gzdoom
 pkgver=4.5.0
 pkgrel=1
-_zmusicver=1.1.6
+_zmusicver=1.1.7
 pkgdesc="Advanced DOOM Port"
 arch=('x86_64')
 url="http://www.zdoom.org"
@@ -27,8 +27,10 @@ provides=(
 source=(
   "$pkgname::git+https://github.com/coelckers/gzdoom#tag=g$pkgver"
   "git+https://github.com/coelckers/ZMusic#tag=$_zmusicver"
+  "01_fix_file_paths.patch"
 )
 sha256sums=(
+  'SKIP'
   'SKIP'
   'SKIP'
 )
@@ -38,6 +40,8 @@ prepare() {
   cd "$pkgname"
 
   git submodule update --init --recursive
+
+  patch -Np1 -i ../01_fix_file_paths.patch 
 
   cd "${srcdir}/ZMusic/source"
 

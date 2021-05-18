@@ -20,14 +20,14 @@ function remove_rgs-em-beebem() {
 }
 
 function configure_rgs-em-beebem() {
-  mkRomDir "bbc"
+  mkRomDir "bbcmicro"
 
-  moveConfigDir "$home/.beebem" "$md_conf_root/bbc"
+  moveConfigDir "$home/.beebem" "$md_conf_root/bbcmicro"
 
-  addEmulator 1 "$md_id-modelb" "bbc" "$md_inst/bin/beebem -Model 0 %ROM%"
-  addEmulator 0 "$md_id-b+integrab" "bbc" "$md_inst/bin/beebem -Model 1 %ROM%"
-  addEmulator 0 "$md_id-bplus" "bbc" "$md_inst/bin/beebem -Model 2 %ROM%"
-  addEmulator 0 "$md_id-master128" "bbc" "$md_inst/bin/beebem -Model 3 %ROM%"
-  addSystem "bbc"
+  addEmulator 1 "$md_id-modelb" "bbcmicro" "$md_inst/bin/beebem -Model 0 %ROM%"
+  addEmulator 0 "$md_id-b+integrab" "bbcmicro" "$md_inst/bin/beebem -Model 1 %ROM%"
+  addEmulator 0 "$md_id-bplus" "bbcmicro" "$md_inst/bin/beebem -Model 2 %ROM%"
+  addEmulator 0 "$md_id-master128" "bbcmicro" "$md_inst/bin/beebem -Model 3 %ROM%"
+  addSystem "bbcmicro"
 }
 

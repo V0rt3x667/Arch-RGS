@@ -4,11 +4,11 @@ pkgver=308
 pkgrel=1
 pkgdesc="Libretro Core - Thomson TO7, TO7/70, TO8, TO8D, TO9, TO9+, MO5 & MO6"
 arch=('x86_64')
-url="https://github.com/libretro/theodore"
+url="https://github.com/zlika/theodore"
 license=('GPL3')
 depends=('glibc')
 makedepends=('git')
-source=("$pkgname::git+https://github.com/libretro/theodore")
+source=("$pkgname::git+https://github.com/zlika/theodore")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname/"
 

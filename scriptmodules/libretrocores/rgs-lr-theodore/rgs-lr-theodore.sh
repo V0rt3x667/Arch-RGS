@@ -7,7 +7,7 @@
 archrgs_module_id="rgs-lr-theodore"
 archrgs_module_desc="Thomson TO7, TO7/70, TO8, TO8D, TO9, TO9+, MO5 & MO6 Libretro Core"
 archrgs_module_help="ROM Extensions: *.fd, *.sap, *.k7, *.m5, *.m7, *.rom\n\nAdd your game files in $romdir/moto"
-archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/theodore/master/LICENSE"
+archrgs_module_licence="GPL3 https://raw.githubusercontent.com/zlika/theodore/master/LICENSE"
 archrgs_module_section="libretrocores"
 archrgs_module_flags="x86_64"
 

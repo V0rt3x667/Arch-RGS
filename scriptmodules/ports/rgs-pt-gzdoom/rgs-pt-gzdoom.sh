@@ -27,18 +27,8 @@ function add_games_rgs-pt-gzdoom() {
 }
 
 function configure_rgs-pt-gzdoom() {
-  local dir
-  dir=(
-    'doom'
-    'chex'
-    'heretic'
-    'hexen'
-    'hacx'
-    'strife' 
-)
-  for d in "${dir[@]}"; do
-    mkRomDir "ports/${d}"
-  done
+  mkRomDir ports/doom
+
 
   moveConfigDir "$home/.config/gzdoom" "$md_conf_root/doom"
 

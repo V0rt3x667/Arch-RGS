@@ -22,7 +22,7 @@ function configure_rgs-lr-beetle-psx-hw() {
   mkRomDir "psx"
   ensureSystemretroconfig "psx"
 
-  addEmulator 0 "$md_id" "psx" "$md_inst/mednafen_psx_hw_libretro.so"
+  addEmulator 1 "$md_id" "psx" "$md_inst/mednafen_psx_hw_libretro.so"
   addSystem "psx"
 }
 

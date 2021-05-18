@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-beetle-psx-hw
-pkgver=2491
+pkgver=2527
 pkgrel=1
 pkgdesc="Libretro Core - Sony PlayStation"
 arch=('x86_64')

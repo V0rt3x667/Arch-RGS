@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-srb2
-pkgver=2.2.8
+pkgver=2.2.9
 pkgrel=1
 pkgdesc="3D Sonic the Hedgehog Fangame"
 arch=('x86_64')
@@ -54,3 +54,4 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
+

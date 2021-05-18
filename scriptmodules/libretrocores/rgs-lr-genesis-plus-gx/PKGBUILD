@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-genesis-plus-gx
-pkgver=1596
+pkgver=1748
 pkgrel=1
 pkgdesc="Libretro Core - Sega Master System, Game Gear, Mega Drive (Genesis), Sega CD & SG-1000"
 arch=('x86_64')
@@ -31,3 +31,4 @@ package() {
   install -Dm644 ./genesis_plus_gx_libretro.so -t "${pkgdir}${_installdir%/}"
   install -Dm644 ./LICENSE.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
+
