@@ -404,7 +404,7 @@ function packages_gui_setup() {
   local default
   local options=()
 
-  for section in core emulators libretrocores ports driver exp; do
+  for section in core emulators libretrocores ports frontends driver exp; do
     options+=("$section" "Manage ${__sections[$section]} packages" "$section Choose to install/update/configure packages from the ${__sections[$section]}")
   done
 

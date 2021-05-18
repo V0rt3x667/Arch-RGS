@@ -25,15 +25,15 @@ function archrgs_listFunctions() {
 
   echo -e "Index/ID:                 Description:                                 List of available actions"
   echo "-----------------------------------------------------------------------------------------------------------------------------------"
-  for idx in ${__mod_idx[@]}; do
+  for idx in "${__mod_idx[@]}"; do
     mod_id=${__mod_id[$idx]};
     printf "%d/%-20s: %-42s :" "$idx" "$mod_id" "${__mod_desc[$idx]}"
-    while read mode; do
+    while read -r mode; do
       ##Skip Private Module Functions (Start With An Underscore)
       [[ "$mode" = _* ]] && continue
       mode=${mode//_$mod_id/}
       echo -n " $mode"
-    done < <(compgen -A function -X \!*_$mod_id)
+    done < <(compgen -A function -X \!*_"$mod_id")
     fnExists "install_${mod_id}" || fnExists "install_bin_${mod_id}" && ! fnExists "remove_${mod_id}" && echo -n " remove"
     echo -n " help"
     echo ""
