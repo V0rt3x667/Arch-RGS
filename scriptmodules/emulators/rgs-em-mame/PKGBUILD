@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-mame
-pkgver=0226
+pkgver=0231
 pkgrel=1
 pkgdesc="Multiple Arcade Machine Emulator"
 url="https://mamedev.org"
@@ -8,8 +8,8 @@ license=('custom:MAME')
 arch=('x86_64')
 depends=(
   'flac'
+  'libpulse'
   'libutf8proc'
-  'lua53'
   'portaudio'
   'portmidi'
   'pugixml'
@@ -17,7 +17,6 @@ depends=(
   'sdl2_ttf'
 )
 makedepends=(
-  'asio'
   'glm'
   'libxinerama'
   'nasm'
@@ -25,48 +24,43 @@ makedepends=(
   'rapidjson'
 )
 _latestver=$(wget -qO- https://api.github.com/repos/mamedev/mame/releases/latest | grep -m 1 tag_name | cut -d\" -f4)
-source=("$pkgname::git+https://github.com/mamedev/mame#tag=${_latestver}")
+source=("https://github.com/mamedev/mame/archive/refs/tags/${_latestver}.tar.gz")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
 
 pkgver() {
-  cd "$pkgname"
+  cd "mame-${_latestver}"
 
-  echo ${_latestver} | sed 's/^mame//'
+  echo "${_latestver}" | sed 's/^mame//'
 }
 
 prepare() {
-  cd "$pkgname"
+  cd "mame-${_latestver}"
 
   ##Use System Libraries
   sed -e 's|\# USE_SYSTEM_LIB|USE_SYSTEM_LIB|g' -i makefile
-  ##Except for ASIO
+  ##Except for ASIO and Lua
+  sed -e 's|USE_SYSTEM_LIB_LUA|\# USE_SYSTEM_LIB_LUA|g' -i makefile
   sed -e 's|USE_SYSTEM_LIB_ASIO|\# USE_SYSTEM_LIB_ASIO|g' -i makefile
 }
 
 build() {
-  cd "$pkgname"
-
-  export CFLAGS+=" -I/usr/include/lua5.3/"
-  export CXXFLAGS+=" -I/usr/include/lua5.3/"
-
-  ##Force Linking to lua5.3
-  mkdir lib
-  ln -s /usr/lib/liblua5.3.so lib/liblua.so
-  export LDFLAGS+=" -L${PWD}/lib"
+  cd "mame-${_latestver}"
 
   make \
-    PREFIX="${_installdir%/}" \
-    BUILDDIR=./build \
     ARCHOPTS=-flifetime-dse=1 \
+    CONFIG=release \
     NOWERROR=1 \
-    TOOLS=1 \
-    PYTHON_EXECUTABLE=python
+    OPTIMISE=2
+    PREFIX="${_installdir%/}" \
+    PTR64=1 \
+    TARGETOS=linux \
+    TOOLS=1
 }
 
 package() {
-  cd "$pkgname"
+  cd "mame-${_latestver}"
 
   _BIN=(
     'castool'
@@ -75,6 +69,7 @@ package() {
     'jedutil'
     'ldresample'
     'ldverify'
+    'mame'
     'nltool'
     'nlwav'
     'pngcmp'
@@ -87,10 +82,8 @@ package() {
 )
 
   ##Install Binaries
-  install -Dm755 ./mame64 "${pkgdir}${_installdir%/}/bin/mame"
-
   for bin in "${_BIN[@]}"; do
-    install -Dm755 "$bin" "${pkgdir}${_installdir%/}/bin"
+    install -Dm755 "$bin" -t "${pkgdir}${_installdir%/}"
   done
 
   ##Install Data
