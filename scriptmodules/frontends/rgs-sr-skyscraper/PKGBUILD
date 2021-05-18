@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-sr-skyscraper
-pkgver=3.6.9
+pkgver=3.6.11
 pkgrel=1
 pkgdesc="Powerful & Versatile Game Scraper"
 arch=("x86_64")

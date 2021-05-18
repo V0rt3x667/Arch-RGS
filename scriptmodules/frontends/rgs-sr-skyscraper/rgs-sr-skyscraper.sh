@@ -19,8 +19,8 @@ function remove_rgs-sr-skyscraper() {
   _purge_rgs-sr-skyscraper
 }
 
-##GET THE LOCATION OF THE CACHED RESOURCES FOLDER. IN V3+ THIS CHANGED TO 'cache'
-##NOTE: THE CACHE FOLDER MIGHT BE UNAVAILABLE DURING FIRST TIME INSTALLATIONS
+##Get The Location Of The Cached Resources Folder. In V3+ This Changed To 'cache'
+##Note: The Cache Folder Might Be Unavailable During First Time Installations
 function _cache_folder_rgs-sr-skyscraper() {
   if [[ -d "$configdir/all/skyscraper/dbs" ]]; then
     echo "dbs"
@@ -29,7 +29,7 @@ function _cache_folder_rgs-sr-skyscraper() {
   fi
 }
 
-##PURGE ALL SKYSCRAPER CACHES
+##Purge All Skyscraper Caches
 function _purge_rgs-sr-skyscraper() {
   local platform
   local cache_folder
@@ -38,7 +38,7 @@ function _purge_rgs-sr-skyscraper() {
   [[ ! -d "$configdir/all/skyscraper/$cache_folder" ]] && return
 
   while read platform; do
-    ##FIND ANY SUB-FOLDERS OF THE CACHE FOLDER AND CLEAR THEM
+    ##Find Any Sub-Folders Of The Cache Folder And Clear Them
     _clear_platform_rgs-sr-skyscraper "$platform"
   done < <(find "$configdir/all/skyscraper/$cache_folder" -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 }
@@ -66,16 +66,16 @@ function _purge_platform_rgs-sr-skyscraper() {
   cache_folder=$(_cache_folder_rgs-sr-skyscraper)
 
   while read system; do
-    ##IF THERE IS NO 'db.xml' FILE UNDERNEATH THE FOLDER SKIP IT THEFOLDER IS EMPTY
+    ##If There Is No 'db.xml' File Underneath The Folder Skip It Thefolder Is Empty
     [[ ! -f "$configdir/all/skyscraper/$cache_folder/$system/db.xml" ]] && continue
 
-    ##GET THE SIZE ON DISK OF THE SYSTEM AND SHOW IT IN THE SELECT LIST
+    ##Get The Size On Disk Of The System And Show It In The Select List
     local size
     size=$(du -sh "$configdir/all/skyscraper/$cache_folder/$system" | cut -f1)
     options+=("$system" "$size" OFF)
   done < <(find "$configdir/all/skyscraper/$cache_folder" -maxdepth 1 -mindepth 1 -type d -exec basename {} \;)
 
-  ##IF NOT FOLDERS ARE FOUND SHOW AN INFO MESSAGE INSTEAD OF THE SELECTION LIST
+  ##If Not Folders Are Found Show An Info Message Instead Of The Selection List
   if [[ ${#options[@]} -eq 0 ]]; then
     printMsgs "dialog" "Nothing to delete ! No cached platforms found in \n$configdir/all/skyscraper/$cache_folder."
     return
@@ -88,7 +88,7 @@ function _purge_platform_rgs-sr-skyscraper() {
   local platform
   platform=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
-  ##EXIT IF NO PLATFORM CHOSEN
+  ##Exit If No Platform Chosen
   [[ -z "$platform" ]] && return
 
   _clear_platform_rgs-sr-skyscraper "$platform" "$@"
@@ -100,7 +100,7 @@ function _get_ver_rgs-sr-skyscraper() {
     fi
 }
 
-##LIST ANY NON-EMPTY SYSTEMS FOUND IN THE ROM FOLDER
+##List Any Non-Empty Systems Found In The Rom Folder
 function _list_systems_rgs-sr-skyscraper() {
   find -L "$romdir/" -mindepth 1 -maxdepth 1 -type d -not -empty | sort -u
 }
@@ -110,14 +110,14 @@ function configure_rgs-sr-skyscraper() {
     return
   fi
 
-  ##CHECK IF THIS A FIRST TIME INSTALL
+  ##Check If This A First Time Install
   local local_config
   local_config=$(readlink -qn "$home/.skyscraper")
 
-  # Handle the cases where the user has an existing Skyscraper installation.
+  ##Handle The Cases Where The User Has An Existing Skyscraper Installation
   if [[ -d "$home/.skyscraper" && "$local_config" != "$configdir/all/skyscraper" ]]; then
-    ##WE HAVE AN EXISTING SKYSCRAPER INSTALLATION BUT NOT HANDLED BY THIS SCRIPTMODULE.
-    ##SINCE THE $HOME/.skyscraper FOLDER WILL BE MOVED MAKE SURE THE 'cache' AND 'import' FOLDERS ARE MOVED SEPARATELY
+    ##We Have An Existing Skyscraper Installation But Not Handled By This Scriptmodule.
+    ##Since The $Home/.Skyscraper Folder Will Be Moved Make Sure The 'Cache' And 'Import' Folders Are Moved Separately
     local f_size
     local cache_folder="dbs"
     [[ -d "$home/.skyscraper/cache" ]] && cache_folder="cache"
@@ -131,15 +131,15 @@ function configure_rgs-sr-skyscraper() {
         printMsgs "console" "INFO: Moved "$home/.skyscraper/$folder" to "$home/.skyscraper-$folder""
     done
 
-    ##WHEN HAVING AN EXISTING INSTALLATION CHANCES ARE THE GAMELIST IS GENERATED IN THE ROMS FOLDER
-    ##CREATE A GUI CONFIG FILE WITH THIS SETTING PRE-SET
+    ##When Having An Existing Installation Chances Are The Gamelist Is Generated In The Roms Folder
+    ##Create A GUI Config File With This Setting Pre-Set
     iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
     iniSet "use_rom_folder" 1
   fi
 
   moveConfigDir "$home/.skyscraper" "$configdir/all/skyscraper"
 
-  ##MOVE THE CACHE AND IMPORT FOLDERS BACK THE NEW CONF FOLDER
+  ##Move The Cache And Import Folders Back The New Conf Folder
   for folder in $cache_folder import; do
     if [[ -d "$home/.skyscraper-$folder" ]]; then
       printMsgs "console" "INFO: Moving "$home/.skyscraper-$folder" back to configuration folder"
@@ -154,7 +154,7 @@ function configure_rgs-sr-skyscraper() {
 function _init_config_rgs-sr-skyscraper() {
   local scraper_conf_dir="$configdir/all/skyscraper"
 
-  ##MAKE SURE THE `artwork.xml` AND OTHER CONF FILE(S) ARE PRESENT BUT DON'T OVERWRITE THEM ON UPGRADES
+  ##Make Sure The `artwork.xml` And Other Conf File(s) Are Present But Do Not Overwrite Them On Upgrades
   local f_conf
   for f_conf in artwork.xml aliasMap.csv; do
     if [[ -f "$scraper_conf_dir/$f_conf" ]]; then
@@ -164,24 +164,24 @@ function _init_config_rgs-sr-skyscraper() {
     fi
   done
 
-  ##IF WE DON'T HAVE A PREVIOUS config.ini FILE COPY THE EXAMPLE ONE
+  ##If We Don'T Have A Previous config.ini File Copy The Example One
   [[ ! -f "$scraper_conf_dir/config.ini" ]] && cp "$md_inst/share/skyscraper/config.ini.example" "$scraper_conf_dir/config.ini"
 
-  ##COPY REQUIRED FILES
+  ##Copy Required Files
   cp -rf "$md_inst/share/skyscraper/*" "$scraper_conf_dir"
 
-    # Create the import folders and add the sample files.
+    ##Create The Import Folders And Add The Sample Files
     local folder
     for folder in covers marquees screenshots textual videos wheels; do
         mkUserDir "$scraper_conf_dir/import/$folder"
     done
 
-    # Create the cache folder and add the sample 'priorities.xml' file to it
+    ##Create The Cache Folder And Add The Sample 'priorities.xml' File To It
     mkdir -p "$scraper_conf_dir/cache"
     cp -f "$md_inst/share/skyscraper/priorities.xml.example" "$scraper_conf_dir/cache"
 }
 
-##SCRAPE ONE SYSTEM PASSED AS PARAMETER
+##Scrape One System Passed As Parameter
 function _scrape_rgs-sr-skyscraper() {
   local system="$1"
 
@@ -212,27 +212,27 @@ function _scrape_rgs-sr-skyscraper() {
   if [[ "$use_rom_folder" -eq 1 ]]; then
     params+=(-g "$romdir/$system")
     params+=(-o "$romdir/$system/media")
-    ##IF WE'RE SAVING TO THE ROM FOLDER, THEN USE RELATIVE PATHS IN THE GAMELIST
+    ##If We'Re Saving To The Rom Folder, Then Use Relative Paths In The Gamelist
     flags+="relative,"
   else
     params+=(-g "$home/.emulationstation/gamelists/$system")
     params+=(-o "$home/.emulationstation/downloaded_media/$system")
   fi
 
-  ##IF 2ND PARAMETER IS UNSET USE THE CONFIGURED SCRAPING SOURCE OTHERWISE SCRAPE FROM CACHE
-  ##SCRAPING FROM CACHE MEANS WE CAN OMIT '-S' FROM THE PARAMETER LIST
+  ##If 2nd Parameter Is Unset Use The Configured Scraping Source Otherwise Scrape From Cache
+  ##Scraping From Cache Means We Can Omit '-s' From The Parameter List
   if [[ -z "$2" ]]; then
     params+=(-s "$scrape_source")
   fi
 
   [[ "$force_refresh" -eq 1 ]] && params+=(--refresh)
 
-  ##THERE WILL ALWAYS BE A ',' AT THE END OF $flags REMOVE IT
+  ##There Will Always Be A ',' At The End Of $flags Remove It
   flags=${flags::-1}
 
   params+=(--flags "$flags")
 
-  ##TRAP CTRL+C AND RETURN IF PRESSED (RATHER THAN EXITING ARCH-RGS)
+  ##Trap CTRL+C And Return If Pressed (Rather Than Exiting Arch-Rgs)
   trap 'trap 2; return 1' INT
   sudo -u "$user" stdbuf -o0 "$md_inst/bin/Skyscraper" "${params[@]}"
   echo -e "\nCOMMAND LINE USED:\n $md_inst/bin/Skyscraper" "${params[@]}"
@@ -240,7 +240,7 @@ function _scrape_rgs-sr-skyscraper() {
   trap 2
 }
 
-##SCRAPE A LIST OF SYSTEMS CHOSEN BY THE USER
+##Scrape A List Of Systems Chosen By The User
 function _scrape_chosen_rgs-sr-skyscraper() {
   local options=()
   local system
@@ -262,10 +262,10 @@ function _scrape_chosen_rgs-sr-skyscraper() {
 
   choices=($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))
 
-  ##EXIT IF NOTHING WAS CHOSEN OR CANCEL WAS USED
+  ##Exit If Nothing Was Chosen Or Cancel Was Used
   [[ ${#choices[@]} -eq 0 || $? -eq 1 ]] && return 1
 
-  ##CONFIRM WITH THE USER THAT SCRAPING CAN START
+  ##Confirm With The User That Scraping Can Start
   dialog --clear --colors --yes-label "Proceed" --no-label "Abort" --yesno "This will start the gathering process, which can take a long time if you have a large game collection.\n\nYou can interrupt this process anytime by pressing \ZbCtrl+C\Zn.\nProceed ?" 12 70 2>&1 >/dev/tty
   [[ ! $? -eq 0 ]] && return 1
 
@@ -277,7 +277,7 @@ function _scrape_chosen_rgs-sr-skyscraper() {
   done
 }
 
-##GENERATE GAMELISTS FOR A LIST OF SYSTEMS CHOSEN BY THE USER
+##Generate Gamelists For A List Of Systems Chosen By The User
 function _generate_chosen_rgs-sr-skyscraper() {
   local options=()
   local system
@@ -299,7 +299,7 @@ function _generate_chosen_rgs-sr-skyscraper() {
 
   choices=($("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty))
 
-  ##EXIT IF NOTHING WAS CHOSEN OR CANCEL WAS USED
+  ##Exit If Nothing Was Chosen Or Cancel Was Used
   [[ ${#choices[@]} -eq 0 || $? -eq 1 ]] && return 1
 
   for choice in "${choices[@]}"; do
@@ -372,7 +372,7 @@ function _gui_advanced_rgs-sr-skyscraper() {
         ;;
 
       HELP*)
-        # Retain choice
+        ##Retain Choice
         default="${choice/HELP /}"
         if [[ ! -z "${help_strings_adv[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_adv[${default}]}" 22 65 >&1
@@ -422,7 +422,7 @@ function gui_rgs-sr-skyscraper() {
     [11]="Import Folder"
   )
 
-  ##HELP STRINGS FOR THIS GUI
+  ##Help Strings For This GUI
   help_strings=(
     [1]="Gather resources and cache them for the platforms found in \Zb$romdir\Zn.\nRuns the scraper to download the information and media from the selected gathering source."
     [2]="Select the source for ROM scraping. Supported sources:\n\ZbONLINE\Zn\n * ScreenScraper (screenscraper.fr)\n * TheGamesDB (thegamesdb.net)\n * OpenRetro (openretro.org)\n * ArcadeDB (adb.arcadeitalia.net)\n * World of Spectrum (worldofspectrum.org)\n\ZbLOCAL\Zn\n * EmulationStation Gamelist (imports data from ES gamelist)\n * Import (imports resources in the local cache)\n\n\Zb\ZrNOTE\Zn: Some sources require a username and password for access. These can be set per source in the \Zbconfig.ini\Zn configuration file.\n\n Skyscraper parameter: \Zb-s <source_name>\Zn"
@@ -479,7 +479,7 @@ function gui_rgs-sr-skyscraper() {
 
     options+=(A "Advanced options -->")
 
-    ##RUN THE GUI
+    ##Run the GUI
     local choice
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
@@ -497,7 +497,7 @@ function gui_rgs-sr-skyscraper() {
         ;;
 
       2)
-        ##SCRAPE SOURCE OPTIONS HAVE A SEPARATE DIALOG
+        ##Scrape Source Options Have A Separate Dialog
         local s_options=()
         local i
 
@@ -519,14 +519,14 @@ function gui_rgs-sr-skyscraper() {
         local s_cmd=(dialog --title "Select Scraping source" --default-item "$s_default" \
           --menu "Choose one of the available scraping sources" 18 50 9)
 
-        ##RUN THE SCRAPER SOURCE SELECTION DIALOG
+        ##Run The Scraper Source Selection Dialog
         local scrape_source_name
         scrape_source_name=$("${s_cmd[@]}" "${s_options[@]}" 2>&1 >/dev/tty)
 
-        ##IF CANCEL WAS CHOSEN DO NOT DO ANYTHING
+        ##If Cancel Was Chosen Do Not Do Anything
         [[ -z "$scrape_source_name" ]] && continue
 
-        ##STRIP THE "XYZ:" PREFIX FROM THE CHOSEN SCRAPER SOURCE THEN COMPARE TO OUR LIST
+        ##Strip The "xyz:" Prefix From The Chosen Scraper Source Then Compare To Our List
         local src
         src=$(echo "$scrape_source_name" | cut -d' ' -f2-)
 
@@ -563,7 +563,7 @@ function gui_rgs-sr-skyscraper() {
         ;;
 
       HELP*)
-        ##RETAIN CHOICE WHEN THE HELP BUTTON IS SELECTED
+        ##Retain Choice When The Help Button Is Selected
         default="${choice/HELP /}"
         if [[ ! -z "${help_strings[$default]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings[$default]}" 22 65 >&1
@@ -700,7 +700,7 @@ function _gui_cache_rgs-sr-skyscraper() {
         ;;
 
       HELP*)
-        ##RETAIN CHOICE
+        ##Retain Choice
         default="${choice/HELP /}"
         if [[ ! -z "${help_strings_cache[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_cache[${default}]}" 22 65 >&1
@@ -770,7 +770,7 @@ function _gui_generate_rgs-sr-skyscraper() {
         ;;
 
       HELP*)
-        ##RETAIN CHOICE
+        ##Retain Choice
         default="${choice/HELP /}"
         if [[ ! -z "${help_strings_gen[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_gen[${default}]}" 22 65 >&1
@@ -782,3 +782,4 @@ function _gui_generate_rgs-sr-skyscraper() {
     fi
   done
 }
+
