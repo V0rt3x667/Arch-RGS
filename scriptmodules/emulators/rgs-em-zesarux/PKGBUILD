@@ -17,7 +17,7 @@ sha256sums=('75f1e38ab9a462dfcf5bafe84fee3c2a4130416658c438fb1d6272d995e48533')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname/src"
+  cd "zesarux-$pkgver/src"
 
   ./configure \
     --prefix="${pkgdir}${_installdir%/}" \
@@ -29,7 +29,7 @@ build() {
 }
 
 package(){
-  cd "$pkgname/src"
+  cd "zesarux-$pkgver/src"
 
   make DESTDIR="${pkgdir}" install
 }

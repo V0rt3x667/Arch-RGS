@@ -21,3 +21,4 @@ function remove_rgs-pt-ionfury() {
 function configure_rgs-pt-ionfury() {
   configure_rgs-pt-eduke32
 }
+

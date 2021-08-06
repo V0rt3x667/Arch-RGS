@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-caprice32"
 archrgs_module_desc="Amstrad CPC Libretro Core"
-archrgs_module_help="ROM Extensions: .cdt .cpc .dsk\n\nCopy your Amstrad CPC games to $romdir/amstradcpc"
+archrgs_module_help="ROM Extensions: .cdt .cpc .dsk\n\nCopy Your Amstrad CPC Games to $romdir/amstradcpc"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/libretro-cap32/master/cap32/COPYING.txt"
 archrgs_module_section="libretrocores"
 

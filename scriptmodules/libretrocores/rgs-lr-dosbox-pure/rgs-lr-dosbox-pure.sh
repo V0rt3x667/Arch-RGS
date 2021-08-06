@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-dosbox-pure"
 archrgs_module_desc="MS-DOS Libretro Core"
-archrgs_module_help="ROM Extensions: .bat .com .cue .dosz .exe .ins .ima .img .iso .m3u .m3u8 .vhd .zip\n\nCopy your DOS games to $ROMDIR/pc"
+archrgs_module_help="ROM Extensions: .bat .com .cue .dosz .exe .ins .ima .img .iso .m3u .m3u8 .vhd .zip\n\nCopy Your DOS Games to $ROMDIR/pc"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/dosbox-pure/main/LICENSE"
 archrgs_module_section="libretrocores"
 

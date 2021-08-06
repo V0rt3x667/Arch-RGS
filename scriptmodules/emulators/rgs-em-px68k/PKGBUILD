@@ -10,7 +10,10 @@ depends=(
   'gcc-libs'
   'sdl_gfx'
 )
-makedepends=('git')
+makedepends=(
+  'clang'
+  'git'
+)
 source=("$pkgname::git+https://github.com/hissorii/px68k")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
@@ -25,15 +28,13 @@ pkgver() {
 build() {
   cd "$pkgname"
 
-  make \
-    MOPT="" \
-    CDEBUGFLAGS="$CFLAGS $LDFLAGS -O2 -DUSE_SDLGFX -DNO_MERCURY"
+  make CC="clang" CXX="clang++" MOPT=""
 }
 
 package() {
   cd "$pkgname"
 
-  install -Dm755 ./px68k -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./px68k -t "${pkgdir}${_installdir%/}"
   install -Dm644 ./readme.txt "${pkgdir}${_licencedir%/}/LICENCE"
 }
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-pt-openbor"
 archrgs_module_desc="OpenBOR - Beat 'Em Up Game Engine"
-archrgs_module_help="OpenBOR games need to be extracted to function properly. Place your pak files in $romdir/ports/openbor and then run $rootdir/ports/openbor/extract.sh. When the script is done, your original pak files will be found in $romdir/ports/openbor/originals and can be deleted."
+archrgs_module_help="OpenBOR Games need to be extracted to function properly. Place your pak files in $romdir/ports/openbor and then run $rootdir/ports/openbor/extract.sh. When the script is done, your original pak files will be found in $romdir/ports/openbor/originals and can be deleted."
 archrgs_module_licence="BSD https://raw.githubusercontent.com/rofl0r/openbor/master/LICENSE"
 archrgs_module_section="ports"
 
@@ -49,7 +49,7 @@ do
   mv data/ "\$CURRENTFILE"/
   mv "\$CURRENTFILE"/ ../
 done
-echo "Your games are extracted and ready to be played. Your originals are stored safely in $BORROMDIR/original/ but they won't be needed anymore. Everything within it can be deleted."
+echo "Your Games are extracted and ready to be played. Your originals are stored safely in $BORROMDIR/original/ but they won't be needed anymore. Everything within it can be deleted."
 _EOF_
   chmod +x "$md_inst/bin/extract.sh"
 

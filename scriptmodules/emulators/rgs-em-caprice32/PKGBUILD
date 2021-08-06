@@ -26,8 +26,9 @@ prepare() {
 
   ##Configure Default ROM and Resources Paths
   sed -e "s|\prefix = /usr/local|prefix = ${_installdir}|g" -i ./makefile
-  sed -e "s|rom_path=.*|rom_path=${_installdir}/share/$pkgname/rom|g" -i ./cap32.cfg
-  sed -e "s|resources_path=.*|resources_path=${_installdir}/share/$pkgname/resources|g" -i ./cap32.cfg
+  sed -e "s|rom_path=.*|rom_path=${_installdir}/rom|g" -i ./cap32.cfg
+  sed -e "s|cart_path=.*|cart_path=${_installdir}/rom|g" -i ./cap32.cfg
+  sed -e "s|resources_path=.*|resources_path=${_installdir}/resources|g" -i ./cap32.cfg
 
   ##Enable Full Screen by Default
   sed -e "s|scr_window=1|scr_window=0|g" -i ./cap32.cfg
@@ -44,7 +45,6 @@ build() {
   ##Build Caprice32
   make \
     LDFLAGS="${LDFLAGS}" \
-    CFLAGS=-DNO_SDL_GLEXT \
     ARCH=linux \
     RELEASE=TRUE \
     APP_PATH="$HOME/.config/caprice32" \
@@ -54,11 +54,9 @@ build() {
 package() {
   cd "$pkgname"
 
-  install -dm755 "${pkgdir}${_installdir%/}/share/$pkgname"
-
-  install -Dm755 ./cap32.cfg -t "${pkgdir}${_installdir%/}/share/$pkgname/resources"
-  install -Dm755 ./cap32 -t "${pkgdir}${_installdir%/}/bin"
-  install -Dm644 "$srcdir/x86_64-linux-gnu-capsimage/libcapsimage.so.4.2" -t "${pkgdir}${_installdir%/}/bin"
-  cp -r ./{resources,rom} "${pkgdir}${_installdir%/}/share/$pkgname"
+  install -Dm755 ./cap32 -t "${pkgdir}${_installdir%/}"
+  install -Dm644 "$srcdir/x86_64-linux-gnu-capsimage/libcapsimage.so.4.2" -t "${pkgdir}${_installdir%/}"
+  cp -r ./{resources,rom} "${pkgdir}${_installdir%/}"
+  install -Dm644 ./cap32.cfg -t "${pkgdir}${_installdir%/}/resources"
 }
 

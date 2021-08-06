@@ -33,6 +33,6 @@ function configure_rgs-lr-cannonball() {
 
   touch "$romdir/ports/cannonball/outrun.game"
   chown -R "$user:$user" "$romdir/ports/cannonball"
-  ln -s "$romdir/ports/cannonball" "$md_inst/roms"
+  ln -sf "$romdir/ports/cannonball" "$md_inst/roms"
 }
 

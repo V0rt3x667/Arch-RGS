@@ -16,7 +16,7 @@ prepare() {
 
   sed -i -e 's|SLFLAGS ?= -static $(LFLAGS)|SLFLAGS ?= $(LFLAGS)|g' Makefile.common
   sed -i -e 's|RL_LFLAGS = -lreadline -ltermcap|RL_LFLAGS = -lreadline|g' Makefile.linux_sdl2
-  sed -i -e 's|LFLAGS   += -lrt|LFLAGS   += -lrt -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now|g' Makefile.linux_sdl2
+  sed -i -e 's|LFLAGS += -lrt|LFLAGS += -lrt -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now|g' Makefile.linux_sdl2
 }
 
 build() {
@@ -28,9 +28,8 @@ build() {
 package() {
   cd "jzintv-$pkgver-src"
 
-  install -Dm755 ./bin/jzintv -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./bin/jzintv -t "${pkgdir}${_installdir%/}"
 
-  install -dm755 "${pkgdir}${_installdir%/}/share/$pkgname"
-  cp -r ./{doc,rom} "${pkgdir}${_installdir%/}/share/$pkgname"
+  cp -r ./{doc,rom} "${pkgdir}${_installdir%/}"
 }
 

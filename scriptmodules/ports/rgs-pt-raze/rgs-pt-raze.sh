@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-pt-raze"
 archrgs_module_desc="Raze Build Engine Port"
-archrgs_module_help="ROM Extensions: .grp\n\nCopy your .grp files to $romdir/ports/{blood,duke3d,exhumed,redneck,sw,wh}"
+archrgs_module_help="ROM Extensions: .grp\n\nCopy Your .grp files to $romdir/ports/{blood,duke3d,exhumed,redneck,sw,wh}"
 archrgs_module_licence="GPL2 & NONCOM: https://raw.githubusercontent.com/coelckers/Raze/master/build-doc/buildlic.txt"
 archrgs_module_section="ports"
 

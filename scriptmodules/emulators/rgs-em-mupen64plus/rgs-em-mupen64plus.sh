@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-mupen64plus"
 archrgs_module_desc="MUPEN64Plus - Nintendo N64 Emulator"
-archrgs_module_help="ROM Extensions: .z64 .n64 .v64 .zip\n\nCopy your N64 roms to $romdir/n64"
+archrgs_module_help="ROM Extensions: .z64 .n64 .v64 .zip\n\nCopy Your N64 ROMs to $romdir/n64"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/mupen64plus/mupen64plus-core/master/LICENSES"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -33,18 +33,18 @@ function configure_rgs-em-mupen64plus() {
 
   [[ "$md_mode" == "remove" ]] && return
 
-  ##COPY HOTKEY REMAPPING START SCRIPT
-  cp "$md_data/mupen64plus.sh" "$md_inst/bin"
+  ##Copy Hotkey Remapping Start Script
+  cp "$md_data/mupen64plus.sh" "$md_inst/bin/"
   chmod +x "$md_inst/bin/mupen64plus.sh"
 
   mkUserDir "$md_conf_root/n64"
 
   moveConfigDir "$home/.config/mupen64plus" "$md_conf_root/n64"
 
-  ##COPY CONFIG FILES
-  cp -v "$md_inst/share/mupen64plus/"{*.ini,font.ttf} "$md_conf_root/n64"
+  ##Copy Config Files
+  cp -v "$md_inst/share/mupen64plus/"{*.ini,font.ttf} "$md_conf_root/n64/"
 
-  ##REMOVE DEFAULT InputAutoConfig.ini
+  ##Remove Default InputAutoConfig.ini
   rm -f "$md_conf_root/n64/InputAutoCfg.ini"
 
   local config
@@ -53,9 +53,9 @@ function configure_rgs-em-mupen64plus() {
   config="$md_conf_root/n64/mupen64plus.cfg"
   cmd="$md_inst/bin/mupen64plus --configdir $md_conf_root/n64 --datadir $md_conf_root/n64"
 
-  ##1) BACK UP EXISTING mupen64plus CONFIG & GENERATE NEW CONFIGURATION FILE
-  ##2) COPY NEW CONFIG FILE TO rgs-dist AND RESTORE THE ORIGINAL CONFIG FILE
-  ##3) MAKE INI CHANGES ON rgs-dist File. PRESERVES USER CONFIGS FROM MODIFICATION AND CREATES A DEFAULT CONFIG FOR REFERENCE
+  ##1) Back Up Existing Mupen64plus Config & Generate New Configuration File
+  ##2) Copy New Config File To rgs-dist And Restore The Original Config File
+  ##3) Make Ini Changes On rgs-dist File. Preserves User Configs From Modification And Creates A Default Config For Reference
   if [[ -f "$config" ]]; then
     mv "$config" "$config.user"
     su "$user" -c "$cmd"

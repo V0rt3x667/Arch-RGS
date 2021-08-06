@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-retrodream"
 archrgs_module_desc="Sega Dreamcast Libretro Core"
-archrgs_module_help="ROM Extensions: .cdi .gdi\n\nCopy your Dreamcast roms to $romdir/dreamcast\n\nCopy the required BIOS files dc_boot.bin and dc_flash.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .cdi .gdi\n\nCopy Your Dreamcast ROMs to $romdir/dreamcast\n\nCopy the required BIOS files dc_boot.bin and dc_flash.bin to $biosdir"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/retrodream/master/LICENSE.txt"
 archrgs_module_section="libretrocores"
 

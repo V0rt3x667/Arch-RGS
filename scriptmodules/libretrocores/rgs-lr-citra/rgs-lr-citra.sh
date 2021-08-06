@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-citra"
 archrgs_module_desc="Nintendo 3DS Libretro Core"
-archrgs_module_help="ROM Extensions: .3ds .3dsx .app .cci .cxi\n\nCopy your Nintendo 3DS roms to $romdir/3ds"
+archrgs_module_help="ROM Extensions: .3ds .3dsx .app .cci .cxi\n\nCopy Your Nintendo 3DS ROMs to $romdir/3ds"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/citra/master/license.txt"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-beetle-vb"
 archrgs_module_desc="Nintendo Virtual Boy Libretro Core"
-archrgs_module_help="ROM Extensions: .vb .zip\n\nCopy your Virtual Boy roms to $romdir/virtualboy"
+archrgs_module_help="ROM Extensions: .vb .zip\n\nCopy Your Virtual Boy ROMs to $romdir/virtualboy"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/beetle-vb-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-bsnes"
 archrgs_module_desc="Super Nintendo Entertainment System Libretro Core"
-archrgs_module_help="ROM Extensions: .bin .smc .sfc .fig .swc .mgd .zip\n\nCopy your SNES roms to $romdir/snes"
+archrgs_module_help="ROM Extensions: .bin .smc .sfc .fig .swc .mgd .zip\n\nCopy Your SNES ROMs to $romdir/snes"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/bsnes-libretro/libretro/COPYING"
 archrgs_module_section="libretrocores"
 

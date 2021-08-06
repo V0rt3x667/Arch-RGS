@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-gw"
 archrgs_module_desc="Nintendo Game & Watch Libretro Core"
-archrgs_module_help="ROM Extension: .mgw\n\nCopy your Game and Watch games to $romdir/gameandwatch"
+archrgs_module_help="ROM Extension: .mgw\n\nCopy Your Game and Watch Games to $romdir/gameandwatch"
 archrgs_module_licence="ZLIB https://raw.githubusercontent.com/libretro/gw-libretro/master/LICENSE"
 archrgs_module_section="libretrocores"
 

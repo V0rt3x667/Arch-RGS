@@ -1,7 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-dosbox
 pkgver=0.74.3
-$_pkgver="$(echo $pkgver | sed -r 's/[.]+/-/2')"
+_gitver="$(echo $pkgver | sed -r 's/[.]+/-/2')"
 pkgrel=1
 pkgdesc="DOS Emulator"
 arch=('x86_64')
@@ -18,12 +18,12 @@ makedepends=(
   'mesa-libgl'
   'subversion'
 )
-source=("https://sourceforge.net/projects/dosbox/files/dosbox/$_pkgver/dosbox-$_pkgver.tar.gz/download")
+source=("https://sourceforge.net/projects/dosbox/files/dosbox/$_gitver/dosbox-$_gitver.tar.gz/download")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname"
+  cd "dosbox-$_gitver"
 
   ./autogen.sh
   ./configure \
@@ -32,7 +32,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname"
+  cd "dosbox-$_gitver"
 
   make DESTDIR="${pkgdir}" install
 }

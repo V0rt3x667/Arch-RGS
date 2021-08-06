@@ -230,7 +230,7 @@ function gui_rgs-fe-emulationstation() {
   getAutoConf "disable" && disable=1
 
   while true; do
-    local options=(1 "Clear/Reset Emulation Station input configuration")
+    local options=(1 "Clear/Reset Emulation Station Input Configuration")
 
     if [[ "$disable" -eq 0 ]]; then
       options+=(2 "Auto Configuration (Currently: Enabled)")
@@ -244,7 +244,7 @@ function gui_rgs-fe-emulationstation() {
       options+=(3 "Swap A/B Buttons in ES (Currently: Swapped)")
     fi
 
-    local cmd=(dialog --backtitle "$__backtitle" --default-item "$default" --menu "Choose an option" 22 76 16)
+    local cmd=(dialog --backtitle "$__backtitle" --default-item "$default" --menu "Choose an Option" 22 76 16)
     local choice
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     [[ -z "$choice" ]] && break
@@ -252,7 +252,7 @@ function gui_rgs-fe-emulationstation() {
 
     case "$choice" in
     1)
-      if dialog --defaultno --yesno "Are you sure you want to reset the Emulation Station controller configuration ? This will wipe all controller configs for ES and it will prompt to reconfigure on next start" 22 76 >/dev/tty 2>&1; then
+      if dialog --defaultno --yesno "Are you sure you want to reset the Emulation Station controller configuration? This will wipe all controller configs for ES and it will prompt to reconfigure on next start" 22 76 >/dev/tty 2>&1; then
         clear_input_rgs-fe-emulationstation
         printMsgs "dialog" "$(_get_input_cfg_rgs-fe-emulationstation) has been reset to default values."
       fi

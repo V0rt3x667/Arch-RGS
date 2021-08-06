@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-retroarch
-pkgver=1.9.2
+pkgver=1.9.5
 pkgrel=1
 pkgdesc="Frontend for the Libretro API"
 arch=('x86_64')
@@ -33,31 +33,37 @@ makedepends=(
   'wayland-protocols'
 )
 source=(
-  "$pkgname::git+https://github.com/libretro/RetroArch#tag=v$pkgver"
-  "core-info::git+https://github.com/libretro/libretro-core-info#tag=v$pkgver"
+  "retroarch::https://github.com/libretro/RetroArch/archive/refs/tags/v$pkgver.tar.gz"
+  "coreinfo::https://github.com/libretro/libretro-core-info/archive/refs/tags/v$pkgver.tar.gz"
   "01_disable_search.patch"
   "02_shader_path_config_enable.patch"
   "03_revert_default_save_paths.patch"
 )
 sha256sums=(
-  'SKIP'
-  'SKIP'
-  '4340865535afe441ad52a5f663c5b8ac39dba78a77fc3b1b780c4829878f9d8c'
-  '7d83f5c442634c63dced54fe4f442a9ee961e9924f08672b5ddc2365103a8af3'
-  'a85f7f7538ec28eafd77f206e1b7335318ec5e56303e872e2044efb9b535636a'
+  '4ff819c31bc310a265bb52ea4db4562c25e7ba7d544147483e57e6117b35fa03'
+  '361ee8625902e90c9c3e1eeef41e94f0449f9be4d2a9689cd6846560ec6a8f1c'
+  '1658ccafdb609425be306bc024731a6737482b8c2240591511e17b8f5ee8bcb3'
+  '7e1c59ede744480149a103495a04ce24a2e2f5a3e4b35c6afd5112fc73dc0639'
+  'f508aa8b5355045aed6bafe8e4dd92b777267684ead05c66f57a52635c0544f7'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 prepare() {
-  cd "$pkgname"
+  cd "RetroArch-$pkgver"
 
-  patch -Np1 -i ../01_disable_search.patch
-  patch -Np1 -i ../02_shader_path_config_enable.patch
-  patch -Np1 -i ../03_revert_default_save_paths.patch
+  patches=(
+    '01_disable_search.patch'
+    '02_shader_path_config_enable.patch'
+    '03_revert_default_save_paths.patch'
+)
+
+  for patch in "${patches[@]}"; do
+    patch -Np1 -i ../"$patch"
+  done
 }
 
 build() {
-  cd "$pkgname"
+  cd "RetroArch-$pkgver"
 
   ./configure \
     --prefix="${_installdir%/}" \
@@ -76,12 +82,15 @@ build() {
 }
 
 package() {
-  cd "$pkgname"
+  cd "RetroArch-$pkgver"
 
   make DESTDIR="${pkgdir}" install
 
   install -Dm644 ./libretro-common/audio/dsp_filters/*.{dsp,so} -t "${pkgdir}${_installdir%/}/filters/audio"
   install -Dm644 ./gfx/video_filters/*.{filt,so} -t "${pkgdir}${_installdir%/}/filters/video"
-  install -Dm644 ../core-info/*.info -t "${pkgdir}${_installdir%/}/info"
+
+  cd "../libretro-core-info-$pkgver"
+
+  install -Dm644 ./*.info -t "${pkgdir}${_installdir%/}/info"
 }
 

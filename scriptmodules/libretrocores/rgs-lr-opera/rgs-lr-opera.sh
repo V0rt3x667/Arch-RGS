@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-opera"
 archrgs_module_desc="3DO Interactive Multiplayer Libretro Core"
-archrgs_module_help="ROM Extension: .iso\n\nCopy your 3do roms to $romdir/3do\n\nCopy the required BIOS file panazf10.bin to $biosdir"
+archrgs_module_help="ROM Extension: .iso\n\nCopy Your 3do ROMs to $romdir/3do\n\nCopy the required BIOS file panazf10.bin to $biosdir"
 archrgs_module_licence="LGPL https://raw.githubusercontent.com/libretro/opera-libretro/master/libfreedo/freedo_3do.c"
 archrgs_module_section="libretrocores"
 

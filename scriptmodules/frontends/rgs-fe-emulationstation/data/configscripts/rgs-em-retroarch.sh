@@ -397,3 +397,4 @@ function onend_rgs-em-retroarch_keyboard() {
     iniSet "input_rewind" ""
   fi
 }
+

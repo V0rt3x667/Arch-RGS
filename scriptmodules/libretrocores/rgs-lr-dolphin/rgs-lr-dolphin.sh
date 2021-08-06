@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-dolphin"
 archrgs_module_desc="Nintendo Gamecube & Wii Libretro Core"
-archrgs_module_help="ROM Extensions: .gcm .iso .wbfs .ciso .gcz\n\nCopy your gamecube roms to $romdir/gc and Wii roms to $romdir/wii"
+archrgs_module_help="ROM Extensions: .gcm .iso .wbfs .ciso .gcz\n\nCopy Your Gamecube ROMs to $romdir/gc and Wii ROMs to $romdir/wii"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/dolphin/master/license.txt"
 archrgs_module_section="libretrocores"
 archrgs_module_flags="x86_64"

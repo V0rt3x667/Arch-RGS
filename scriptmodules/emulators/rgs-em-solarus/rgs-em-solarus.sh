@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-solarus"
 archrgs_module_desc="Solarus - Open-source Game Engine for Action-RPGs"
-archrgs_module_help="Copy your Solarus quests (games) to $romdir/solarus"
+archrgs_module_help="Copy Your Solarus Games to $romdir/solarus"
 archrgs_module_licence="GPL3 https://gitlab.com/solarus-games/solarus/raw/dev/license.txt"
 archrgs_module_section="emulators"
 

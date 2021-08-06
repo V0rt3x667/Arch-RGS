@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-mame"
 archrgs_module_desc="MAME - Multiple Arcade Machine Emulator (Latest Version)"
-archrgs_module_help="ROM Extensions: .zip .7z\n\nCopy your MAME roms to either $romdir/mame or\n$romdir/arcade"
+archrgs_module_help="ROM Extensions: .zip .7z\n\nCopy Your MAME ROMs to either $romdir/mame or\n$romdir/arcade"
 archrgs_module_licence="MAME https://raw.githubusercontent.com/mamedev/mame/master/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

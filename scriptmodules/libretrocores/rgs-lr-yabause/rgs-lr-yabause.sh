@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-yabause"
 archrgs_module_desc="Sega Saturn Libretro Core"
-archrgs_module_help="ROM Extensions: .iso .bin .zip\n\nCopy your Sega Saturn roms to $romdir/saturn\n\nCopy the required BIOS file saturn_bios.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .iso .bin .zip\n\nCopy Your Sega Saturn ROMs to $romdir/saturn\n\nCopy the required BIOS file saturn_bios.bin to $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/yabause/master/yabause/COPYING"
 archrgs_module_section="libretrocores"
 

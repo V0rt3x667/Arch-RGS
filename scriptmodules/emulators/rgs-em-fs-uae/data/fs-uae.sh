@@ -46,7 +46,7 @@ function launch_amiga() {
 
 function check_arch_files() {
   case "$MODEL" in
-    CD32|CDTV)
+    CD32|CDTV|GUI)
       launch_amiga
     ;;
     A500|A500+|A600|A1200)

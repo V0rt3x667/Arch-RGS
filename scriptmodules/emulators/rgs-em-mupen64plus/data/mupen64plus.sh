@@ -34,46 +34,45 @@ function getBind() {
   ##Search Hotkey Enable Button
   local hotkey
   local input_type
-  local i
-  i=0
+  local i=0
 
   for hotkey in input_enable_hotkey "$key"; do
     for input_type in "_btn" "_axis"; do
       iniGet "${hotkey}${input_type}"
       ini_value="${ini_value// /}"
-    if [[ -n "$ini_value" ]]; then
-      ini_value="${ini_value//\"/}"
-    case "$input_type" in
-      _axis)
-          m64p_hotkey+="A${ini_value:1}${ini_value:0:1}"
-      ;;
-      _btn)
-          ##If ini_value Contains "h" it is a Hat Device
-          if [[ "$ini_value" == *h* ]]; then
-            local dir="${ini_value:2}"
-            ini_value="${ini_value:1}"
-            case $dir in
-            up)
-              dir="1"
-            ;;
-            right)
-              dir="2"
-            ;;
-            down)
-              dir="4"
-            ;;
-            left)
-              dir="8"
-            ;;
-            esac
-            m64p_hotkey+="H${ini_value}V${dir}"
-          else
-            [[ "$atebitdo_hack" -eq 1 && "$ini_value" -ge 11 ]] && ((ini_value-=11))
-            m64p_hotkey+="B${ini_value}"
-          fi
-      ;;
-    esac
-    fi
+      if [[ -n "$ini_value" ]]; then
+        ini_value="${ini_value//\"/}"
+        case "$input_type" in
+          _axis)
+            m64p_hotkey+="A${ini_value:1}${ini_value:0:1}"
+          ;;
+          _btn)
+            ##If ini_value Contains "h" It Is A Hat Device
+            if [[ "$ini_value" == *h* ]]; then
+              local dir="${ini_value:2}"
+              ini_value="${ini_value:1}"
+              case $dir in
+                up)
+                  dir="1"
+                ;;
+                right)
+                  dir="2"
+                ;;
+                down)
+                  dir="4"
+                ;;
+                left)
+                  dir="8"
+                ;;
+              esac
+              m64p_hotkey+="H${ini_value}V${dir}"
+            else
+              [[ "$atebitdo_hack" -eq 1 && "$ini_value" -ge 11 ]] && ((ini_value-=11))
+              m64p_hotkey+="B${ini_value}"
+            fi
+        ;;
+        esac
+      fi
     done
   [[ "$i" -eq 0 ]] && m64p_hotkey+="/"
   ((i++))
@@ -114,7 +113,7 @@ function remap() {
   for i in {0..2}; do
     bind=""
       for device_num in "${!devices[@]}"; do
-        ##Get Name of retroarch Auto Config File
+        ##Get Name of Retroarch Auto Config File
         file=$(grep -lF "\"${devices[$device_num]}\"" "$configdir/all/retroarch-joypads/"*.cfg)
         atebitdo_hack=0
         [[ "$file" == *8Bitdo* ]] && getAutoConf "8bitdo_hack" && atebitdo_hack=1
@@ -138,7 +137,7 @@ function useTexturePacks() {
   fi
   iniConfig " = " "" "$config"
   ##Settings Version
-  local config_version="20"
+  local config_version="17"
   if [[ -f "$configdir/n64/GLideN64_config_version.ini" ]]; then
     config_version=$(<"$configdir/n64/GLideN64_config_version.ini")
   fi
@@ -151,7 +150,6 @@ function useTexturePacks() {
   fi
   iniSet "LoadHiResTextures" "True"
 }
-
 
   if ! grep -q "\[Core\]" "$config"; then
     echo "[Core]" >> "$config"

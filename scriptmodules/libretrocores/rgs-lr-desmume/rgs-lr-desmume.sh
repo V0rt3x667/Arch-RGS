@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-desmume"
 archrgs_module_desc="Nintendo DS Libretro Core"
-archrgs_module_help="ROM Extensions: .nds .zip\n\nCopy your Nintendo DS roms to $romdir/nds"
+archrgs_module_help="ROM Extensions: .nds .zip\n\nCopy Your Nintendo DS ROMs to $romdir/nds"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/desmume/master/desmume/COPYING"
 archrgs_module_section="libretrocores"
 

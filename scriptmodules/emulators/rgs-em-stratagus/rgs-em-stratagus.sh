@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-stratagus"
 archrgs_module_desc="Stratagus - Strategy Game Engine to Play Warcraft I, II & Starcraft"
-archrgs_module_help="Copy your Stratagus games to $romdir/stratagus"
+archrgs_module_help="Copy Your Stratagus Games to $romdir/stratagus"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/Wargus/stratagus/master/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

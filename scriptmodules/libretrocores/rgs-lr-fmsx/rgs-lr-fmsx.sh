@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-fmsx"
 archrgs_module_desc="Microsoft MSX, MSX2 & MSX2+ Libretro Core"
-archrgs_module_help="ROM Extensions: .rom .mx1 .mx2 .col .dsk .zip\n\nCopy your MSX/MSX2 games to $romdir/msx"
+archrgs_module_help="ROM Extensions: .rom .mx1 .mx2 .col .dsk .zip\n\nCopy Your MSX/MSX2 Games to $romdir/msx"
 archrgs_module_licence="NONCOM https://raw.githubusercontent.com/libretro/fmsx-libretro/master/LICENSE"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-snes9x"
 archrgs_module_desc="SNES9X - Super Nintendo Entertainment System Emulator"
-archrgs_module_help="ROM Extensions: .bin .smc .sfc .fig .swc .mgd .zip\n\nCopy your SNES roms to $romdir/snes"
+archrgs_module_help="ROM Extensions: .bin .smc .sfc .fig .swc .mgd .zip\n\nCopy Your SNES ROMs to $romdir/snes"
 archrgs_module_licence="NONCOM https://raw.githubusercontent.com/snes9xgit/snes9x/master/LICENSE"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

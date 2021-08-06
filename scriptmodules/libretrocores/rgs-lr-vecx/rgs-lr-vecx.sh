@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-vecx"
 archrgs_module_desc="GCE Vectrex Libretro Core"
-archrgs_module_help="ROM Extensions: .vec .gam .bin .zip\n\nCopy your Vectrex roms to $romdir/vectrex"
+archrgs_module_help="ROM Extensions: .vec .gam .bin .zip\n\nCopy Your Vectrex ROMs to $romdir/vectrex"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/libretro-vecx/master/LICENSE.md"
 archrgs_module_section="libretrocores"
 

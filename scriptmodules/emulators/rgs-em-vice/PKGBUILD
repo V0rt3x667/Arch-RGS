@@ -23,12 +23,12 @@ makedepends=(
   'xorg-bdftopcf'
   'xorg-mkfontdir'
 )
-source=("$pkgname::svn+https://svn.code.sf.net/p/vice-emu/code/tags/v$pkgver/vice")
-sha256sums=('SKIP')
+source=("https://sourceforge.net/projects/vice-emu/files/releases/vice-$pkgver.tar.gz/download")
+sha256sums=('56b978faaeb8b2896032bd604d03c3501002187eef1ca58ceced40f11a65dc0e')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname/vice"
+  cd "vice-$pkgver"
 
   ./autogen.sh
   ./configure \
@@ -42,7 +42,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname/vice"
+  cd "vice-$pkgver"
 
   make DESTDIR="${pkgdir}" install
 }

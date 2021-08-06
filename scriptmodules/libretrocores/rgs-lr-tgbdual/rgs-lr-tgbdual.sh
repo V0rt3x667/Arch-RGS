@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-tgbdual"
 archrgs_module_desc="Nintendo Gameboy & Gameboy Color Libretro Core"
-archrgs_module_help="ROM Extensions: .gb .gbc .zip\n\nCopy your GameBoy roms to $romdir/gb\n\nCopy your GameBoy Color roms to $romdir/gbc"
+archrgs_module_help="ROM Extensions: .gb .gbc .zip\n\nCopy Your GameBoy ROMs to $romdir/gb\n\nCopy Your GameBoy Color ROMs to $romdir/gbc"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/tgbdual-libretro/master/docs/COPYING-2.0.txt"
 archrgs_module_section="libretrocores"
 

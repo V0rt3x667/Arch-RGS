@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-bluemsx"
 archrgs_module_desc="Microsoft MSX, MSX2, Coleco ColecoVision & Sega SG-1000 Libretro Core"
-archrgs_module_help="ROM Extensions: .rom .mx1 .mx2 .col .dsk .zip\n\nCopy your MSX/MSX2 games to $romdir/msx\nCopy your Colecovision games to $romdir/coleco\n\nrgs-lr-bluemsx requires the BIOS files from the full standalone package of BlueMSX to be copied to '$biosdir/Machines' folder.\nColecovision BIOS needs to be copied to '$biosdir/Machines/COL - ColecoVision\coleco.rom'"
+archrgs_module_help="ROM Extensions: .rom .mx1 .mx2 .col .dsk .zip\n\nCopy Your MSX/MSX2 Games to $romdir/msx\nCopy Your Colecovision Games to $romdir/coleco\n\nrgs-lr-bluemsx requires the BIOS files from the full standalone package of BlueMSX to be copied to '$biosdir/Machines' folder.\nColecovision BIOS needs to be copied to '$biosdir/Machines/COL - ColecoVision\coleco.rom'"
 archrgs_module_licence="BSD GPL2 https://raw.githubusercontent.com/libretro/blueMSX-libretro/master/license.txt"
 archrgs_module_section="libretrocores"
 

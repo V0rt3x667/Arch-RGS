@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-snes9x
-pkgver=1.53.r1790.364aa1b
+pkgver=1.53.r1799.4811462
 pkgrel=1
 pkgdesc="Super Nintendo Entertainment System Emulator"
 arch=('x86_64')

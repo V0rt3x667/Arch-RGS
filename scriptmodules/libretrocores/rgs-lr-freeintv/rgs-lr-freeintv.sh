@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-freeintv"
 archrgs_module_desc="Mattel Intellivision Libretro Core"
-archrgs_module_help="ROM Extensions: .int .bin\n\nCopy your Intellivision roms to $romdir/intellivision\n\nCopy the required BIOS files exec.bin and grom.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .int .bin\n\nCopy Your Intellivision ROMs to $romdir/intellivision\n\nCopy the required BIOS files exec.bin and grom.bin to $biosdir"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/FreeIntv/master/LICENSE"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-quasi88"
 archrgs_module_desc="NEC PC-8801 Libretro Core"
-archrgs_module_help="ROM Extensions: .d88 .88d .cmt .t88\n\nCopy your pc88 games to to $romdir/pc88\n\nCopy bios files n88.rom, n88_0.rom, n88_1.rom, n88_2.rom, n88_3.rom, n88n.rom, disk.rom, n88knj1.rom, n88knj2.rom, and n88jisho.rom to $biosdir/quasi88"
+archrgs_module_help="ROM Extensions: .d88 .88d .cmt .t88\n\nCopy Your pc88 Games to to $romdir/pc88\n\nCopy bios files n88.rom, n88_0.rom, n88_1.rom, n88_2.rom, n88_3.rom, n88n.rom, disk.rom, n88knj1.rom, n88knj2.rom, and n88jisho.rom to $biosdir/quasi88"
 archrgs_module_licence="BSD https://raw.githubusercontent.com/libretro/quasi88-libretro/master/LICENSE"
 archrgs_module_section="libretrocores"
 archrgs_module_flags="x86_64"

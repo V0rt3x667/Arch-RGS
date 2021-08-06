@@ -1,0 +1,75 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-b-em
+pkgver=r1529.925fd1f
+_allver=5.2.7.0
+pkgrel=1
+pkgdesc="Acorn BBC Micro A, B, B+, Master 128, 512, Compact & Turbo Emulator"
+arch=('x86_64')
+url="https://github.com/stardot/b-em"
+license=('GPL2')
+depends=(
+  'flac'
+  'freeimage'
+  'gtk3'
+  'libxss'
+  'openal'
+)
+makedepends=('git')
+source=(
+  "$pkgname::git+https://github.com/stardot/b-em"
+  "https://github.com/liballeg/allegro5/archive/refs/tags/$_allver.tar.gz"
+)
+sha256sums=(
+  'SKIP'
+  '1ccc1804be54e6c84b58218cb63143d80d18bf6ed06a0ad49480a3616cddeee1'
+)
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd allegro5-"$_allver"
+
+  if [[ -d ./build ]]; then
+    rm -rf ./build
+  fi
+  mkdir ./build
+}
+
+build() {
+  cd allegro5-"$_allver"/build
+
+  ##Build Allegro From Source.
+  ##The Official Arch Linux Package is Missing allegro_native_dialog.h and liballegro_dialog.so.
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX="" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON
+  make DESTDIR="$srcdir/allegro-5" install
+
+  cd "$srcdir/$pkgname"
+
+  ##Build B-Em
+  export CFLAGS="${CFLAGS} -ffile-prefix-map=\"$PWD\"=. -I$srcdir/allegro-5/include"
+  export LDFLAGS="${LDFLAGS} -Wl,-L$srcdir/allegro-5/lib,-rpath='${_installdir%/}/lib'"
+
+  ./autogen.sh
+  ./configure --prefix="${_installdir%/}"
+  make
+}
+
+package() {
+  cd "$pkgname"
+
+  install -Dm755 ./src/{b-em,gtest,hdfmt,jstest,m7makechars,sdf2imd} -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ./{b-em.cfg,README.md} -t "${pkgdir}${_installdir%/}"
+  cp -r --no-preserve=ownership ./{ddnoise,discs,fonts,roms,tapes} "${pkgdir}${_installdir%/}"
+
+  install -dm755 "${pkgdir}${_installdir%/}/lib"
+  cp --no-dereference --preserve=links --no-preserve=ownership ../allegro-5/lib/*.so* "${pkgdir}${_installdir%/}/lib"
+}
+

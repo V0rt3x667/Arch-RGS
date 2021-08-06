@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-stella"
 archrgs_module_desc="Stella - Atari 2600 VCS Emulator"
-archrgs_module_help="ROM Extensions: .a26 .bin .rom .zip .gz\n\nCopy your Atari 2600 roms to $romdir/atari2600"
+archrgs_module_help="ROM Extensions: .a26 .bin .rom .zip .gz\n\nCopy Your Atari 2600 ROMs to $romdir/atari2600"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/stella-emu/stella/master/License.txt"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

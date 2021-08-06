@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-mame
-pkgver=0231
+pkgver=0.234
 pkgrel=1
 pkgdesc="Multiple Arcade Machine Emulator"
 url="https://mamedev.org"
@@ -23,44 +23,48 @@ makedepends=(
   'python'
   'rapidjson'
 )
-_latestver=$(wget -qO- https://api.github.com/repos/mamedev/mame/releases/latest | grep -m 1 tag_name | cut -d\" -f4)
-source=("https://github.com/mamedev/mame/archive/refs/tags/${_latestver}.tar.gz")
-sha256sums=('SKIP')
+source=("https://github.com/mamedev/mame/archive/mame${pkgver/./}.tar.gz")
+sha256sums=('c6b464f33b9e0eb7afb528fac52619b073525ded86f35afc36cca4dd0363fe4d')
 _installdir="/opt/archrgs/emulators/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
 
-pkgver() {
-  cd "mame-${_latestver}"
-
-  echo "${_latestver}" | sed 's/^mame//'
-}
-
 prepare() {
-  cd "mame-${_latestver}"
+  cd "mame-mame${pkgver/./}"
 
   ##Use System Libraries
   sed -e 's|\# USE_SYSTEM_LIB|USE_SYSTEM_LIB|g' -i makefile
   ##Except for ASIO and Lua
   sed -e 's|USE_SYSTEM_LIB_LUA|\# USE_SYSTEM_LIB_LUA|g' -i makefile
   sed -e 's|USE_SYSTEM_LIB_ASIO|\# USE_SYSTEM_LIB_ASIO|g' -i makefile
+  ##Rename The BUILDDIR Variable To Avoid a Conflict With The Makepkg Variable of the Same Name
+  sed -e 's|BUILDDIR|BLDDIR|g' -i makefile
 }
 
 build() {
-  cd "mame-${_latestver}"
+  cd "mame-mame${pkgver/./}"
+
+  export CFLAGS+=" -I/usr/include/lua5.3/"
+  export CXXFLAGS+=" -I/usr/include/lua5.3/"
+
+  ##Hack to Force Linking to lua5.3
+  mkdir ./lib
+  ln -s /usr/lib/liblua5.3.so ./lib/liblua.so
+  export LDFLAGS+=" -L${PWD}/lib"
 
   make \
     ARCHOPTS=-flifetime-dse=1 \
     CONFIG=release \
     NOWERROR=1 \
-    OPTIMISE=2
+    OPTIMISE=2 \
     PREFIX="${_installdir%/}" \
     PTR64=1 \
+    PYTHON_EXECUTABLE=python \
     TARGETOS=linux \
     TOOLS=1
 }
 
 package() {
-  cd "mame-${_latestver}"
+  cd "mame-mame${pkgver/./}"
 
   _BIN=(
     'castool'

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-genesis-plus-gx"
 archrgs_module_desc="Sega Master System, Game Gear, Mega Drive (Genesis), Sega CD & SG-1000 Libretro Core"
-archrgs_module_help="ROM Extensions: .bin .cue .gen .gg .iso .md .sg .smd .sms .zip\nCopy your Game Gear roms to $romdir/gamegear\nMasterSystem roms to $romdir/mastersystem\nMegadrive / Genesis roms to $romdir/megadrive\nSG-1000 roms to $romdir/sg-1000\nSegaCD roms to $romdir/segacd\nThe Sega CD requires the BIOS files bios_CD_U.bin and bios_CD_E.bin and bios_CD_J.bin copied to $biosdir"
+archrgs_module_help="ROM Extensions: .bin .cue .gen .gg .iso .md .sg .smd .sms .zip\nCopy Your Game Gear ROMs to $romdir/gamegear\nMasterSystem ROMs to $romdir/mastersystem\nMegadrive / Genesis ROMs to $romdir/megadrive\nSG-1000 ROMs to $romdir/sg-1000\nSegaCD ROMs to $romdir/segacd\nThe Sega CD requires the BIOS files bios_CD_U.bin and bios_CD_E.bin and bios_CD_J.bin copied to $biosdir"
 archrgs_module_licence="NONCOM https://raw.githubusercontent.com/libretro/Genesis-Plus-GX/master/LICENSE.txt"
 archrgs_module_section="libretrocores"
 

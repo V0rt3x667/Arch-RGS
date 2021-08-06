@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-handy"
 archrgs_module_desc="Atari Lynx Libretro Core"
-archrgs_module_help="ROM Extensions: .lnx .zip\n\nCopy your Atari Lynx roms to $romdir/atarilynx"
+archrgs_module_help="ROM Extensions: .lnx .zip\n\nCopy Your Atari Lynx ROMs to $romdir/atarilynx"
 archrgs_module_licence="NONCOM https://raw.githubusercontent.com/libretro/libretro-handy/master/lynx/license.txt"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-scummvm"
 archrgs_module_desc="ScummVM Libretro Core"
-archrgs_module_help="Copy your ScummVM games to $romdir/scummvm\n\nThe name of your game directories must be suffixed with '.svm' for direct launch in EmulationStation."
+archrgs_module_help="Copy Your ScummVM Games to $romdir/scummvm\n\nThe name of your game directories must be suffixed with '.svm' for direct launch in EmulationStation."
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/scummvm/master/COPYING"
 archrgs_module_section="libretrocores"
 

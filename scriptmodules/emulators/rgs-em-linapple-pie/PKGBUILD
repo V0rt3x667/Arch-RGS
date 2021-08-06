@@ -31,7 +31,7 @@ build() {
 package() {
   cd "$pkgname/src"
 
-  install -Dm755 ./linapple -t "${pkgdir}${_installdir%/}/bin"
-  install -Dm644 ../{linapple.conf,Master.dsk,README,README-linapple-pie,CHANGELOG,INSTALL,LICENSE} -t "${pkgdir}${_installdir%/}/share"
+  install -Dm755 ./linapple -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ../{linapple.conf,Master.dsk,README,README-linapple-pie,CHANGELOG,INSTALL,LICENSE} -t "${pkgdir}${_installdir%/}/resources"
 }
 

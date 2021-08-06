@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-basiliskii"
 archrgs_module_desc="Apple Macintosh II Emulator"
-archrgs_module_help="ROM Extensions: .img .rom\n\nCopy your Macintosh roms mac.rom and disk.img to $romdir/macintosh"
+archrgs_module_help="ROM Extensions: .img .rom\n\nCopy Your Macintosh ROMs mac.rom and disk.img to: $romdir/macintosh"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/cebix/macemu/master/BasiliskII/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-openmsx"
 archrgs_module_desc="OpenMSX - Microsoft MSX, MSX2, MSX2+ & TurboR Emulator"
-archrgs_module_help="ROM Extensions: .rom .mx1 .mx2 .col .dsk .zip\n\nCopy your MSX/MSX2 games to $romdir/msx\nCopy the BIOS files to $biosdir/openmsx"
+archrgs_module_help="ROM Extensions: .cas .col .dsk .mx1 .mx2 .rom .zip\n\nCopy Your MSX/MSX2 Games to $romdir/msx\nCopy the BIOS Files to $biosdir/openmsx"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/openMSX/openMSX/master/doc/GPL.txt"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -16,7 +16,7 @@ function install_bin_rgs-em-openmsx() {
 }
 
 function remove_rgs-em-openmsx() {
-  pacmanRemove rgs-em-openmsx    
+  pacmanRemove rgs-em-openmsx
 }
 
 function configure_rgs-em-openmsx() {
@@ -24,32 +24,32 @@ function configure_rgs-em-openmsx() {
   mkRomDir "msx2"
 
   addEmulator 1 "$md_id" "msx" "$md_inst/bin/openmsx %ROM%"
-  addEmulator 1 "$md_id-msx2" "msx" "$md_inst/bin/openmsx -machine 'Boosted_MSX2_EN' %ROM%"
-  addEmulator 0 "$md_id-msx2-plus" "msx" "$md_inst/bin/openmsx -machine 'Boosted_MSX2+_JP' %ROM%"
+  addEmulator 1 "$md_id-msx2" "msx2" "$md_inst/bin/openmsx -machine 'Boosted_MSX2_EN' %ROM%"
+  addEmulator 0 "$md_id-msx2-plus" "msx2" "$md_inst/bin/openmsx -machine 'Boosted_MSX2+_JP' %ROM%"
   addEmulator 0 "$md_id-msx-turbor" "msx" "$md_inst/bin/openmsx -machine 'Panasonic_FS-A1GT' %ROM%"
   addSystem "msx"
   addSystem "msx2"
 
   [[ $md_mode == "remove" ]] && return
 
-  ##Add a Minimal Configuration
+  ##Add A Minimal Configuration
   local config
   config="$(mktemp)"
-  echo "$(_default_settings_openmsx)" > "$config"
+  echo "$(_default_settings_rgs-em-openmsx)" > "$config"
 
   mkUserDir "$home/.openMSX/share/scripts"
   mkUserDir "$home/.openMSX/share/systemroms"
 
   moveConfigDir "$home/.openMSX" "$configdir/msx/openmsx"
-  moveConfigDir "$configdir/msx/openmsx/share/systemroms" "$home/ARCH-RGS/BIOS/openmsx"
+  moveConfigDir "$configdir/msx/openmsx/share/systemroms" "$home/Arch-RGS/bios/openmsx"
 
   ##Add System ROMs
-  downloadAndExtract "$__archive_url/openmsxroms.tar.gz" "$home/ARCH-RGS/BIOS/openmsx"
+  downloadAndExtract "$__archive_url/openmsxroms.tar.gz" "$md_inst/share/systemroms/"
 
   copyDefaultConfig "$config" "$home/.openMSX/share/settings.xml"
   rm "$config"
 
-  ##Add Autostart Script, for Joypad Configuration
+  ##Add Autostart Script For Joypad Configuration
   cp "$md_data/archrgs-init.tcl" "$home/.openMSX/share/scripts"
   chown -R "$user:$user" "$home/.openMSX/share/scripts"
 }
@@ -71,5 +71,8 @@ function _default_settings_rgs-em-openmsx() {
     <setting id="fullscreen">true</setting>
     <setting id="save_settings_on_exit">false</setting>
 _EOF_
+
+echo -e "${header}${body}${conf_reverse}  </settings>\n</settings>"
+
 }
 

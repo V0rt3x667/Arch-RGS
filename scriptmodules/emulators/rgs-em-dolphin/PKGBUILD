@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-dolphin
-pkgver=5.0.r12946.g35a113f6a2
+pkgver=5.0.r14326.ga3c89ac701
 pkgrel=1
 pkgdesc="Nintendo Gamecube, Wii & Triforce Emulator"
 arch=('x86_64')
@@ -8,9 +8,10 @@ url="https://dolphin-emu.org"
 license=('GPL2')
 depends=(
   'bluez-libs'
-  'enet mbedtls'
+  'enet'
   'ffmpeg'
   'lzo'
+  'mbedtls'
   'miniupnpc'
   'pugixml'
   'qt5-base'
@@ -47,6 +48,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON \
     -DUSE_SHARED_ENET=ON
   make
 }

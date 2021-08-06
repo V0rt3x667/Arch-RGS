@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-ags
-pkgver=3.5.0.32
+pkgver=3.5.1.9
 pkgrel=1
 pkgdesc="Graphical Adventure Game Engine"
 arch=('x86_64')

@@ -1,7 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-oricutron
 pkgver=1.2.4
-_pkgver="$(echo $pkgver | sed -r 's/[.]+/_/g')"
+_gitver="$(echo $pkgver | sed -r 's/[.]+/_/g')"
 pkgrel=1
 pkgdesc="Tangerine Computer Systems Oric-1, Atmos, Stratos, Telestrat & Pravetz 8D Emulator"
 arch=('x86_64')
@@ -12,20 +12,12 @@ depends=(
   'sdl2'
 )
 makedepends=('cmake')
-source=(
-  "https://github.com/pete-gordon/oricutron/archive/V$_pkgver.tar.gz"
-  "01_Fix_CMake_Lists.patch"
-)
-sha256sums=(
-  'c4bf6570cf9571baec917ee1df8b5f44d5641c9334cc32af0472809a4cca4a7d'
-  '9141cdcf39efac3009270c849b20bb5e9b7606421c9a6c6b512999cf33506015'  
-)
+source=("$pkgname::git+https://github.com/pete-gordon/oricutron")
+sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 prepare() {
-  cd "oricutron-$_pkgver"
-
-  patch -Np1 -i ../01_Fix_CMake_Lists.patch
+  cd "$pkgname"
 
   if [[ -d ./build ]]; then
     rm -rf ./build
@@ -34,19 +26,19 @@ prepare() {
 }
 
 build() {
-  cd "oricutron-$_pkgver/build"
+  cd "$pkgname/build"
 
   cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${_installdir%/}"
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_TYPE="Release"
   make 
 }
 
 package() {
-  cd "oricutron-$_pkgver"
+  cd "$pkgname/build"
 
-  install -Dm755 ./build/Oricutron -t "${pkgdir}${_installdir%/}/bin"
-  install -Dm755 ./oricutron.cfg -t "${pkgdir}${_installdir%/}"
-  install -dm755 "${pkgdir}${_installdir%/}"/{disks,images,roms}
-  cp -r ./{disks,images,roms} "${pkgdir}${_installdir%/}"
+  install -Dm755 ./Oricutron -t "${pkgdir}${_installdir%/}/oricutron"
+  install -Dm644 ../oricutron.cfg -t "${pkgdir}${_installdir%/}/resources"
+  cp -r ../{disks,images,roms} "${pkgdir}${_installdir%/}"
 }
 

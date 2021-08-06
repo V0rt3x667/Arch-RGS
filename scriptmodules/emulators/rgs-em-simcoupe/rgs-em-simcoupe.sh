@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-simcoupe"
 archrgs_module_desc="SimCoupe - SAM Coupé Emulator"
-archrgs_module_help="ROM Extensions: .dsk .mgt .sbt .sad\n\nCopy your SAM Coupe games to $romdir/samcoupe."
+archrgs_module_help="ROM Extensions: .dsk .mgt .sbt .sad\n\nCopy Your SAM Coupe Games to $romdir/samcoupe."
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/simonowen/simcoupe/master/License.txt"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

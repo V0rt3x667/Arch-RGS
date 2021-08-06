@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-bsnes
-pkgver=1201
+pkgver=1226
 pkgrel=1
 pkgdesc="Libretro Core - Super Nintendo Entertainment System"
 arch=('x86_64')
@@ -8,26 +8,14 @@ url="https://github.com/libretro/bsnes-libretro"
 license=('GPL3')
 depends=('gcc-libs')
 makedepends=('git')
-source=(
-  "$pkgname::git+https://github.com/libretro/bsnes"
-  "01_bsnes_flags.patch"
-)
-sha256sums=(
-  'SKIP'
-  '997e5f3b11cd1d284a1338f55cb7aa713d706958866bb6c4b0e37500b5fd9d7a'
-)
+source=("$pkgname::git+https://github.com/libretro/bsnes")
+sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname"
 
 pkgver() {
   cd "$pkgname"
 
   git rev-list --count HEAD
-}
-
-prepare() {
-  cd "$pkgname"
-
-  patch -Np1 -i ../01_bsnes_flags.patch
 }
 
 build() {

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-basiliskii
-pkgver=r2660.29bb3d5a
+pkgver=r2667.4671258b
 pkgrel=1
 pkgdesc="Apple Macintosh II Emulator"
 arch=('x86_64')
@@ -12,14 +12,26 @@ depends=(
   'vde2'
 )
 makedepends=('git')
-source=("$pkgname::git+https://github.com/cebix/macemu")
-sha256sums=('SKIP')
+source=(
+  "$pkgname::git+https://github.com/cebix/macemu"
+  "01_fix_config_rpath_error.patch"
+)
+sha256sums=(
+  'SKIP'
+  'a1df34dcb7179657eeeef25a9999c4f38ef97b0fcb7307340809103a7914ec02'
+)
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 pkgver() {
   cd "$pkgname"
 
   printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  patch -Np1 -i ../01_fix_config_rpath_error.patch
 }
 
 build() {

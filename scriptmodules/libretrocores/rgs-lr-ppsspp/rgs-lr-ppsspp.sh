@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-ppsspp"
 archrgs_module_desc="Sony PlayStation Portable Libretro Core"
-archrgs_module_help="ROM Extensions: .iso .pbp .cso\n\nCopy your PlayStation Portable roms to $romdir/psp"
+archrgs_module_help="ROM Extensions: .iso .pbp .cso\n\nCopy Your PlayStation Portable ROMs to $romdir/psp"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/hrydgard/ppsspp/master/LICENSE.TXT"
 archrgs_module_section="libretrocores"
 

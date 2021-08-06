@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-xroar"
 archrgs_module_desc="XRoar - Dragon Data Dragon 32 & 64 & Tandy Colour Computer (CoCo) 1 & 2 Emulator"
-archrgs_module_help="ROM Extensions: .cas .wav .bas .asc .dmk .jvc .os9 .dsk .vdk .rom .ccc .sna\n\nCopy your Dragon roms to $romdir/dragon32\n\nCopy your CoCo games to $romdir/coco\n\nCopy the required BIOS files d32.rom (Dragon 32) and bas13.rom (CoCo) to $biosdir"
+archrgs_module_help="ROM Extensions: .cas .wav .bas .asc .dmk .jvc .os9 .dsk .vdk .rom .ccc .sna\n\nCopy Your Dragon ROMs to $romdir/dragon32\n\nCopy Your CoCo Games to $romdir/coco\n\nCopy the required BIOS files d32.rom (Dragon 32) and bas13.rom (CoCo) to $biosdir"
 archrgs_module_licence="GPL3 http://www.6809.org.uk/xroar"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

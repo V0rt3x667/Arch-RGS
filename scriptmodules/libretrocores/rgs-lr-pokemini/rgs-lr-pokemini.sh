@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-pokemini"
 archrgs_module_desc="Pokémon-Mini Libretro Core"
-archrgs_module_help="ROM Extensions: .min .zip\n\nCopy your Pokemon Mini roms to $romdir/pokemini"
+archrgs_module_help="ROM Extensions: .min .zip\n\nCopy Your Pokemon Mini ROMs to $romdir/pokemini"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/PokeMini/master/LICENSE"
 archrgs_module_section="libretrocores"
 

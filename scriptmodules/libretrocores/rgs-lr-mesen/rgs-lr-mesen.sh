@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-mesen"
 archrgs_module_desc="Nintendo NES (Famicom) & Famicom Disk System Libretro Core"
-archrgs_module_help="ROM Extensions: .nes .fds .unf .unif\n\nCopy your NES roms to $romdir/nes\nFamicom roms to $romdir/fds\nCopy the recommended BIOS file disksys.rom to $biosdir"
+archrgs_module_help="ROM Extensions: .nes .fds .unf .unif\n\nCopy Your NES ROMs to $romdir/nes\nFamicom ROMs to $romdir/fds\nCopy the recommended BIOS file disksys.rom to $biosdir"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/SourMesen/Mesen/master/LICENSE"
 archrgs_module_section="libretrocores"
 

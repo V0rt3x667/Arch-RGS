@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-ppsspp"
 archrgs_module_desc="PPSSPP - Sony PlayStation Portable Emulator"
-archrgs_module_help="ROM Extensions: .iso .pbp .cso\n\nCopy your PlayStation Portable roms to $romdir/psp"
+archrgs_module_help="ROM Extensions: .iso .pbp .cso\n\nCopy Your PlayStation Portable ROMs to $romdir/psp"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/hrydgard/ppsspp/master/LICENSE.TXT"
 archrgs_module_section="emulators"
 
@@ -25,7 +25,7 @@ function configure_rgs-em-ppsspp() {
   mkUserDir "$md_conf_root/psp/PSP"
   ln -snf "$romdir/psp" "$md_conf_root/psp/PSP/GAME"
 
-  addEmulator 1 "$md_id" "psp" "ppsspp --fullscreen %ROM%"
+  addEmulator 1 "$md_id" "psp" "md_inst/ppsspp --fullscreen %ROM%"
   addSystem "psp"
 }
 

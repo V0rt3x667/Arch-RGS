@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-hatari"
 archrgs_module_desc="Atari ST, STE, TT & Falcon Libretro Core"
-archrgs_module_help="ROM Extensions: .st .stx .img .rom .raw .ipf .ctr .zip\n\nCopy your Atari ST games to $romdir/atarist"
+archrgs_module_help="ROM Extensions: .st .stx .img .rom .raw .ipf .ctr .zip\n\nCopy Your Atari ST Games to $romdir/atarist"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/hatari/master/gpl.txt"
 archrgs_module_section="libretrocores"
 

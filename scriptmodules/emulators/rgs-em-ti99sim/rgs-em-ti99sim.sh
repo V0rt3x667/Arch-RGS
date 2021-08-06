@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-ti99sim"
 archrgs_module_desc="TI-99/SIM - Texas Instruments Home Computer Emulator"
-archrgs_module_help="ROM Extension: .ctg\n\nCopy your TI-99 games to $romdir/ti99\n\nCopy the required BIOS file TI-994A.ctg (case sensitive) to $biosdir"
+archrgs_module_help="ROM Extension: .ctg\n\nCopy Your TI-99 Games to $romdir/ti99\n\nCopy the required BIOS file TI-994A.ctg (case sensitive) to $biosdir"
 archrgs_module_licence="GPL2 http://www.mrousseau.org/programs/ti99sim/"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -28,13 +28,13 @@ function configure_rgs-em-ti99sim() {
   [[ "$md_mode" == "remove" ]] && return
 
   moveConfigDir "$home/.ti99sim" "$md_conf_root/ti99/"
-  ln -sf "$biosdir/TI-994A.ctg" "$md_inst/console/TI-994A.ctg"
+  ln -sf "$biosdir/TI-994A.ctg" "$md_inst/TI-994A.ctg"
 
   local file
-  file="$md_inst/bin/ti99sim.sh"
+  file="$md_inst/ti99sim.sh"
   cat >"$file" << _EOF_
-#!/usr/bin/env bash
-pushd "$md_inst/bin"
+#!/usr/bin/bash
+pushd "$md_inst"
 ./ti99sim-sdl "\$@"
 popd
 _EOF_

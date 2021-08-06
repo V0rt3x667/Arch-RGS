@@ -96,3 +96,4 @@ function onstart_rgs-fe-emulationstation_cec() {
 function map_rgs-fe-emulationstation_cec() {
   map_rgs-fe-emulationstation_joystick "$@"
 }
+

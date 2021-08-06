@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-openmsx
-pkgver=16.0.r127.9d3741947
+pkgver=17.0.r18.1ada31091
 pkgrel=1
 pkgdesc="Microsoft MSX, MSX2, MSX2+ & TurboR Emulator"
 arch=('x86_64')
@@ -36,7 +36,7 @@ prepare() {
   sed -i "s|<SDL_ttf.h>|<SDL2/SDL_ttf.h>|" build/libraries.py
   echo "INSTALL_DOC_DIR:=${_installdir%/}/share/doc" >> build/custom.mk
   echo "INSTALL_SHARE_DIR:=${_installdir%/}/share" >> build/custom.mk
-  echo "LINK_FLAGS:=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now, -lrt" >> build/custom.mk
+  echo "LINK_FLAGS:=-Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,-lrt" >> build/custom.mk
 }
 
 build() {

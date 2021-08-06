@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-stratagus
-pkgver=3.0.0
+pkgver=3.1.0
 pkgrel=1
 pkgdesc="Strategy Game Engine"
 arch=('x86_64')
@@ -19,12 +19,12 @@ makedepends=(
   'doxygen'
   'git'
 )
-source=("$pkgname::git+https://github.com/Wargus/stratagus#tag=v$pkgver")
-sha256sums=('SKIP')
+source=("https://github.com/Wargus/stratagus/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('19a367a6c5695c4602d59e0963cbcd9df154ea2d300000aac52426957f64e56a')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 prepare() {
-  cd "$pkgname"
+  cd "stratagus-$pkgver"
 
   if [[ -d ./build ]]; then
     rm -rf ./build
@@ -33,7 +33,7 @@ prepare() {
 }
 
 build() {
-  cd "$pkgname/build"
+  cd "stratagus-$pkgver/build"
 
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
@@ -44,7 +44,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname/build"
+  cd "stratagus-$pkgver/build"
 
   make DESTDIR="${pkgdir}" install
 }

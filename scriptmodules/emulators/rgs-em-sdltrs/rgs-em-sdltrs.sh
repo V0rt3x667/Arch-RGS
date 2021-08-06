@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-sdltrs"
 archrgs_module_desc="SDLTRS - Radio Shack TRS-80 Model 1, 3, 4 & 4P Emulator"
-archrgs_module_help="ROM Extension: .dsk\n\nCopy your TRS-80 games to $romdir/trs-80\n\nCopy the required BIOS file level2.rom, level3.rom, level4.rom or level4p.rom to $biosdir"
+archrgs_module_help="ROM Extension: .dsk\n\nCopy Your TRS-80 Games to $romdir/trs-80\n\nCopy the required BIOS file level2.rom, level3.rom, level4.rom or level4p.rom to $biosdir"
 archrgs_module_section="emulators"
 archrgs_module_licence="BSD https://gitlab.com/jengun/sdltrs/-/raw/master/LICENSE"
 archrgs_module_flags="x86_64"

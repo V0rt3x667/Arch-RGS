@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-mesen-s"
 archrgs_module_desc="Nintendo SNES (Super Famicom), Game Boy, Game Boy Color & Super Game Boy Libretro Core"
-archrgs_module_help="ROM Extensions: .sfc .smc .fig .swc .bs .gb .gbc\n\nCopy your Game Boy roms to $romdir/gb\n\nCopy your Game Boy Color roms to $romdir/gbc\n\nCopy your SNES roms to $romdir/snes"
+archrgs_module_help="ROM Extensions: .sfc .smc .fig .swc .bs .gb .gbc\n\nCopy Your Game Boy ROMs to $romdir/gb\n\nCopy Your Game Boy Color ROMs to $romdir/gbc\n\nCopy Your SNES ROMs to $romdir/snes"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/SourMesen/Mesen-S/master/LICENSE"
 archrgs_module_section="libretrocores"
 

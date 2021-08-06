@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-ppsspp
-pkgver=1.10.3.r1123.28da9958e
+pkgver=1.11.3
 pkgrel=1
 pkgdesc="Sony PSP Emulator"
 arch=('x86_64')
@@ -20,23 +20,17 @@ makedepends=(
   'python'
   'qt5-tools'
 )
-source=("$pkgname::git+https://github.com/hrydgard/ppsspp")
+source=("$pkgname::git+https://github.com/hrydgard/ppsspp#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/emulators/$pkgname"
-
-pkgver() {
-  cd "$pkgname"
-
-  printf "%s" "$(git describe --long | sed 's/^v//; s/\([^-]*-\)g/r\1/; s/-/./g')"
-}
 
 prepare() {
   cd "$pkgname"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 
   git submodule update --init --recursive
 }
@@ -46,7 +40,6 @@ build() {
 
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DUSE_SYSTEM_LIBZIP=ON \
     -DOpenGL_GL_PREFERENCE=GLVND \
@@ -57,8 +50,8 @@ build() {
 package() {
   cd "$pkgname/build"
 
-  install -Dm755 ./PPSSPPSDL -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./PPSSPPSDL -t "${pkgdir}${_installdir%/}/ppsspp"
 
-  cp -dr --no-preserve=ownership ./assets "${pkgdir}${_installdir%/}/assets"
+  cp -r --no-preserve=ownership ./assets "${pkgdir}${_installdir%/}"
 }
 

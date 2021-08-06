@@ -1,11 +1,11 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-dosbox-x
-pkgver=0.83.13
+pkgver=0.83.16
 pkgrel=1
 pkgdesc="DOS Emulator Includes Additional Patches & Features"
 arch=('x86_64')
 url="http://dosbox-x.com"
-license=('GPL')
+license=('GPL2')
 depends=(
   'alsa-lib'
   'fluidsynth'
@@ -17,11 +17,11 @@ depends=(
 )
 makedepends=('git')
 source=("https://github.com/joncampbell123/dosbox-x/archive/refs/tags/dosbox-x-v$pkgver.tar.gz")
-sha256sums=('8e7a5d30ae7ec70fa853663368badf5bafe3b4018629196115ffaa95f4771f27')
+sha256sums=('d27e1b796e22104c1cc822ee3255c07275e5ebbb6e29d8eda07dbf9feefc53e8')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname"
+  cd "dosbox-x-dosbox-x-v$pkgver"
 
   ./autogen.sh
   ./configure \
@@ -34,7 +34,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname"
+  cd "dosbox-x-dosbox-x-v$pkgver"
 
   make DESTDIR="$pkgdir" install
 }

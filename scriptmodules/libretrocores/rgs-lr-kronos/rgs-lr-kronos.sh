@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-kronos"
 archrgs_module_desc="Saturn & ST-V Libretro Core"
-archrgs_module_help="ROM Extensions: .iso .cue .zip .ccd .mds\n\nCopy your Sega Saturn & ST-V roms to $romdir/saturn\n\nCopy the required BIOS file saturn_bios.bin / stvbios.zip to $biosdir/kronos"
+archrgs_module_help="ROM Extensions: .iso .cue .zip .ccd .mds\n\nCopy Your Sega Saturn & ST-V ROMs to $romdir/saturn\n\nCopy the required BIOS file saturn_bios.bin / stvbios.zip to $biosdir/kronos"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro-mirrors/Kronos/extui-align/yabause/COPYING"
 archrgs_module_section="libretrocores"
 

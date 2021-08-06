@@ -33,10 +33,10 @@ prepare() {
 
   cd "$pkgname"
 
-  if [[ -d build ]]; then
-    rm -rf build
+  if [[ -d ./build ]]; then
+    rm -rf ./build
   fi
-  mkdir build
+  mkdir ./build
 }
 
 build() {
@@ -54,7 +54,7 @@ build() {
 
   rm -f ../CMakeCache.txt
 
-  LDFLAGS+=" -Wl,-rpath='${_installdir%/}/bin'" \
+  LDFLAGS+=" -Wl,-rpath='${_installdir%/}/bin'"
   cmake .. \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
@@ -71,6 +71,6 @@ package() {
 
   install -Dm644 "$srcdir/capsimg_source_linux_macosx/CAPSImg/libcapsimage.so.5.1" -t "${pkgdir}${_installdir%/}/bin"
 
-  ln -s "${_installdir%/}/bin/libcapsimage.so.5.1" "${pkgdir}${_installdir%/}/bin/libcapsimage.so.5"
+  ln -sf "${_installdir%/}/bin/libcapsimage.so.5.1" "${pkgdir}${_installdir%/}/bin/libcapsimage.so.5"
 }
 

@@ -25,6 +25,6 @@ build() {
 package() {
   cd minivmac
 
-  install -Dm755 ./minivmac -t "${pkgdir}${_installdir%/}/bin"
+  install -Dm755 ./minivmac -t "${pkgdir}${_installdir%/}"
 }
 

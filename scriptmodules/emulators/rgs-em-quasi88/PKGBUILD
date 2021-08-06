@@ -41,8 +41,6 @@ build() {
 package() {
   cd "quasi88-$pkgver"
 
-  mkdir -p "${pkgdir}${_installdir%/}/bin"
-
-  make DESTDIR="${pkgdir}" BINDIR="${pkgdir}${_installdir%/}/bin" install
+  install -Dm755 ./quasi88 -t "${pkgdir}${_installdir%/}"
 }
 

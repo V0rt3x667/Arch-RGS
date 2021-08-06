@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-mupen64plus-next
-pkgver=340
+pkgver=374
 pkgrel=1
 pkgdesc="Libretro Core - Nintendo 64"
 arch=('x86_64')

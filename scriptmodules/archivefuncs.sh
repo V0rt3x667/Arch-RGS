@@ -18,10 +18,10 @@ readonly arch_dir="/tmp/archrgs-archive"
 ## for extraction. Also the variable arch_files will contain an array of filenames that are
 ## considered as game disks according to parameter disk_exts.
 function archiveExtract() {
-    local src_file="$1"
-    local disk_exts="$2"
+  local src_file="$1"
+  local disk_exts="$2"
 
-  ##CLEAN TEMP DIRECTORY
+  ##Clean Temp Directory
   archiveCleanup
   mkdir "$arch_dir"
   local ext="${src_file##*.}"
@@ -29,14 +29,14 @@ function archiveExtract() {
   case "${ext,,}" in
   zip)
     unzip "$src_file" -d "$arch_dir"
-    ;;
+  ;;
   *)
     echo "Unsupported archive: $src_file"
     return 1
-    ;;
+  ;;
   esac
 
-  ##BUILD A REGEX PORTION FROM EXTENSIONS
+  ##Build A Regex Portion From Extensions
   local regex
   regex="${disk_exts// /\\|}"
 

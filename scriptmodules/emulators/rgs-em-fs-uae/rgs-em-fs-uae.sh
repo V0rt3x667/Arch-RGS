@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-fs-uae"
 archrgs_module_desc="FS-UAE - Commodore Amiga 500, 500+, 600, 1200, CDTV & CD32 Emulator"
-archrgs_module_help="ROM Extension: .adf .adz .dms .ipf .zip .lha .iso .cue .bin\n\nCopy your Amiga games to $romdir/amiga.\nCopy your CD32 games to $romdir/cd32.\nCopy your CDTV games to $romdir/cdtv.\n\nCopy a required BIOS file (e.g. kick13.rom) to $biosdir."
+archrgs_module_help="ROM Extension: .adf .adz .dms .ipf .zip .lha .iso .cue .bin\n\nCopy Your Amiga Games to $romdir/amiga.\nCopy Your CD32 Games to $romdir/cd32.\nCopy Your CDTV Games to $romdir/cdtv.\n\nCopy a required BIOS file (e.g. kick13.rom) to $biosdir."
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/FrodeSolheim/fs-uae/master/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

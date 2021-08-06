@@ -24,12 +24,12 @@ makedepends=(
   'git'
   'mesa'
 )
-source=("$pkgname::git+https://github.com/scummvm/scummvm#tag=v2.2.0")
-sha256sums=('SKIP')
+source=("https://downloads.scummvm.org/frs/scummvm/$pkgver/scummvm-$pkgver.tar.xz")
+sha256sums=('1469657e593bd8acbcfac0b839b086f640ebf120633e93f116cab652b5b27387')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname"
+  cd "scummvm-$pkgver"
 
   ./configure \
     --prefix="${_installdir%/}" \
@@ -40,7 +40,7 @@ build() {
 }
 
 package() {
-  cd "$pkgname"
+  cd "scummvm-$pkgver"
 
   make DESTDIR="${pkgdir}" install
 }

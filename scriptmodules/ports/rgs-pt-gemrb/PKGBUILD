@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-gemrb
-pkgver=0.8.7
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="Port of Bioware's Infinity Engine"
 arch=('x86_64')
@@ -10,7 +10,8 @@ depends=(
   'glew'
   'libvorbis'
   'openal'
-  'python2'
+  'python'
+  'sdl2'
   'vlc'
 )
 makedepends=(

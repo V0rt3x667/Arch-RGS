@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-zesarux"
 archrgs_module_desc="ZEsarUX - Sinclair Zx80, Zx81, Z88, Zx Spectrum 16, 48, 128, +2, +2A & ZX-Uno Emulator"
-archrgs_module_help="ROM Extensions: .sna .szx .z80 .tap .tzx .gz .udi .mgt .img .trd .scl .dsk .zip\n\nCopy your ZX Spectrum games to $romdir/zxspectrum"
+archrgs_module_help="ROM Extensions: .sna .szx .z80 .tap .tzx .gz .udi .mgt .img .trd .scl .dsk .zip\n\nCopy Your ZX Spectrum Games to $romdir/zxspectrum"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/chernandezba/zesarux/master/src/LICENSE"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

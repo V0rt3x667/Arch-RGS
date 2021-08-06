@@ -15,19 +15,19 @@ _installdir="/opt/archrgs/emulators/$pkgname"
 prepare() {
   cd "ti99sim-$pkgver"
 
-  sed s'/LFLAGS   += -Wl,--gc-sections/LFLAGS   += -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,--gc-sections/'g -i ./rules.mak
+  sed s'/LFLAGS += -Wl,--gc-sections/LFLAGS += -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now,--gc-sections/'g -i ./rules.mak
 }
 
 build() {
   cd "ti99sim-$pkgver"
 
-  make DATA_DIR="${_installdir%/}"
+  make
 }
 
 package() {
   cd "ti99sim-$pkgver"
 
-  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}/bin"
-  install -dm755 "${pkgdir}${_installdir%/}/{cartridges,console,disks}"
+  install -Dm755 ./bin/* -t "${pkgdir}${_installdir%/}"
+  cp -r ./{doc,roms,scripts} "${pkgdir}${_installdir%/}"
 }
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-ags"
 archrgs_module_desc="Adventure Game Studio - Graphical Adventure Game Engine"
-archrgs_module_help="ROM Extension: .exe\n\nCopy your Adventure Game Studio roms to $romdir/ags"
+archrgs_module_help="ROM Extension: .exe\n\nCopy Your Adventure Game Studio ROMs to $romdir/ags"
 archrgs_module_licence="OTHER https://raw.githubusercontent.com/adventuregamestudio/ags/master/License.txt"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"

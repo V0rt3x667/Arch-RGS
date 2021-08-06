@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-beetle-wswan"
 archrgs_module_desc="Bandai WonderSwan & WonderSwan Color Libretro Core"
-archrgs_module_help="ROM Extensions: .ws .wsc .zip\n\nCopy your Wonderswan roms to $romdir/wonderswan\n\nCopy your Wonderswan Color roms to $romdir/wonderswancolor"
+archrgs_module_help="ROM Extensions: .ws .wsc .zip\n\nCopy Your Wonderswan ROMs to $romdir/wonderswan\n\nCopy Your Wonderswan Color ROMs to $romdir/wonderswancolor"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/beetle-wswan-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

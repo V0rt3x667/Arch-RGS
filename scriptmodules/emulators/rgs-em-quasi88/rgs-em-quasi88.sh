@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-quasi88"
 archrgs_module_desc="QUASI88 - NEC PC-8801 Emulator"
-archrgs_module_help="ROM Extensions: .d88 .88d .cmt .t88\n\nCopy your pc88 games to to $romdir/pc88\n\nCopy bios files FONT.ROM, N88.ROM, N88KNJ1.ROM, N88KNJ2.ROM, and N88SUB.ROM to $biosdir/pc88"
+archrgs_module_help="ROM Extensions: .d88 .88d .cmt .t88\n\nCopy Your pc88 Games to to $romdir/pc88\n\nCopy bios files FONT.ROM, N88.ROM, N88KNJ1.ROM, N88KNJ2.ROM, and N88SUB.ROM to $biosdir/pc88"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
 

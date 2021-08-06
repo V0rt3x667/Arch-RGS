@@ -45,7 +45,7 @@ build() {
   cd "$srcdir/fs-uae-$pkgver"
 
   ./configure --prefix="${_installdir%/}"
-  make
+  make CXXFLAGS+="-std=gnu++14 -fpermissive"
 
   ##Build FS-UAE Launcher (Configuration GUI)
   cd "$srcdir/fs-uae-launcher-$pkgver"

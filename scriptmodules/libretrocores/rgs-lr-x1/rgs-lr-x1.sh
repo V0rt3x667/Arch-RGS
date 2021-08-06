@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-x1"
 archrgs_module_desc="Sharp X1 Libretro Core"
-archrgs_module_help="ROM Extensions: .dx1 .zip .2d .2hd .tfd .d88 .88d .hdm .xdf .dup .cmd\n\nCopy your X1 roms to $romdir/x1\n\nCopy the required BIOS files IPLROM.X1 and IPLROM.X1T to $biosdir"
+archrgs_module_help="ROM Extensions: .dx1 .zip .2d .2hd .tfd .d88 .88d .hdm .xdf .dup .cmd\n\nCopy Your X1 ROMs to $romdir/x1\n\nCopy the required BIOS files IPLROM.X1 and IPLROM.X1T to $biosdir"
 archrgs_module_section="libretrocores"
 
 function install_bin_rgs-lr-x1() {

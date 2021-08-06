@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-dosbox"
 archrgs_module_desc="DOSBox Libretro Core"
-archrgs_module_help="ROM Extensions: .bat .com .exe .sh\n\nCopy your DOS games to $ROMDIR/pc"
+archrgs_module_help="ROM Extensions: .bat .com .exe .sh\n\nCopy Your DOS Games to $ROMDIR/pc"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/dosbox-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

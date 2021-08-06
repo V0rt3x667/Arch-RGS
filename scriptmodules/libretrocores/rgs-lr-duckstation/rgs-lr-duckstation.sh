@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-duckstation"
 archrgs_module_desc="Sony Playstation Libretro Core"
-archrgs_module_help="ROM Extensions: .bin .cue .cbn .img .iso .m3u .mdf .pbp .toc .z .znx\n\nCopy your PlayStation roms to $romdir/psx\n\nCopy the required BIOS files\n\nscph5500.bin and\nscph5501.bin and\nscph5502.bin to\n\n$biosdir"
+archrgs_module_help="ROM Extensions: .bin .cue .cbn .img .iso .m3u .mdf .pbp .toc .z .znx\n\nCopy Your PlayStation ROMs to $romdir/psx\n\nCopy the required BIOS files\n\nscph5500.bin and\nscph5501.bin and\nscph5502.bin to\n\n$biosdir"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/stenzek/duckstation/master/LICENSE"
 archrgs_module_section="libretrocores"
 

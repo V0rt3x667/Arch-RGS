@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-fuse"
 archrgs_module_desc="Sinclair ZX Spectrum Libretro Core"
-archrgs_module_help="ROM Extensions: .sna .szx .z80 .tap .tzx .gz .udi .mgt .img .trd .scl .dsk .zip\n\nCopy your ZX Spectrum games to $romdir/zxspectrum"
+archrgs_module_help="ROM Extensions: .sna .szx .z80 .tap .tzx .gz .udi .mgt .img .trd .scl .dsk .zip\n\nCopy Your ZX Spectrum Games to $romdir/zxspectrum"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/fuse-libretro/master/LICENSE"
 archrgs_module_section="libretrocores"
 

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-pt-gzdoom
-pkgver=4.5.0
+pkgver=4.6.0
 pkgrel=1
 _zmusicver=1.1.7
 pkgdesc="Advanced DOOM Port"

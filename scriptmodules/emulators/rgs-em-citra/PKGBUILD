@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-citra
-pkgver=r8857.1bb20571b
+pkgver=r9023.842031a2e
 pkgrel=1
 pkgdesc="Nintendo 3DS Emulator"
 arch=('x86_64')
@@ -12,7 +12,8 @@ depends=(
   'sdl2'
 )
 makedepends=(
-  'cmake' 
+  'cmake'
+  'doxygen'
   'git'
 )
 source=("$pkgname::git+https://github.com/citra-emu/citra")
@@ -42,6 +43,7 @@ build() {
   cmake .. \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON \
     -DUSE_SYSTEM_CURL=ON \
     -DENABLE_SDL2=ON \
     -DENABLE_QT=ON \

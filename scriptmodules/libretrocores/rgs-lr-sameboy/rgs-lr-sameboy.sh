@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-sameboy"
 archrgs_module_desc="Nintendo Game Boy, Game Boy Color & Super Game Boy Libretro Core"
-archrgs_module_help="ROM Extensions: .gb .gbc .zip\n\nCopy your Game Boy roms to $romdir/gb\nGame Boy Color roms to $romdir/gbc\nCopy the recommended BIOS files gb_bios.bin and gbc_bios.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .gb .gbc .zip\n\nCopy Your Game Boy ROMs to $romdir/gb\nGame Boy Color ROMs to $romdir/gbc\nCopy the recommended BIOS files gb_bios.bin and gbc_bios.bin to $biosdir"
 archrgs_module_licence="MIT https://raw.githubusercontent.com/SameBoy/sameboy.github.io/master/minima-license.txt"
 archrgs_module_section="libretrocores"
 

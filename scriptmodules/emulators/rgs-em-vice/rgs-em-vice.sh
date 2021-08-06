@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-vice"
 archrgs_module_desc="VICE - Commodore C64, C64DTV, C128, VIC20, PET, PLUS4 & CBM-II Emulator"
-archrgs_module_help="ROM Extensions: .crt .d64 .g64 .prg .t64 .tap .x64 .zip .vsf\n\nCopy your Commodore 64 games to $romdir/c64"
+archrgs_module_help="ROM Extensions: .crt .d64 .g64 .prg .t64 .tap .x64 .zip .vsf\n\nCopy Your Commodore 64 Games to $romdir/c64"
 archrgs_module_licence="GPL2 http://svn.code.sf.net/p/vice-emu/code/trunk/vice/COPYING"
 archrgs_module_section="emulators"
 

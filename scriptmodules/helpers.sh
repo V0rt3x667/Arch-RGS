@@ -313,7 +313,7 @@ function setupDirectories() {
     fi
   done
 
-  ##CREATE TEMPLATE FOR autoconf.cfg AND MAKE SURE IT IS OWNED BY $user
+  ##Create Template For autoconf.cfg And Make Sure It Is Owned By $user
   local config="$configdir/all/autoconf.cfg"
 
   if [[ ! -f "$config" ]]; then
@@ -465,7 +465,7 @@ function renameModule() {
     sed -i --follow-symlinks "s/\"$from\"/\"$to\"/g" "$configdir"/*/emulators.cfg
     ##Replace Any $from = "cmdline"
     sed -i --follow-symlinks "s/^$from\([ =]\)/$to\1/g" "$configdir"/*/emulators.cfg
-    ##Replace Any Paths WITH /$from/
+    ##Replace Any Paths With /$from/
     sed -i --follow-symlinks "s|/$from/|/$to/|g" "$configdir"/*/emulators.cfg
   fi
 }
@@ -542,20 +542,20 @@ function iniFileEditor() {
     local keys=()
     local i=0
 
-    ##GENERATE MENU FROM OPTIONS
+    ##Generate Menu From Options
     for option in "${ini_options[@]}"; do
-      ##SPLIT INTO NEW ARRAY (GLOBBING SAFE)
+      ##Split Into New Array (Globbing Safe)
       read -ra option <<<"$option"
       key="${option[0]}"
       keys+=("$key")
       params+=("${option[*]:1}")
 
-      ##IF THE FIRST PARAMETER IS _FUNCTION_ WE CALL THE SECOND PARAMETER AS A FUNCTION
-      ##SO WE CAN HANDLE SOME OPTIONS WITH A CUSTOM MENU
+      ##If The First Parameter Is _function_ We Call The Second Parameter As A Function
+      ##So We Can Handle Some Options With A Custom Menu
       if [[ "$key" == "_function_" ]]; then
         value="$(${option[1]} get)"
       else
-        ##GET CURRENT VALUE
+        ##Get Current Value
         iniGet "$key"
         if [[ -n "$ini_value" ]]; then
           value="$ini_value"
@@ -566,12 +566,12 @@ function iniFileEditor() {
 
       values+=("$value")
 
-      ##ADD THE MATCHING VALUE TO OUR id IN _id_ lists
+      ##Add The Matching Value To Our id IN _id_ Lists
       if [[ "${option[1]}" == "_id_" && "$value" != "unset" ]]; then
         value+=" - ${option[value+2]}"
       fi
 
-      ##USE CUSTOM TITLE IF PROVIDED
+      ##Use Custom Title If Provided
       if [[ -n "${ini_titles[i]}" ]]; then
         title="${ini_titles[i]}"
       else
@@ -590,18 +590,18 @@ function iniFileEditor() {
 
     [[ -z "$sel" ]] && break
 
-    ##IF THE KEY IS _function_ WE HANDLE THE OPTION WITH A CUSTOM FUNCTION
+    ##If The Key Is _function_ We Handle The Option With A Custom Function
     if [[ "${keys[sel]}" == "_function_" ]]; then
       "${params[sel]}" set "${values[sel]}"
       continue
     fi
 
-    ##PROCESS THE EDITING OF THE OPTION
+    ##Process The Editing Of The Option
     i=0
     options=("U" "unset")
     local default=""
 
-    ##SPLIT INTO NEW ARRAY (GLOBBING SAFE)
+    ##Split Into New Array (Globbing Safe)
     read -ra params <<<"${params[sel]}"
 
     local mode="${params[0]}"
@@ -635,11 +635,11 @@ function iniFileEditor() {
       ;;
     esac
     [[ -z "$default" ]] && default="U"
-    ##DISPLAY VALUES
+    ##Display Values
     cmd=(dialog --backtitle "$__backtitle" --default-item "$default" --menu "Please choose the value for ${keys[sel]}" 22 76 16)
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
-    ##IF IT IS A _STRING_ TYPE WE WILL OPEN AN INPUTBOX DIALOG TO GET A MANUAL VALUE
+    ##If It Is A _STRING_ Type We Will Open An Inputbox Dialog To Get A Manual Value
     if [[ -z "$choice" ]]; then
       continue
     elif [[ "$choice" == "E" ]]; then
@@ -652,7 +652,7 @@ function iniFileEditor() {
       if [[ "$mode" == "_id_" ]]; then
         value="$choice"
       else
-        ##GET THE ACTUAL VALUE FROM THE OPTIONS ARRAY
+        ##Get The Actual Value From The Options Array
         local index=$((choice * 2 + 3))
         if [[ "$mode" == "_file_" ]]; then
           value="$path/${options[index]}"
@@ -692,6 +692,9 @@ function setESSystem() {
 ## @param shader set a default shader to use (deprecated)
 ## @brief Creates a default retroarch.cfg for specified system in `/opt/archrgs/configs/$system/retroarch.cfg`.
 function ensureSystemretroconfig() {
+  ##Do Not Do Any Config Work On Module Removal
+  [[ "$md_mode" == "remove" ]] && return
+
   local system="$1"
   local shader="$2"
 
@@ -700,10 +703,10 @@ function ensureSystemretroconfig() {
   fi
 
   local config="$(mktemp)"
-  ##ADD THE INITIAL COMMENT REGARDING INCLUDE ORDER
-  echo -e "# Settings made here will only override settings in the global retroarch.cfg if placed above the #include line\n" >"$config"
+  ##Add The Initial Comment Regarding Include Order
+  echo -e "# Settings Made Here Will Only Override Settings in the Global retroarch.cfg If Placed Above the #include Line\n" >"$config"
 
-  ##ADD THE PER SYSTEM DEFAULT SETTINGS
+  ##Add The Per System Default Settings
   iniConfig " = " '"' "$config"
   iniSet "input_remapping_directory" "$configdir/$system/"
 
@@ -713,7 +716,7 @@ function ensureSystemretroconfig() {
     iniUnset "video_shader_enable" "true"
   fi
 
-  ##INCLUDE THE GLOBAL retroarch config
+  ##Include The Global retroarch config
   echo -e "\n#include \"$configdir/all/retroarch.cfg\"" >>"$config"
 
   copyDefaultConfig "$config" "$configdir/$system/retroarch.cfg"
@@ -813,37 +816,37 @@ function applyPatch() {
 ## parameters, eg - timeouts etc.
 ## @retval curl return value
 function runCurl() {
-    local params=("$@")
-    # add any user supplied curl opts - timeouts can be overridden as curl uses the last parameters given
-    [[ -z "$__curl_opts" ]] && params+=($__curl_opts)
+  local params=("$@")
+  ##Add Any User Supplied Curl Opts - Timeouts Can Be Overridden As Curl Uses The Last Parameters Given
+  [[ -n "$__curl_opts" ]] && params+=($__curl_opts)
 
-    local cmd_err
-    local ret
+  local cmd_err
+  local ret
 
-    # get the last non zero exit status (ignoring tee)
-    set -o pipefail
+  ##Get The Last Non Zero Exit Status (Ignoring tee)
+  set -o pipefail
 
-    # set up additional file descriptor for stdin
-    exec 3>&1
+  ##Set Up Additional File Descriptor For stdin
+  exec 3>&1
 
-    # capture stderr - while passing both stdout and stderr to terminal
-    # curl like wget outputs the progress meter to stderr, so we will extract the error line later
-    cmd_err=$(curl "${params[@]}" 2>&1 1>&3 | tee /dev/stderr)
-    ret="$?"
+  ##Capture stderr - While Passing Both stdout and stderr to Terminal
+  ##Curl Like wget Outputs the Progress Meter to stderr, So We Will Extract The Error Line Later
+  cmd_err=$(curl "${params[@]}" 2>&1 1>&3 | tee /dev/stderr)
+  ret="$?"
 
-    # remove stdin copy
-    exec 3>&-
+  ##Remove stdin Copy
+  exec 3>&-
 
-    set +o pipefail
+  set +o pipefail
 
-    # if there was an error, extract it and put in __NET_ERRMSG
-    if [[ "$ret" -ne 0 ]]; then
-        # as we also capture the curl progress output, extract the last line which contains the error
-        __NET_ERRMSG="${cmd_err##*$'\n'}"
-    else
-        __NET_ERRMSG=""
-    fi
-    return "$ret"
+  ##If There Was An Error, Extract It And Put In __NET_ERRMSG
+  if [[ "$ret" -ne 0 ]]; then
+    ##As We Also Capture The Curl Progress Output, Extract The Last Line Which Contains The Error
+    __NET_ERRMSG="${cmd_err##*$'\n'}"
+  else
+    __NET_ERRMSG=""
+  fi
+  return "$ret"
 }
 
 ## @fn download()
@@ -856,38 +859,38 @@ function runCurl() {
 ## the url to the destination folder.
 ## @retval 0 on success
 function download() {
-    local url="$1"
-    local dest="$2"
-    local file="${url##*/}"
+  local url="$1"
+  local dest="$2"
+  local file="${url##*/}"
 
-    # if no destination, get the basename from the url
-    [[ -z "$dest" ]] && dest="${PWD}/$file"
+  ##If No Destination, Get The basename From The URL
+  [[ -z "$dest" ]] && dest="${PWD}/$file"
 
-    # if the destination is a folder, download to that with filename from url
-    [[ -d "$dest" ]] && dest="$dest/$file"
+  ##If The Destination Is A Folder, Download To That With Filename From URL
+  [[ -d "$dest" ]] && dest="$dest/$file"
 
-    local params=(--location)
-    if [[ "$dest" == "-" ]]; then
-        params+=(-s)
-    else
-        printMsgs "console" "Downloading $url to $dest ..."
-        params+=(-o "$dest")
-    fi
-    params+=(--connect-timeout 10 --speed-limit 1 --speed-time 60)
-    # add the url
-    params+=("$url")
+  local params=(--location)
+  if [[ "$dest" == "-" ]]; then
+    params+=(--silent --no-buffer)
+  else
+    printMsgs "console" "Downloading $url to $dest ..."
+    params+=(-o "$dest")
+  fi
+  params+=(--connect-timeout 10 --speed-limit 1 --speed-time 60 --fail)
+  ##Add the URL
+  params+=("$url")
 
-    local ret
-    runCurl "${params[@]}"
-    ret="$?"
+  local ret
+  runCurl "${params[@]}"
+  ret="$?"
 
-    # if download failed, remove file, log error and return error code
-    if [[ "$ret" -ne 0 ]]; then
-        # remove dest if not set to stdout and exists
-        [[ "$dest" != "-" && -f "$dest" ]] && rm "$dest"
-        md_ret_errors+=("URL $url failed to download.\n\n$__NET_ERRMSG")
-    fi
-    return "$ret"
+  ##If the Download Failed, Remove File, Log Error and Return Error Code
+  if [[ "$ret" -ne 0 ]]; then
+    ##Remove Dest If Not Set To Stdout And Exists
+    [[ "$dest" != "-" && -f "$dest" ]] && rm "$dest"
+    md_ret_errors+=("URL $url failed to download.\n\n$__NET_ERRMSG")
+  fi
+  return "$ret"
 }
 
 ## @fn downloadAndVerify()
@@ -899,25 +902,25 @@ function download() {
 ## If the dest parameter is omitted, the file will be downloaded to the current directory
 ## @retval 0 on success
 function downloadAndVerify() {
-    local url="$1"
-    local dest="$2"
-    local file="${url##*/}"
+  local url="$1"
+  local dest="$2"
+  local file="${url##*/}"
 
-    # if no destination, get the basename from the url (supported by GNU basename)
-    [[ -z "$dest" ]] && dest="${PWD}/$file"
+  ##If No Destination, Get The Basename From The URL (Supported By GNU basename)
+  [[ -z "$dest" ]] && dest="${PWD}/$file"
 
-    local cmd_out
-    local ret=1
-    if download "${url}.asc" "${dest}.asc"; then
-        if download "$url" "$dest"; then
-            cmd_out="$(gpg --verify "${dest}.asc" 2>&1)"
-            ret="$?"
-            if [[ "$ret" -ne 0 ]]; then
-                md_ret_errors+=("$dest failed signature check:\n\n$cmd_out")
-            fi
+  local cmd_out
+  local ret=1
+  if download "${url}.asc" "${dest}.asc"; then
+    if download "$url" "$dest"; then
+      cmd_out="$(gpg --verify "${dest}.asc" 2>&1)"
+      ret="$?"
+        if [[ "$ret" -ne 0 ]]; then
+          md_ret_errors+=("$dest failed signature check:\n\n$cmd_out")
         fi
     fi
-    return "$ret"
+  fi
+  return "$ret"
 }
 
 ## @fn downloadAndExtract()
@@ -932,33 +935,32 @@ function downloadAndExtract() {
   local dest="$2"
   shift 2
   local opts=("$@")
-
   local ext="${url##*.}"
-    local file="${url##*/}"
+  local file="${url##*/}"
+  local temp="$(mktemp -d)"
 
-    local temp="$(mktemp -d)"
-    ##Download File, Removing Temporary Folder And Returning On Error
-    if ! download "$url" "$temp/$file"; then
-        rm -rf "$temp"
-        return 1
-    fi
-
-    mkdir -p "$dest"
-
-    local ret
-    case "$ext" in
-        exe|zip)
-            runCmd unzip "${opts[@]}" -o "$temp/$file" -d "$dest"
-            ;;
-        *)
-            tar -xvf "$temp/$file" -C "$dest" "${opts[@]}"
-            ;;
-    esac
-    ret=$?
-
+  ##Download File, Removing Temporary Folder And Returning On Error
+  if ! download "$url" "$temp/$file"; then
     rm -rf "$temp"
+    return 1
+  fi
 
-    return $ret
+  mkdir -p "$dest"
+
+  local ret
+  case "$ext" in
+    exe|zip)
+      runCmd unzip "${opts[@]}" -o "$temp/$file" -d "$dest"
+    ;;
+    *)
+      tar -xvf "$temp/$file" -C "$dest" "${opts[@]}"
+    ;;
+  esac
+  ret=$?
+
+  rm -rf "$temp"
+
+  return $ret
 }
 
 ## @fn joy2keyStart()
@@ -974,7 +976,7 @@ function downloadAndExtract() {
 ## @details Arguments are curses capability names or hex values starting with '0x'
 ## see: http://pubs.opengroup.org/onlinepubs/7908799/xcurses/terminfo.html
 function joy2keyStart() {
-  ##Do Not Start On SSH Sessions (Check For Bracket In Output Ip / Name In Brackets Over A Ssh Connection)
+  ##Do Not Start On SSH Sessions (Check For Bracket In Output IP/Name In Brackets Over A SSH Connection)
   [[ "$(who -m)" == *\(* ]] && return
 
   local params=("$@")
@@ -1021,7 +1023,7 @@ function getPlatformConfig() {
     iniGet "$key"
     [[ -n "$ini_value" ]] && break
   done
-  ##WORKAROUND FOR ARCH-RGS PLATFORM
+  ##Workaround For Arch-RGS Platform
   [[ "$key" == "archrgs_fullname" ]] && ini_value="Arch-RGS"
   echo "$ini_value"
 }
@@ -1035,20 +1037,20 @@ function getPlatformConfig() {
 function addSystem() {
   local system="$1"
   local fullname="$2"
-  local exts=($3)
+  local exts=("$3")
 
   local platform="$system"
   local theme="$system"
   local cmd
   local path
 
-  ##IF REMOVING AND WE DON'T HAVE AN emulators.cfg WE CAN REMOVE THE SYSTEM FROM THE FRONTENDS
+  ##If Removing And We Don'T Have An emulators.cfg We Can Remove The System From The Frontends
   if [[ "$md_mode" == "remove" ]] && [[ ! -f "$md_conf_root/$system/emulators.cfg" ]]; then
     delSystem "$system" "$fullname"
     return
   fi
 
-  ##SET SYSTEM / PLATFORM / THEME FOR CONFIGURATION BASED ON DATA IN NAMES FIELD
+  ##Set System/Platform/Theme For Configuration Based On Data In Names Field
   if [[ "$system" == "ports" ]]; then
     cmd="bash %ROM%"
     path="$romdir/ports"
@@ -1078,7 +1080,7 @@ function addSystem() {
   [[ -n "$temp" ]] && fullname="$temp"
 
   exts="${exts[*]}"
-  ##ADD THE EXTENSIONS AGAIN AS UPPERCASE
+  ##Add The Extensions Again As Uppercase
   exts+=" ${exts^^}"
 
   setESSystem "$fullname" "$system" "$path" "$exts" "$cmd" "$platform" "$theme"
@@ -1130,19 +1132,19 @@ function addPort() {
   local cmd="$4"
   local game="$5"
 
-  ##MOVE CONFIGURATIONS FROM OLD PORTS LOCATION
+  ##Move Configurations From Old Ports Location
   if [[ -d "$configdir/$port" ]]; then
     mv "$configdir/$port" "$md_conf_root/"
   fi
 
-  ##REMOVE THE EMULATOR / PORT
+  ##Remove The Emulator/Port
   if [[ "$md_mode" == "remove" ]]; then
     delEmulator "$id" "$port"
 
-    ##REMOVE LAUNCH SCRIPT IF IN REMOVE MODE AND THE PORTS emulators.cfg IS EMPTY
+    ##Remove Launch Script If In Remove Mode And The Ports emulators.cfg Is Empty
     [[ ! -f "$md_conf_root/$port/emulators.cfg" ]] && rm -f "$file"
 
-    ##IF THERE ARE NO MORE PORT LAUNCH SCRIPTS WE CAN REMOVE PORTS FROM EMULATION STATION
+    ##If There Are No More Port Launch Scripts We Can Remove Ports From Emulation Station
     if [[ "$(find "$romdir/ports" -maxdepth 1 -name "*.sh" | wc -l)" -eq 0 ]]; then
       delSystem "ports"
     fi
@@ -1181,7 +1183,7 @@ _EOF_
 ##  id = "cmd"
 ##  default = id
 ##
-## Which are then selectable from runcommand when launching roms
+## Which are then selectable from runcommand when launching ROMs
 ##
 ## For libretro emulators, cmd needs to only contain the path to the libretro library.
 ##
@@ -1194,25 +1196,25 @@ function addEmulator() {
   local system="$3"
   local cmd="$4"
 
-  ##CHECK IF WE ARE REMOVING THE SYSTEM
+  ##Check If We Are Removing The System
   if [[ "$md_mode" == "remove" ]]; then
     delEmulator "$id" "$system"
     return
   fi
 
-  ##AUTOMATICALLY ADD PARAMETERS FOR LIBRETRO MODULES
+  ##Automatically Add Parameters For Libretro Modules
   if [[ "$id" == rgs-lr-* && "$cmd" =~ ^"$md_inst"[^[:space:]]*\.so ]]; then
     cmd="$emudir/rgs-em-retroarch/bin/retroarch -L $cmd --config $md_conf_root/$system/retroarch.cfg %ROM%"
   fi
 
-  ##CREATE A CONFIG FOLDER FOR THE SYSTEM OR PORT
+  ##Create A Config Folder For The System Or Port
   mkUserDir "$md_conf_root/$system"
 
-  ##ADD THE EMULATOR TO THE $conf_dir/emulators.cfg IF A COMMANDLINE EXISTS (NOT USED FOR SOME PORTS)
+  ##Add The Emulator To The $conf_dir/emulators.cfg If A Commandline Exists (Not Used For Some Ports)
   if [[ -n "$cmd" ]]; then
     iniConfig " = " '"' "$md_conf_root/$system/emulators.cfg"
     iniSet "$id" "$cmd"
-    ##SET A DEFAULT
+    ##Set A Default
     iniGet "default"
     if [[ -z "$ini_value" && "$default" -eq 1 ]]; then
       iniSet "default" "$id"
@@ -1232,15 +1234,15 @@ function delEmulator() {
   local id="$1"
   local system="$2"
   local config="$md_conf_root/$system/emulators.cfg"
-  ##REMOVE FROM APPS LIST FOR SYSTEM
+  ##Remove from Apps List for System
   if [[ -f "$config" && -n "$id" ]]; then
-    ##DELETE EMULATOR ENTRY
+    ##Delete Emulator Entry
     iniConfig " = " '"' "$config"
     iniDel "$id"
-    ##IF IT IS THE DEFAULT REMOVE IT, RUNCOMMAND WILL PROMPT TO SELECT A NEW DEFAULT
+    ##If It Is The Default Remove It, Runcommand Will Prompt To Select A New Default
     iniGet "default"
     [[ "$ini_value" == "$id" ]] && iniDel "default"
-    ##IF WE NO LONGER HAVE ANY ENTRIES IN THE emulators.cfg FILE WE CAN REMOVE IT
+    ##If We No Longer Have Any Entries In The Emulators.Cfg File We Can Remove It
     grep -q "=" "$config" || rm -f "$config"
   fi
 
@@ -1257,47 +1259,47 @@ function dkmsManager() {
   local kernel="$(uname -r)"
   local ver
 
-    case "$mode" in
-        install)
-            if dkms status | grep -q "^$module_name"; then
-                dkmsManager remove "$module_name" "$module_ver"
+  case "$mode" in
+    install)
+      if dkms status | grep -q "^$module_name"; then
+        dkmsManager remove "$module_name" "$module_ver"
+      fi
+      ln -sf "$md_inst" "/usr/src/${module_name}-${module_ver}"
+      dkms install --no-initrd --force -m "$module_name" -v "$module_ver" -k "$kernel"
+      if ! dkms status "$module_name/$module_ver" -k "$kernel" | grep -q installed; then
+        ##Force Building For Any Kernel That Has Source/Headers
+        local k_ver
+          while read k_ver; do
+            if [[ -d "$(realpath /lib/modules/$k_ver/build)" ]]; then
+              dkms install --no-initrd --force -m "$module_name/$module_ver" -k "$k_ver"
             fi
-            ln -sf "$md_inst" "/usr/src/${module_name}-${module_ver}"
-            dkms install --no-initrd --force -m "$module_name" -v "$module_ver" -k "$kernel"
-            if ! dkms status "$module_name/$module_ver" -k "$kernel" | grep -q installed; then
-                # Force building for any kernel that has source/headers
-                local k_ver
-                while read k_ver; do
-                    if [[ -d "$(realpath /lib/modules/$k_ver/build)" ]]; then
-                        dkms install --no-initrd --force -m "$module_name/$module_ver" -k "$k_ver"
-                    fi
-                done < <(ls -r1 /lib/modules)
-            fi
-            if ! dkms status "$module_name/$module_ver" | grep -q installed; then
-                md_ret_errors+=("Failed to install $md_id")
-                return 1
-            fi
-            ;;
-        remove)
-            for ver in $(dkms status "$module_name" | cut -d"," -f2 | cut -d":" -f1); do
-                dkms remove -m "$module_name" -v "$ver" --all
-                rm -f "/usr/src/${module_name}-${ver}"
-            done
-            dkmsManager unload "$module_name" "$module_ver"
-            ;;
-        reload)
-            dkmsManager unload "$module_name" "$module_ver"
-            # No reason to load modules in chroot
-            if [[ "$__chroot" -eq 0 ]]; then
-                modprobe "$module_name"
-            fi
-            ;;
-        unload)
-            if [[ -n "$(lsmod | grep ${module_name/-/_})" ]]; then
-                rmmod "$module_name"
-            fi
-            ;;
-    esac
+          done < <(ls -r1 /lib/modules)
+      fi
+      if ! dkms status "$module_name/$module_ver" | grep -q installed; then
+        md_ret_errors+=("Failed to install $md_id")
+        return 1
+      fi
+    ;;
+    remove)
+      for ver in $(dkms status "$module_name" | cut -d"," -f2 | cut -d":" -f1); do
+        dkms remove -m "$module_name" -v "$ver" --all
+        rm -f "/usr/src/${module_name}-${ver}"
+      done
+      dkmsManager unload "$module_name" "$module_ver"
+    ;;
+    reload)
+      dkmsManager unload "$module_name" "$module_ver"
+      ##No Reason To Load Modules In chroot
+      if [[ "$__chroot" -eq 0 ]]; then
+        modprobe "$module_name"
+      fi
+    ;;
+    unload)
+      if [[ -n "$(lsmod | grep ${module_name/-/_})" ]]; then
+        rmmod "$module_name"
+      fi
+    ;;
+  esac
 }
 
 ## @fn getIPAddress()
@@ -1311,14 +1313,14 @@ function getIPAddress() {
   local dev="$1"
   local ip_route
 
-  ##OBTAIN AN EXTERNAL IPv4 ROUTE
+  ##Obtain An External IPv4 Route
   ip_route=$(ip -4 route get 8.8.8.8 ${dev:+dev $dev} 2>/dev/null)
   if [[ -z "$ip_route" ]]; then
-    ##IF NO IPv4 ROUTE OBTAIN AN IPv6 ROUTE
+    ##If No IPv4 Route Obtain An IPv6 Route
     ip_route=$(ip -6 route get 2001:4860:4860::8888 ${dev:+dev $dev} 2>/dev/null)
   fi
 
-  ##IF AN EXTERNAL ROUTE WAS FOUND, REPORT ITS SOURCE ADDRESS
+  ##If An External Route Was Found, Report Its Source Address
   [[ -n "$ip_route" ]] && grep -oP "src \K[^\s]+" <<<"$ip_route"
 }
 
@@ -1329,12 +1331,13 @@ function getIPAddress() {
 ## @retval 0 on success
 ## @retval 1 on failure
 function isConnected() {
-    local ip="$(getIPAddress)"
-    if [[ -z "$ip" ]]; then
-        __NET_ERRMSG="Not connected to the Internet"
-        return 1
-    fi
-    return 0
+  local ip="$(getIPAddress)"
+
+  if [[ -z "$ip" ]]; then
+    __NET_ERRMSG="Not connected to the Internet"
+    return 1
+  fi
+  return 0
 }
 
 ## @fn signFile()
@@ -1342,13 +1345,14 @@ function isConnected() {
 ## @brief signs file with $__gpg_signing_key
 ## @details signs file with $__gpg_signing_key creating corresponding .asc file in the same folder
 function signFile() {
-    local file="$1"
-    local cmd_out
-    cmd_out=$(gpg --default-key "$__gpg_signing_key" --detach-sign --armor --yes "$1" 2>&1)
-    if [[ "$?" -ne 0 ]]; then
-        md_ret_errors+=("Failed to sign $1\n\n$cmd_out")
-        return 1
-    fi
-    return 0
+  local file="$1"
+  local cmd_out
+
+  cmd_out=$(gpg --default-key "$__gpg_signing_key" --detach-sign --armor --yes "$1" 2>&1)
+  if [[ "$?" -ne 0 ]]; then
+    md_ret_errors+=("Failed to sign $1\n\n$cmd_out")
+    return 1
+  fi
+  return 0
 }
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-virtualjaguar"
 archrgs_module_desc="Atari Jaguar Libretro Core"
-archrgs_module_help="ROM Extensions: .j64 .jag .zip\n\nCopy your Atari Jaguar roms to $romdir/atarijaguar"
+archrgs_module_help="ROM Extensions: .j64 .jag .zip\n\nCopy Your Atari Jaguar ROMs to $romdir/atarijaguar"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/virtualjaguar-libretro/master/docs/GPLv3"
 archrgs_module_section="libretrocores"
 

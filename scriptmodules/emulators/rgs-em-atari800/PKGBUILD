@@ -1,7 +1,7 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-atari800
 pkgver=4.2.0
-$_pkgver="$(echo $pkgver | sed -r 's/[.]+/_/g')"
+_gitver="$(echo $pkgver | sed -r 's/[.]+/_/g')"
 pkgrel=1
 pkgdesc="Atari 400, 800, 600 XL, 800XL, 130XE & 5200 Emulator"
 arch=('x86_64')
@@ -11,14 +11,15 @@ depends=(
   'libpng'
   'sdl'
 )
-source=("https://github.com/atari800/atari800/releases/download/ATARI800_$_pkgver/atari800-$_pkgver-src.tgz")
+source=("https://github.com/atari800/atari800/releases/download/ATARI800_$_gitver/atari800-$pkgver-src.tgz")
 sha256sums=('55cb5568229c415f1782130afd11df88c03bb6d81fa4aa60a4ac8a2f151f1359')
+_installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
   cd "atari800-$pkgver"
 
   ./configure \
-    --prefix="$_installdir" \
+    --prefix="${_installdir%/}" \
     --with-video=sdl \
     --with-sound=sdl \
     --with-opengl \
@@ -29,6 +30,6 @@ build() {
 package() {
   cd "atari800-$pkgver/src"
 
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="${pkgdir}" install
 }
 

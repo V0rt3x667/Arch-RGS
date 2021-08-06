@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-beetle-saturn"
 archrgs_module_desc="Sega Saturn Libretro Core"
-archrgs_module_help="ROM Extensions: .cue\n\nCopy your Saturn roms to $romdir/saturn\n\nCopy the required BIOS files sega_101.bin / mpr-17933.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .cue\n\nCopy Your Saturn ROMs to $romdir/saturn\n\nCopy the required BIOS files sega_101.bin / mpr-17933.bin to $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/beetle-saturn-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

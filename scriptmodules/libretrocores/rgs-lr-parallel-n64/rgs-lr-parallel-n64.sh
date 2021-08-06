@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-parallel-n64"
 archrgs_module_desc="Nintendo N64 Libretro Core"
-archrgs_module_help="ROM Extensions: .z64 .n64 .v64\n\nCopy your N64 roms to $romdir/n64"
+archrgs_module_help="ROM Extensions: .z64 .n64 .v64\n\nCopy Your N64 ROMs to $romdir/n64"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/parallel-n64/master/mupen64plus-core/LICENSES"
 archrgs_module_section="libretrocores"
 

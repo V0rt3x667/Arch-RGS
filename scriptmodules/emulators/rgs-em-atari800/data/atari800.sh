@@ -17,22 +17,22 @@ source "$rootdir/lib/archivefuncs.sh"
 
 function check_arch_files() {
 
-case "$MODEL" in
+  case "$MODEL" in
     Atari800-PAL|Atari800-NTSC|Atari800XL|Atari130XE|Atari5200)
-      archiveExtract "$ROM" ".a52 .atr .bas .bin .car .dcm .xex .xfd"
-      # check successful extraction and if we have at least one file
+    archiveExtract "$ROM" ".a52 .atr .bas .bin .car .dcm .xex .xfd"
+      ##Check Successful Extraction And If We Have At Least One File
       if [[ $? == 0 ]]; then
-          ROM="${arch_files[0]}"
-          romdir="$arch_dir"
+        ROM="${arch_files[0]}"
+        romdir="$arch_dir"
       fi
-      launch_atari
-      ;;
-esac
+    launch_atari
+    ;;
+  esac
 }
 
 function launch_atari() {
 
-case "$MODEL" in
+  case "$MODEL" in
     Atari800-PAL)
       "$rootdir/emulators/rgs-em-atari800/bin/atari800" \
       -atari \
@@ -86,7 +86,7 @@ case "$MODEL" in
       -atari_files "$romdir" \
       -saved_files "$savedir/atari5200"
       ;;
-esac
+  esac
 }
 
 check_arch_files

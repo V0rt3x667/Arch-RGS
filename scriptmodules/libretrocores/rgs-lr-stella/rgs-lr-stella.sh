@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-stella"
 archrgs_module_desc="Atari 2600 Libretro Core"
-archrgs_module_help="ROM Extensions: .a26 .bin .rom .zip .gz\n\nCopy your Atari 2600 roms to $romdir/atari2600"
+archrgs_module_help="ROM Extensions: .a26 .bin .rom .zip .gz\n\nCopy Your Atari 2600 ROMs to $romdir/atari2600"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/stella-libretro/master/stella/license.txt"
 archrgs_module_section="libretrocores"
 

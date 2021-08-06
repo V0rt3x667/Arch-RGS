@@ -5,8 +5,8 @@
 # Please see the LICENSE file at the top-level directory of this distribution.
 
 archrgs_module_id="rgs-em-atari800"
-archrgs_module_desc="Atari 400, 800, 600 XL, 800XL, 130XE & 5200 Emulator"
-archrgs_module_help="ROM Extensions: .a52 .bas .bin .car .xex .atr .xfd .dcm .atr.gz .xfd.gz\n\nCopy your Atari800 games to $romdir/atari800\n\nCopy your Atari 5200 roms to $romdir/atari5200 You need to copy the Atari 800/5200 BIOS files (5200.ROM, ATARIBAS.ROM, ATARIOSB.ROM and ATARIXL.ROM) to the folder $biosdir and then on first launch configure it to scan that folder for roms (F1 -> Emulator Configuration -> System Rom Settings)"
+archrgs_module_desc="Atari 400, 800, 600XL, 800XL, 130XE & 5200 Emulator"
+archrgs_module_help="ROM Extensions: .a52 .atr .atr.gz .bas .bin .car .dcm .xex .xfd .xfd.gz\n\nCopy Your Atari800 ROMs to: $romdir/atari800\n\nCopy Your Atari 5200 ROMs to: $romdir/atari5200.\n\nYou Need to Copy the Atari 800/5200 BIOS Files (5200.ROM, ATARIBAS.ROM, ATARIOSB.ROM and ATARIXL.ROM) to: $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/atari800/atari800/master/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -23,9 +23,19 @@ function configure_rgs-em-atari800() {
   mkRomDir "atari800"
   mkRomDir "atari5200"
 
-  moveConfigFile "$home/.atari800.cfg" "$md_conf_root/atari800/atari800.cfg"
+  if [[ "$md_mode" == "install" ]]; then
+    mkUserDir "$md_conf_root/atari800"
+      ##Move Old Config If Exists To New Location
+      if [[ -f "$md_conf_root/atari800.cfg" ]]; then
+        mv "$md_conf_root/atari800.cfg" "$md_conf_root/atari800/atari800.cfg"
+      fi
+    moveConfigFile "$home/.atari800.cfg" "$md_conf_root/atari800/atari800.cfg"
+    ##Copy Launch Script
+    install -Dm755 "$md_data/atari800.sh" "$md_inst"
+    chmod a+x "$md_inst/atari800.sh"
+  fi
 
-  addEmulator 0 "atari800-800-pal" "atari800" "$md_inst/atari800.sh %ROM% Atari800-PAL"
+  addEmulator 1 "atari800-800-pal" "atari800" "$md_inst/atari800.sh %ROM% Atari800-PAL"
   addEmulator 1 "atari800-800-ntsc" "atari800" "$md_inst/atari800.sh %ROM% Atari800-NTSC"
   addEmulator 1 "atari800-800xl" "atari800" "$md_inst/atari800.sh %ROM% Atari800XL"
   addEmulator 1 "atari800-130xe" "atari800" "$md_inst/atari800.sh %ROM% Atari130XE"
@@ -33,25 +43,5 @@ function configure_rgs-em-atari800() {
 
   addSystem "atari800"
   addSystem "atari5200"
-
-  [[ "$md_mode" == "remove" ]] && return
-
-  iniConfig " = " "" "$md_conf_root/atari800/atari800.cfg"
-  iniSet "SDL_JOY_0_ENABLED" "1"
-  iniSet "SDL_JOY_0_LEFT" "260"
-  iniSet "SDL_JOY_0_RIGHT" "262"
-  iniSet "SDL_JOY_0_UP" "264"
-  iniSet "SDL_JOY_0_DOWN" "261"
-  iniSet "SDL_JOY_0_TRIGGER" "305"
-  iniSet "SDL_JOY_1_ENABLED" "0"
-  iniSet "SDL_JOY_1_LEFT" "97"
-  iniSet "SDL_JOY_1_RIGHT" "100"
-  iniSet "SDL_JOY_1_UP" "119"
-  iniSet "SDL_JOY_1_DOWN" "115"
-  iniSet "SDL_JOY_1_TRIGGER" "306"
-
-  ##Copy Launch Script
-  install -Dm755 "$md_data/atari800.sh" "$md_inst"
-  chmod +x "$md_inst/atari800.sh"
 }
 

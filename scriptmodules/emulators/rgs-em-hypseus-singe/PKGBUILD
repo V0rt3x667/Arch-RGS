@@ -1,0 +1,51 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-hypseus-singe
+pkgver=2.6.10
+pkgrel=1
+pkgdesc="Emulator - Laserdisc Arcade Games"
+arch=('x86_64')
+url="https://github.com/DirtBagXon/hypseus-singe"
+license=('GPL3')
+depends=(
+  'libvorbis'
+  'sdl2_image'
+  'sdl2_ttf'
+  'zlib'
+)
+makedepends=(
+  'cmake'
+  'git'
+)
+source=("$pkgname::git+https://github.com/DirtBagXon/hypseus-singe#tag=v$pkgver")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d ./build ]]; then
+    rm -rf ./build
+  fi
+  mkdir ./build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake ../src \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON
+  make
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./hypseus -t "${pkgdir}${_installdir%/}"
+  install -Dm644 ../sound/{*.ogg,*.wav} -t "${pkgdir}${_installdir%/}/sound"
+  install -Dm644 ../fonts/*.ttf -t "${pkgdir}${_installdir%/}/fonts"
+  install -Dm644 ../pics/*.bmp -t "${pkgdir}${_installdir%/}/pics"
+  cp -r ../doc -t "${pkgdir}${_installdir%/}"
+}
+

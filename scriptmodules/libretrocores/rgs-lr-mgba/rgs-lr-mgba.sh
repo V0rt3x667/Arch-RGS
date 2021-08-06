@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-mgba"
 archrgs_module_desc="Nintendo Game Boy, Game Boy Advance & Game Boy Color Libretro Core"
-archrgs_module_help="ROM Extensions: .gb .gbc .gba .zip\n\nCopy your Game Boy roms to $romdir/gb\nGame Boy Color roms to $romdir/gbc\nGame Boy Advance roms to $romdir/gba\n\nCopy the recommended BIOS files gb_bios.bin, gbc_bios.bin, sgb_bios.bin and gba_bios.bin to $biosdir"
+archrgs_module_help="ROM Extensions: .gb .gbc .gba .zip\n\nCopy Your Game Boy ROMs to $romdir/gb\nGame Boy Color ROMs to $romdir/gbc\nGame Boy Advance ROMs to $romdir/gba\n\nCopy the recommended BIOS files gb_bios.bin, gbc_bios.bin, sgb_bios.bin and gba_bios.bin to $biosdir"
 archrgs_module_licence="MPL2 https://raw.githubusercontent.com/libretro/mgba/master/LICENSE"
 archrgs_module_section="libretrocores"
 

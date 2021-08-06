@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-smsplus-gx"
 archrgs_module_desc="Sega Master System & Game Gear Libretro Core"
-archrgs_module_help="ROM Extensions: .gg .sms .bin .zip\nCopy your Game Gear roms to $romdir/gamegear\nMasterSystem roms to $romdir/mastersystem"
+archrgs_module_help="ROM Extensions: .gg .sms .bin .zip\nCopy Your Game Gear ROMs to $romdir/gamegear\nMasterSystem ROMs to $romdir/mastersystem"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/smsplus-gx/master/docs/license"
 archrgs_module_section="libretrocores"
 

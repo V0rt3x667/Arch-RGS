@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-beetle-ngp"
 archrgs_module_desc="Neo Geo Pocket & Pocket Color Libretro Core"
-archrgs_module_help="ROM Extensions: .ngc .ngp .zip\n\nCopy your Neo Geo Pocket roms to $romdir/ngp\n\nCopy your Neo Geo Pocket Color roms to $romdir/ngpc"
+archrgs_module_help="ROM Extensions: .ngc .ngp .zip\n\nCopy Your Neo Geo Pocket ROMs to $romdir/ngp\n\nCopy Your Neo Geo Pocket Color ROMs to $romdir/ngpc"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/beetle-ngp-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

@@ -1,0 +1,57 @@
+# Maintainer: V0rt3x667 <al-g0l@outlook.com>
+pkgname=rgs-em-duckstation
+pkgver=r4623.179a7aea
+pkgrel=1
+pkgdesc="Emulator - Sony PlayStation"
+arch=('x86_64')
+url="https://www.duckstation.org"
+license=('GPL3')
+depends=(
+  'qt5-base'
+  'sdl2'
+)
+makedepends=(
+  'cmake'
+  'git'
+  'ninja'
+)
+source=("$pkgname::git+https://github.com/stenzek/duckstation")
+sha256sums=('SKIP')
+_installdir="/opt/archrgs/emulators/$pkgname"
+
+pkgver() {
+  cd "$pkgname"
+
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$pkgname"
+
+  if [[ -d ./build ]]; then
+    rm -rf ./build
+  fi
+  mkdir ./build
+}
+
+build() {
+  cd "$pkgname/build"
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON \
+    -DBUILD_TESTING=NO \
+    -DUSE_DRMKMS=ON \
+    -DUSE_WAYLAND=ON \
+    -GNinja
+  ninja
+}
+
+package() {
+  cd "$pkgname/build"
+
+  install -Dm755 ./bin/duckstation* -t "${pkgdir}${_installdir%/}"
+  cp -r --no-dereference --preserve=links --no-preserve=ownership ./bin/{database,inputprofiles,resources,shaders,translations} "${pkgdir}${_installdir%/}"
+}
+

@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-mupen64plus
-pkgver=2.5.9.r104.91b90941
+pkgver=2.5.9.r210.1e150c5b
 pkgrel=1
 pkgdesc="Nintendo 64 Emulator"
 arch=('x86_64')
@@ -69,7 +69,7 @@ _3p_components=(
   'video-gliden64'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
-_parameters=("PREFIX=${_installdir%/}" "COREDIR=${_installdir%/}/lib" "PLUGINDIR=${_installdir%/}/lib/mupen64plus" "OSD=1" "PIE=1" "SSE=SSE2")
+_parameters=("PREFIX=${_installdir%/}" "COREDIR=${_installdir%/}/lib/" "PLUGINDIR=${_installdir%/}/lib/" "OSD=1" "PIE=1" "SSE=SSE2")
 
 pkgver() {
   cd "$srcdir/mupen64plus-core"
@@ -80,15 +80,16 @@ pkgver() {
 prepare() {
   cd "$srcdir"
 
-  for component in "${_3p_components[@]}"
-  do
-    cd "$srcdir/${component}"
-    if [[ -d build ]]; then
-      rm -rf build
+  local component
+  for component in "${_3p_components[@]}"; do
+    cd "$srcdir/${component}" || exit
+    if [[ -d ./build ]]; then
+      rm -rf ./build
     fi
-    mkdir build
+    mkdir ./build
   done
 
+  local config_version
   config_version=$(grep -oP '(?<=CONFIG_VERSION_CURRENT ).+?(?=U)' "$srcdir/video-gliden64/src/Config.h")
   echo "${config_version}" > "$srcdir/video-gliden64/GLideN64_config_version.ini"
 }
@@ -96,10 +97,9 @@ prepare() {
 build() {
   cd "$srcdir"
 
-  for component in "${_m64p_components[@]}"
-  do
+  for component in "${_m64p_components[@]}"; do
     cd "$srcdir"
-    printf '%s\n' "  -> Building component 'mupen64plus-${component}'..."
+    printf '%s\n' "  -> Building Component 'mupen64plus-${component}'..."
     make -C "mupen64plus-${component}/projects/unix" all "${_parameters[@]}" OPTFLAGS="${CFLAGS} -O3 -flto"
   done
 
@@ -107,7 +107,8 @@ build() {
   cd "$srcdir/video-angrylion/build"
 
   cmake .. \
-    -DCMAKE_INSTALL_PREFIX="${_installdir%/}"
+    -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON
   make
 
   ##Build GLideN64 Plugin
@@ -117,6 +118,7 @@ build() {
 
   cmake ../src \
     -DCMAKE_INSTALL_PREFIX="${_installdir%/}" \
+    -DCMAKE_BUILD_RPATH_USE_ORIGIN=ON \
     -DMUPENPLUSAPI=ON \
     -DVEC4_OPT=ON \
     -DX86_OPT=ON \
@@ -130,22 +132,22 @@ build() {
 package() {
   cd "$srcdir"
 
-  for component in ${_m64p_components[@]}
-  do
-    printf '%s\n' "  -> Installing component '${component}'..."
+  local component
+  for component in ${_m64p_components[@]}; do
+    printf '%s\n' "  -> Installing Component '${component}'..."
     make -C "mupen64plus-${component}/projects/unix" DESTDIR="${pkgdir}" "${_parameters[@]}" OPTFLAGS="${CFLAGS} -O3 -flto" install
   done
 
   ##Install Angrylion Plugin
   cd "$srcdir/video-angrylion/build"
 
-  install -Dm644 ./mupen64plus-video-angrylion-plus.so -t "${pkgdir}${_installdir%/}/lib/mupen64plus"
+  install -Dm644 ./mupen64plus-video-angrylion-plus.so -t "${pkgdir}${_installdir%/}/lib"
 
   ##Install GLideN64 Plugin
   cd "$srcdir/video-gliden64/build/plugin/Release"
 
-  install -Dm644 ./mupen64plus-video-GLideN64.so -t "${pkgdir}${_installdir%/}/lib/mupen64plus"
-  install -Dm755 ../../../ini/{GLideN64.ini,GLideN64.custom.ini} -t "${pkgdir}${_installdir%/}/share/mupen64plus"
-  install -Dm755 ../../../GLideN64_config_version.ini -t "${pkgdir}${_installdir%/}/share/mupen64plus"
+  install -Dm644 ./mupen64plus-video-GLideN64.so -t "${pkgdir}${_installdir%/}/lib"
+  install -Dm644 ../../../ini/{GLideN64.ini,GLideN64.custom.ini} -t "${pkgdir}${_installdir%/}/share"
+  install -Dm644 ../../../GLideN64_config_version.ini -t "${pkgdir}${_installdir%/}/share"
 }
 

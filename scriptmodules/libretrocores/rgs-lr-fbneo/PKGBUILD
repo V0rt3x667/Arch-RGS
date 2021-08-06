@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-lr-fbneo
-pkgver=11577
+pkgver=1.0.0.02
 pkgrel=1
 pkgdesc="Libretro Core - Final Burn Neo"
 arch=('x86_64')
@@ -8,19 +8,16 @@ url="https://neo-source.com"
 license=('custom:Non-Commercial')
 depends=('gcc-libs')
 makedepends=('git')
-source=("$pkgname::git+https://github.com/libretro/FBNeo")
+source=("$pkgname::git+https://github.com/libretro/FBNeo#tag=v$pkgver")
 sha256sums=('SKIP')
 _installdir="/opt/archrgs/libretrocores/$pkgname"
 _licencedir="/usr/share/licenses/$pkgname"
 
-pkgver() {
-  cd "$pkgname"
-
-  git rev-list --count HEAD
-}
-
 build() {
   cd "$pkgname/src/burner/libretro"
+
+  export CC="clang" CXX="clang++"
+  export CXXFLAGS+=" -fcommon -ffile-prefix-map=\"$PWD\"=."
 
   make USE_X64_DRC=1
 }

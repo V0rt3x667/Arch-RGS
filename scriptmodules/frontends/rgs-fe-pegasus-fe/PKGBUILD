@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l at outlook dot com>
 pkgname=rgs-fe-pegasus-fe
-pkgver=alpha14.r62.74f285fe
+pkgver=alpha15.r1.4be7c848
 pkgrel=1
 pkgdesc="Graphical Front-End for Launching Emulators"
 arch=('x86_64')

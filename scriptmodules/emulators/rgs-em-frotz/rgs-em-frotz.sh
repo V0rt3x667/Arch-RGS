@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-frotz"
 archrgs_module_desc="Frotz - Interpreter for Infocom & Z-Machine Games"
-archrgs_module_help="ROM Extensions: .dat .zip .z1 .z2 .z3 .z4 .z5 .z6 .z7 .z8\n\nCopy your Infocom games to $romdir/zmachine"
+archrgs_module_help="ROM Extensions: .dat .zip .z1 .z2 .z3 .z4 .z5 .z6 .z7 .z8\n\nCopy Your Infocom Games to $romdir/zmachine"
 archrgs_module_licence="GPL2 https://gitlab.com/DavidGriffith/frotz/raw/master/COPYING"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -38,7 +38,7 @@ function game_data_rgs-em-frotz() {
 function configure_rgs-em-frotz() {
   mkRomDir "zmachine"
 
-  moveConfigDir "$home/.config/frotzrc" "$md_conf_root/zmachine/frotz"
+  moveConfigDir "$home/.config/frotzrc" "$md_conf_root/zmachine"
 
   ##CON: Stop runcommand From Redirecting stdout to Log
   addEmulator 1 "$md_id" "zmachine" "CON:pushd $romdir/zmachine; $md_inst/bin/sfrotz -F %ROM%; popd"

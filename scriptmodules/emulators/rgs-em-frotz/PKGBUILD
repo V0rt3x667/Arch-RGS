@@ -12,7 +12,7 @@ depends=(
   'sdl2_mixer'
 )
 source=("https://gitlab.com/DavidGriffith/frotz/-/archive/$pkgver/frotz-$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('ed288b2ddad6c100f7ad7cb6ee8c867053d75144e96160b5ba00abb8969cdf30')
 _installdir=/opt/archrgs/emulators/$pkgname
 
 build() {

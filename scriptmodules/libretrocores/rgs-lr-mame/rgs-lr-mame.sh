@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-mame"
 archrgs_module_desc="MAME (Latest) Libretro Core"
-archrgs_module_help="ROM Extension: .zip\n\nCopy your MAME roms to either $romdir/mame-libretro or\n$romdir/arcade"
+archrgs_module_help="ROM Extension: .zip\n\nCopy Your MAME ROMs to either $romdir/mame-libretro or\n$romdir/arcade"
 archrgs_module_licence="MAME https://raw.githubusercontent.com/libretro/mame/master/COPYING"
 archrgs_module_section="libretrocores"
 

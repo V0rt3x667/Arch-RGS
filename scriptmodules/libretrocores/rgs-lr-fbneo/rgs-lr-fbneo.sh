@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-fbneo"
 archrgs_module_desc="FinalBurn Neo Libretro Core"
-archrgs_module_help="Previously called rgs-lr-fba-next and fbalpha\nROM Extension: .zip\n\nCopy your FBA roms to\n$romdir/fba or\n$romdir/neogeo or\n$romdir/arcade\n\nFor NeoGeo games the neogeo.zip BIOS is required and must be placed in the same directory as your FBA roms."
+archrgs_module_help="ROM Extension: .zip\n\nCopy Your FBA ROMs to\n$romdir/fba or\n$romdir/neogeo or\n$romdir/arcade\n\nFor NeoGeo Games the neogeo.zip BIOS is required and must be placed in the same directory as your FBA ROMs."
 archrgs_module_licence="NONCOM https://raw.githubusercontent.com/libretro/FBNeo/master/src/license.txt"
 archrgs_module_section="libretrocores"
 
@@ -40,6 +40,7 @@ function configure_rgs-lr-fbneo() {
   addEmulator 0 "$md_id-nes" "nes" "$md_inst/fbneo_libretro.so --subsystem nes"
   addEmulator 0 "$md_id-ngp" "ngp" "$md_inst/fbneo_libretro.so --subsystem ngp"
   addEmulator 0 "$md_id-ngpc" "ngpc" "$md_inst/fbneo_libretro.so --subsystem ngp"
+  addEmulator 0 "$md_id-chf" "channelf" "$md_inst/fbneo_libretro.so --subsystem chf"
 
   addSystem "arcade"
   addSystem "neogeo"
@@ -57,6 +58,7 @@ function configure_rgs-lr-fbneo() {
   addSystem "nes"
   addSystem "ngp"
   addSystem "ngpc"
+  addSystem "channelf"
 
   [[ "$md_mode" == "remove" ]] && return
 
@@ -66,8 +68,11 @@ function configure_rgs-lr-fbneo() {
     ensureSystemretroconfig "$dir"
   done
 
-  ##Create Samples Directory
+  ##Create Directories For All Support Files
   mkUserDir "$biosdir/fbneo"
+  mkUserDir "$biosdir/fbneo/blend"
+  mkUserDir "$biosdir/fbneo/cheats"
+  mkUserDir "$biosdir/fbneo/patched"
   mkUserDir "$biosdir/fbneo/samples"
 
   ##Copy hiscore.dat

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-pt-love"
 archrgs_module_desc="Love - 2D Game Framework for Lua"
-archrgs_module_help="Copy your Love games (.love) to $romdir/love"
+archrgs_module_help="Copy Your Love Games (.love) to $romdir/love"
 archrgs_module_licence="ZLIB https://raw.githubusercontent.com/love2d/love/master/license.txt"
 archrgs_module_section="ports"
 

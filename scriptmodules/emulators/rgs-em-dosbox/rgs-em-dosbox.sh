@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-dosbox"
 archrgs_module_desc="DOS Emulator"
-archrgs_module_help="ROM Extensions: .bat .com .exe .sh .conf\n\nCopy your DOS games to $romdir/pc"
+archrgs_module_help="ROM Extensions: .bat .com .exe .sh .conf\n\nCopy Your DOS Games to $romdir/pc"
 archrgs_module_licence="GPL2 https://sourceforge.net/p/dosbox/code-0/HEAD/tree/dosbox/trunk/COPYING"
 archrgs_module_section="emulators"
 

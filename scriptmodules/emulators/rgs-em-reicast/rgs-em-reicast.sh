@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-reicast"
 archrgs_module_desc="Reicast - Sega Dreamcast Emulator"
-archrgs_module_help="ROM Extensions: .cdi .chd .gdi\n\nCopy your Dreamcast roms to $romdir/dreamcast\n\nCopy the required BIOS files dc_boot.bin and dc_flash.bin to $biosdir/dc"
+archrgs_module_help="ROM Extensions: .cdi .chd .gdi\n\nCopy Your Dreamcast ROMs to $romdir/dreamcast\n\nCopy the required BIOS files dc_boot.bin and dc_flash.bin to $biosdir/dc"
 archrgs_module_licence="BSD & GPL2 https://raw.githubusercontent.com/reicast/reicast-emulator/master/LICENSE"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -23,7 +23,7 @@ function configure_rgs-em-reicast() {
   mkRomDir "dreamcast"
 
   moveConfigDir "$home/.config/reicast" "$md_conf_root/dreamcast"
-  moveConfigDir "$biosdir/dc/" "$md_conf_root/dreamcast/data"
+  moveConfigDir "$biosdir/dc" "$md_conf_root/dreamcast/data"
 
   addEmulator 1 "$md_id" "dreamcast" "$md_inst/bin/reicast.sh ${params[*]}"
   addSystem "dreamcast"
@@ -31,14 +31,14 @@ function configure_rgs-em-reicast() {
 
   [[ "$md_mode" == "remove" ]] && rm "$romdir/dreamcast/+Start Reicast.sh" && return
 
-  install -Dm755 "$md_inst"/share/reicast/mappings/*.cfg -t "$md_conf_root/dreamcast/mappings"
+  cp -r "$md_inst/share/rgs-em-reicast/mappings" "$md_conf_root/dreamcast"
   chown -R "$user:$user" "$md_conf_root/dreamcast"
 
   ##Copy Hotkey Remapping Start Script
-  install -Dm755 "$md_data/reicast.sh" -t "$md_inst/bin"
+  cp "$md_data/reicast.sh" "$md_inst/bin"
 
   cat > "$romdir/dreamcast/+Start Reicast.sh" << _EOF_
-#!/usr/bin/env bash
+#!/usr/bin/bash
   $md_inst/bin/reicast.sh
 _EOF_
   chmod a+x "$romdir/dreamcast/+Start Reicast.sh"

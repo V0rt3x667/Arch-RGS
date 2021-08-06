@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-beetle-lynx"
 archrgs_module_desc="Atari Lynx Libretro Core"
-archrgs_module_help="ROM Extensions: .lnx .zip\n\nCopy your Atari Lynx roms to $romdir/atarilynx\n\nCopy the required BIOS file lynxboot.img to $biosdir"
+archrgs_module_help="ROM Extensions: .lnx .zip\n\nCopy Your Atari Lynx ROMs to $romdir/atarilynx\n\nCopy the required BIOS file lynxboot.img to $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/beetle-lynx-libretro/master/COPYING"
 archrgs_module_section="libretrocores"
 

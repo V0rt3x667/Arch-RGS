@@ -29,27 +29,28 @@ function archrgs_logInit() {
 }
 
 function archrgs_logStart() {
-  echo -e "Log started at: $(date -d @"$time_start")\n"
-  echo "Arch-RGS Setup version: $__version ($(git -C "$scriptdir" log -1 --pretty=format:%h))"
+  echo -e "Log Started At: $(date -d @"$time_start")\n"
+  echo "Arch-RGS Setup Version: $__version ($(git -C "$scriptdir" log -1 --pretty=format:%h))"
   echo "System: $__platform $__os_desc - $(uname -a)"
 }
 
 function archrgs_logEnd() {
   time_end=$(date +"%s")
   echo
-  echo "Log ended at: $(date -d @"$time_end")"
+  echo "Log Ended At: $(date -d @"$time_end")"
   date_total=$((time_end - time_start))
   local hours=$((date_total / 60 / 60 % 24))
   local mins=$((date_total / 60 % 60))
   local secs=$((date_total % 60))
-  echo "Total running time: $hours hours, $mins mins, $secs secs"
+  echo "Total Running Time: $hours Hours, $mins Mins, $secs Secs"
 }
 
 function archrgs_printInfo() {
+  local log="$1"
   reset
   if [[ ${#__ERRMSGS[@]} -gt 0 ]]; then
     printMsgs "dialog" "${__ERRMSGS[@]}"
-    printMsgs "dialog" "Please see $1 for more in depth information regarding the errors."
+    [[ -n "$log" ]] && printMsgs "dialog" "Please See $log For More In-Depth Information Regarding the Errors."
   fi
   if [[ ${#__INFMSGS[@]} -gt 0 ]]; then
     printMsgs "dialog" "${__INFMSGS[@]}"
@@ -109,9 +110,9 @@ function post_update_setup() {
   } &> >(_setup_gzip_log "$logfilename")
   archrgs_printInfo "$logfilename"
 
-  printMsgs "dialog" "NOTICE: The Arch-RGS setup script is available to download for free from:\n\nhttps://gitlab.com/arch-rgs/arch-rgs.git.\n\nArch-RGS includes software that has non commercial licences. Selling or including Arch-RGS with your commercial product is not allowed.\n\nNo copyrighted games are included with Arch-RGS.\n\nIf you have been sold this software, you can report it by emailing archrgs.project@gmail.com."
+  printMsgs "dialog" "NOTICE: The Arch-RGS Setup Script Is Available To Download For Free From:\n\nhttps://gitlab.com/arch-rgs/arch-rgs.git.\n\nArch-RGS Includes Software That Has Non Commercial Licences. Selling Or Including Arch-RGS With Your Commercial Product Is Not Allowed.\n\nNo Copyrighted Games Are Included With Arch-RGS.\n\nIf You Have Been Sold This Software, You Can Report It By Emailing archrgs.project@gmail.com."
 
-  ##RETURN TO SET RETURN FUNCTION
+  ##Return To Set Return Function
   "${return_func[@]}"
 }
 
@@ -132,11 +133,11 @@ function package_setup() {
     fi
 
     if archrgs_hasPackage "$idx"; then
-      options+=(I "$install from package")
+      options+=(I "$install From Package")
     fi
 
     if fnExists "sources_${md_id}"; then
-      options+=(S "$install from source")
+      options+=(S "$install From Source")
     fi
 
     if archrgs_isInstalled "$idx"; then
@@ -147,7 +148,7 @@ function package_setup() {
     fi
 
     if [[ -d "$__builddir/$md_id" ]]; then
-      options+=(Z "Clean source folder")
+      options+=(Z "Clean Source Folder")
     fi
 
     local help="${__mod_desc[$idx]}\n\n${__mod_help[$idx]}"
@@ -155,7 +156,7 @@ function package_setup() {
       options+=(H "Package Help")
     fi
 
-    cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Choose an option for ${__mod_id[$idx]}\n$status" 22 76 16)
+    cmd=(dialog --backtitle "$__backtitle" --cancel-label "Back" --menu "Choose An Option For ${__mod_id[$idx]}\n$status" 22 76 16)
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 
     local logfilename
@@ -192,8 +193,8 @@ function package_setup() {
       archrgs_printInfo "$logfilename"
       ;;
     X)
-      local text="Are you sure you want to remove $md_id?"
-      [[ "${__mod_section[$idx]}" == "core" ]] && text+="\n\nWARNING - core packages are needed for Arch-RGS to function!"
+      local text="Are You Sure You Want to Remove $md_id?"
+      [[ "${__mod_section[$idx]}" == "core" ]] && text+="\n\nWARNING! - Core Packages Are Needed For Arch-RGS to Function!"
       dialog --defaultno --yesno "$text" 22 76 >/dev/tty 2>&1 || continue
       archrgs_logInit
       {
@@ -226,8 +227,8 @@ function section_gui_setup() {
     local options=()
 
     options+=(
-      I "Install/Update all ${__sections[$section]} packages" "I This will install all ${__sections[$section]} packages via makepkg."
-      X "Remove all ${__sections[$section]} packages" "X This will remove all $section packages."
+      I "Install/Update All ${__sections[$section]} packages" "I This Will Install All ${__sections[$section]} Packages Via makepkg."
+      X "Remove All ${__sections[$section]} packages" "X This Will Remove All $section Packages."
     )
 
     local idx
@@ -245,11 +246,11 @@ function section_gui_setup() {
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
     [[ -z "$choice" ]] && break
     if [[ "${choice[*]:0:4}" == "HELP" ]]; then
-      ##REMOVE HELP
+      ##Remove Help
       choice="${choice[*]:5}"
-      ##GET ID OF MENU ITEM
+      ##Get Id Of Menu Item
       default="${choice/%\ */}"
-      ##REMOVE ID
+      ##Remove Id
       choice="${choice#* }"
       printMsgs "dialog" "$choice"
       continue
@@ -260,7 +261,7 @@ function section_gui_setup() {
     local logfilename
     case "$choice" in
     I)
-      dialog --defaultno --yesno "Are you sure you want to install/update all $section packages via makepkg?" 22 76 >/dev/tty 2>&1 || continue
+      dialog --defaultno --yesno "Are You Sure You Want to Install/Update All $section Packages Via makepkg?" 22 76 >/dev/tty 2>&1 || continue
       archrgs_logInit
       {
         archrgs_logStart
@@ -272,7 +273,7 @@ function section_gui_setup() {
       archrgs_printInfo "$logfilename"
       ;;
     S)
-      dialog --defaultno --yesno "Are you sure you want to install/update all $section packages from source?" 22 76 >/dev/tty 2>&1 || continue
+      dialog --defaultno --yesno "Are You Sure You Want to Install/Update All $section Packages From Source?" 22 76 >/dev/tty 2>&1 || continue
       archrgs_logInit
       {
         archrgs_logStart
@@ -286,8 +287,8 @@ function section_gui_setup() {
       ;;
 
     X)
-      local text="Are you sure you want to remove all $section packages?"
-      [[ "$section" == "core" ]] && text+="\n\nWARNING - core packages are needed for Arch-RGS to function!"
+      local text="Are You Sure You Want to Remove All $section Packages?"
+      [[ "$section" == "core" ]] && text+="\n\nWARNING! - Core Packages Are Needed For Arch-RGS to Function!"
       dialog --defaultno --yesno "$text" 22 76 >/dev/tty 2>&1 || continue
       archrgs_logInit
       {
@@ -313,7 +314,7 @@ function config_gui_setup() {
     local options=()
     local idx
     for idx in "${__mod_idx[@]}"; do
-      ##SHOW ALL CONFIGURATION MODULES AND ANY INSTALLED PACKAGES WITH A GUI FUNCTION
+      ##Show All Configuration Modules and Any Installed Packages With a GUI Function
       if [[ "${__mod_section[idx]}" == "config" ]] || archrgs_isInstalled "$idx" && fnExists "gui_${__mod_id[idx]}"; then
         options+=("$idx" "${__mod_id[$idx]}  - ${__mod_desc[$idx]}" "$idx ${__mod_desc[$idx]}")
       fi
@@ -365,15 +366,15 @@ function update_packages_setup() {
 function update_packages_gui_setup() {
   local update="$*"
   if [[ "$update" != "update" ]]; then
-    dialog --defaultno --yesno "Are you sure you want to update installed packages?" 22 76 >/dev/tty 2>&1 || return 1
+    dialog --defaultno --yesno "Are You Sure You Want To Update Installed Packages?" 22 76 >/dev/tty 2>&1 || return 1
     updatescript_setup || return 1
-    ##RESTART AT POST_UPDATE AND THEN CALL "update_packages_gui_setup update" AFTERWARDS
+    ##Restart At Post_update And Then Call "update_packages_gui_setup update" Afterwards
     joy2keyStop
     exec "$scriptdir/archrgs_packages.sh" setup post_update update_packages_gui_setup update
   fi
 
   local update_os=0
-  dialog --yesno "Would you like to update Arch Linux?" 22 76 >/dev/tty 2>&1 && update_os=1
+  dialog --yesno "Would You Like To Update Arch Linux?" 22 76 >/dev/tty 2>&1 && update_os=1
 
   clear
 
@@ -387,7 +388,7 @@ function update_packages_gui_setup() {
   } &> >(_setup_gzip_log "$logfilename")
 
   archrgs_printInfo "$logfilename"
-  printMsgs "dialog" "Installed packages have been updated."
+  printMsgs "dialog" "Installed Packages Have Been Updated."
   gui_setup "$@"
 }
 
@@ -405,7 +406,7 @@ function packages_gui_setup() {
   local options=()
 
   for section in core emulators libretrocores ports frontends driver exp; do
-    options+=("$section" "Manage ${__sections[$section]} packages" "$section Choose to install/update/configure packages from the ${__sections[$section]}")
+    options+=("$section" "Manage ${__sections[$section]} Packages" "$section Choose To Install/Update/Configure Packages From The ${__sections[$section]}")
   done
 
   local cmd
@@ -428,16 +429,16 @@ function packages_gui_setup() {
 }
 
 function uninstall_setup() {
-  dialog --defaultno --yesno "Are you sure you want to uninstall Arch-RGS?" 22 76 >/dev/tty 2>&1 || return 0
-  dialog --defaultno --yesno "Are you REALLY sure you want to uninstall Arch-RGS?\n\n$rootdir will be removed - this includes configuration files for all Arch-RGS components." 22 76 >/dev/tty 2>&1 || return 0
+  dialog --defaultno --yesno "Are You Sure You Want To Uninstall Arch-RGS?" 22 76 >/dev/tty 2>&1 || return 0
+  dialog --defaultno --yesno "Are You REALLY Sure You Want To Uninstall Arch-RGS?\n\n$rootdir will be removed - this includes configuration files for all Arch-RGS components." 22 76 >/dev/tty 2>&1 || return 0
   clear
   printHeading "Uninstalling Arch-RGS"
   for idx in "${__mod_idx[@]}"; do
     archrgs_isInstalled "$idx" && archrgs_callModule "$idx" remove
   done
   rm -rfv "$rootdir"
-  dialog --defaultno --yesno "Do you want to remove all the files from $datadir - this includes all your installed ROMs, BIOS files and custom splashscreens." 22 76 >/dev/tty 2>&1 && rm -rfv "$datadir"
-  printMsgs "dialog" "Arch-RGS has been uninstalled."
+  dialog --defaultno --yesno "Do You Want To Remove All The Files From $datadir - This Includes All Your Installed ROMs, BIOS Files And Custom Splashscreens." 22 76 >/dev/tty 2>&1 && rm -rfv "$datadir"
+  printMsgs "dialog" "Arch-RGS Has Been Uninstalled."
 }
 
 function reboot_setup() {
@@ -445,10 +446,10 @@ function reboot_setup() {
   reboot
 }
 
-##ARCHRGS-SETUP MAIN MENU
+##Arch-RGS Setup Main Menu
 function gui_setup() {
-  depends_setup
   joy2keyStart
+  depends_setup
   local commit
   local default
   while true; do
@@ -456,19 +457,19 @@ function gui_setup() {
 
     cmd=(dialog --backtitle "$__backtitle" --title "Arch-RGS Setup Script" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version\nLast Commit: $commit" 22 76 16)
     options=(
-      I "Basic Install" "I This will install all packages from Core which gives a basic Arch-RGS install. Further packages can then be installed later from the Emulators, Ports, Libretrocores and Experimental sections. Packages will be built from source and installed via makepkg."
+      I "Basic Install" "I This Will Install All Packages From Core Which Gives A Basic Arch-RGS Install. Further Packages Can Then Be Installed Later From The Emulators, Ports, Libretrocores and Experimental sections. Packages Will Be Built From Source And Installed Via makepkg."
 
-      U "Update" "U Updates Arch-RGS Setup and all currently installed packages. Will also update OS packages. Packages will be built and installed via makepkg."
+      U "Update" "U Updates Arch-RGS Setup And All Currently Installed Packages. Will Also Update OS Packages. Packages Will Be Built And Installed Via makepkg."
 
-      P "Manage Packages" "P Install/Remove and Configure the various components of Arch-RGS, including emulators, ports, and controller drivers."
+      P "Manage Packages" "P Install/Remove And Configure The Various Components Of Arch-RGS, Including Emulators, Ports, And Controller Drivers."
 
-      C "Configuration & Tools" "C Configuration and Tools. Any packages you have installed that have additional configuration options will also appear here."
+      C "Configuration & Tools" "C Configuration and Tools. Any Packages You Have Installed That Have Additional Configuration Options Will Also Appear Here."
 
-      S "Update Arch-RGS Setup script" "S Update this Arch-RGS Setup script. This will update this main management script only, but will not update any software packages. To update packages use the 'Update' option from the main menu, which will also update the Arch-RGS Setup script."
+      S "Update Arch-RGS Setup Script" "S Update the Arch-RGS Setup Script. This Will Update The Main Management Script Only, But Will Not Update Any Software Packages. To Update Packages Use The 'Update' Option From The Main Menu, Which Will Also Update The Arch-RGS Setup Script."
 
-      X "Uninstall Arch-RGS" "X Uninstall Arch-RGS completely."
+      X "Uninstall Arch-RGS" "X Uninstall Arch-RGS Completely."
 
-      R "Perform reboot" "R Reboot your machine."
+      R "Perform Reboot" "R Reboot Your Machine."
     )
 
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
@@ -485,7 +486,7 @@ function gui_setup() {
 
     case "$choice" in
     I)
-      dialog --defaultno --yesno "Are you sure you want to do a basic install?\n\nThis will install all packages from the 'Core' package section." 22 76 >/dev/tty 2>&1 || continue
+      dialog --defaultno --yesno "Are You Sure You Want To Do A Basic Install?\n\nThis Will Install All Packages From The 'Core' Package Section." 22 76 >/dev/tty 2>&1 || continue
       clear
       local logfilename
       archrgs_logInit
@@ -506,7 +507,7 @@ function gui_setup() {
       config_gui_setup
       ;;
     S)
-      dialog --defaultno --yesno "Are you sure you want to update the Arch-RGS Setup script ?" 22 76 >/dev/tty 2>&1 || continue
+      dialog --defaultno --yesno "Are You Sure You Want To Update The Arch-RGS Setup Script ?" 22 76 >/dev/tty 2>&1 || continue
       if updatescript_setup; then
         joy2keyStop
         exec "$scriptdir/archrgs_packages.sh" setup post_update gui_setup
@@ -521,7 +522,7 @@ function gui_setup() {
       archrgs_printInfo "$logfilename"
       ;;
     R)
-      dialog --defaultno --yesno "Are you sure you want to reboot?\n\nNote that if you reboot when Emulation Station is running, you will lose any metadata changes." 22 76 >/dev/tty 2>&1 || continue
+      dialog --defaultno --yesno "Are You Sure You Want To Reboot?\n\nNote That If You Reboot When Emulation Station Is Running, You Will Lose Any Metadata Changes." 22 76 >/dev/tty 2>&1 || continue
       reboot_setup
       ;;
     esac

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-gearsystem"
 archrgs_module_desc="Sega Master System, Game Gear & SG-1000 Libretro Core"
-archrgs_module_help="ROM Extensions: .gg .sg .sms .bin .zip\nCopy your Game Gear roms to $romdir/gamegear\nMasterSystem roms to $romdir/mastersystem\nSG-1000 roms to $romdir/sg-1000"
+archrgs_module_help="ROM Extensions: .gg .sg .sms .bin .zip\nCopy Your Game Gear ROMs to $romdir/gamegear\nMasterSystem ROMs to $romdir/mastersystem\nSG-1000 ROMs to $romdir/sg-1000"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/drhelius/Gearsystem/master/LICENSE"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-nestopia"
 archrgs_module_desc="Nintendo Entertainment System Libretro Core"
-archrgs_module_help="ROM Extensions: .nes .zip\n\nCopy your NES roms to $romdir/nes\n\nFor the Famicom Disk System copy your roms to $romdir/fds\n\nFor the Famicom Disk System copy the required BIOS file disksys.rom to $biosdir"
+archrgs_module_help="ROM Extensions: .nes .zip\n\nCopy Your NES ROMs to $romdir/nes\n\nFor the Famicom Disk System copy your ROMs to $romdir/fds\n\nFor the Famicom Disk System copy the required BIOS file disksys.rom to $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/nestopia/master/COPYING"
 archrgs_module_section="libretrocores"
 

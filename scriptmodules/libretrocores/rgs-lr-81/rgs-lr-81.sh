@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-81"
 archrgs_module_desc="Sinclair ZX81 Libretro Core"
-archrgs_module_help="ROM Extensions: .p .tzx .t81\n\nCopy your ZX81 roms to $romdir/zx81"
+archrgs_module_help="ROM Extensions: .p .tzx .t81\n\nCopy Your ZX81 ROMs to $romdir/zx81"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/81-libretro/master/LICENSE"
 archrgs_module_section="libretrocores"
 

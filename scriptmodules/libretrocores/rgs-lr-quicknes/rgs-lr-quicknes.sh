@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-quicknes"
 archrgs_module_desc="Nintendo Entertainment System Libretro Core"
-archrgs_module_help="ROM Extensions: .nes .zip\n\nCopy your NES roms to $romdir/nes"
+archrgs_module_help="ROM Extensions: .nes .zip\n\nCopy Your NES ROMs to $romdir/nes"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/QuickNES_Core/master/LICENSE"
 archrgs_module_section="libretrocores"
 

@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-play"
 archrgs_module_desc="Sony PlayStation 2 Libretro Core"
-archrgs_module_help="ROM Extensions: .iso .cue\n\nCopy your PlayStation 2 roms to $romdir/ps2"
+archrgs_module_help="ROM Extensions: .iso .cue\n\nCopy Your PlayStation 2 ROMs to $romdir/ps2"
 archrgs_module_licence="MIT https://raw.githubusercontent.com/jpd002/Play-/master/License.txt"
 archrgs_module_section="libretrocores"
 

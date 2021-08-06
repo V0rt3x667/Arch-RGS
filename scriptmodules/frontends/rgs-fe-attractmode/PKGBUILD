@@ -25,15 +25,15 @@ sha256sums=(
 _installdir="/opt/archrgs/frontends/$pkgname"
 
 prepare() {
-  cd attract-"$pkgver"
+  cd "attract-$pkgver"
 
   sed -e "s|\prefix=/usr/local|prefix=${_installdir}|g" -i ./Makefile
-  ##FIX LACKS FULL RELOC
+  ##Fix Lacks Full Reloc
   sed -e "s|LIBS += -ldl -lGL|LIBS += -ldl -lGL -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now|g" -i ./Makefile
 }
 
 build() {
-  cd attract-"$pkgver"
+  cd "attract-$pkgver"
 
   make \
     FE_HWACCEL_VAAPI=1 \
@@ -41,7 +41,7 @@ build() {
 }
 
 package() {
-  cd attract-"$pkgver"
+  cd "attract-$pkgver"
 
   make DESTDIR="${pkgdir}" install
 

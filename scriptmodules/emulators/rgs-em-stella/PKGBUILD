@@ -11,19 +11,19 @@ depends=(
   'sdl2'
 )
 makedepends=('glu')
-source=("$pkgname::git+https://github.com/stella-emu/stella#tag=$pkgver")
-sha256sums=('SKIP')
+source=("https://github.com/stella-emu/stella/releases/download/$pkgver/stella-$pkgver-src.tar.xz")
+sha256sums=('b49d5e5a5aa872e1f4b6f24eabd72304abdd577801d6ec349760c73b99e7f14d')
 _installdir="/opt/archrgs/emulators/$pkgname"
 
 build() {
-  cd "$pkgname"
+  cd "stella-$pkgver"
 
   ./configure --prefix="${_installdir%/}"
   make
 }
 
 package() {
-  cd "$pkgname"
+  cd "stella-$pkgver"
 
   make DESTDIR="${pkgdir}" install
 }

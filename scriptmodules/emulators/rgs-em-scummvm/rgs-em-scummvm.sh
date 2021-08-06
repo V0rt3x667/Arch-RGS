@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-scummvm"
 archrgs_module_desc="ScummVM - Virtual Machine for Graphical Point-and-Click Adventure Games"
-archrgs_module_help="Copy your ScummVM games to $romdir/scummvm"
+archrgs_module_help="Copy Your ScummVM Games to $romdir/scummvm"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/scummvm/scummvm/master/COPYING"
 archrgs_module_section="emulators"
 

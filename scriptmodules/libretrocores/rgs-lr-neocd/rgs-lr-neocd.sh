@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-neocd"
 archrgs_module_desc="Neo Geo CD Libretro Core"
-archrgs_module_help="ROM Extension: .chd .cue\n\nCopy your roms to\n$romdir/neogeo\n\nYou will need a minimum of two BIOS files (eg. ng-lo.rom, uni-bioscd.rom) which should be copied to $biosdir/neocd"
+archrgs_module_help="ROM Extension: .chd .cue\n\nCopy Your ROMs to\n$romdir/neogeo\n\nYou will need a minimum of two BIOS files (eg. ng-lo.rom, uni-bioscd.rom) which should be copied to $biosdir/neocd"
 archrgs_module_licence="GPL3 https://raw.githubusercontent.com/libretro/neocd_libretro/master/LICENSE.md"
 archrgs_module_section="libretrocores"
 

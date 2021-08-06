@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-em-citra"
 archrgs_module_desc="Nintendo 3DS Emulator"
-archrgs_module_help="ROM Extensions: .3ds .cci .cxi .app .3dsx\n\nCopy your Nintendo 3DS roms to $romdir/3ds"
+archrgs_module_help="ROM Extensions: .3ds .cci .cxi .app .3dsx\n\nCopy Your Nintendo 3DS Games to $romdir/3ds"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/citra-emu/citra/master/license.txt"
 archrgs_module_section="emulators"
 archrgs_module_flags="x86_64"
@@ -22,8 +22,8 @@ function remove_rgs-em-citra() {
 function configure_rgs-em-citra() {
   mkRomDir "3ds"
 
-  addEmulator 1 "$md_id" "3ds" "$md_inst/bin/citra %ROM%"
-  addEmulator 0 "$md_id-gui" "3ds" "$md_inst/bin/citra-qt %ROM%"
+  addEmulator 1 "$md_id" "3ds" "$md_inst/bin/citra -f %ROM%"
+  addEmulator 0 "$md_id-gui" "3ds" "$md_inst/bin/citra-qt -f %ROM%"
 
   addSystem "3ds"
 }

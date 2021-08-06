@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-puae"
 archrgs_module_desc="Commodore Amiga 500, 500+, 600, 1200, 4000, CDTV & CD32 Libretro Core"
-archrgs_module_help="ROM Extensions: .adf .uae\n\nCopy your roms to $romdir/amiga and create configs as .uae"
+archrgs_module_help="ROM Extensions: .adf .uae\n\nCopy Your ROMs to $romdir/amiga and create configs as .uae"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/PUAE/master/COPYING"
 archrgs_module_section="libretrocores"
 

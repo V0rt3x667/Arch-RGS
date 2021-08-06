@@ -14,9 +14,7 @@ function install_bin_rgs-sr-skyscraper() {
 }
 
 function remove_rgs-sr-skyscraper() {
-  pacmanRemove rgs-sr-skyscraper
-
-  _purge_rgs-sr-skyscraper
+  pacmanRemove rgs-sr-skyscraper && _purge_rgs-sr-skyscraper
 }
 
 ##Get The Location Of The Cached Resources Folder. In V3+ This Changed To 'cache'
@@ -52,9 +50,9 @@ function _clear_platform_rgs-sr-skyscraper() {
   [[ ! -d "$configdir/all/skyscraper/$cache_folder/$platform" ]] && return
 
   if [[ $mode == "vacuum" ]]; then
-    sudo -u "$user" stdbuf -o0 "$md_inst"/bin/Skyscraper --unattend -p "$platform" --cache vacuum
+    sudo -u "$user" stdbuf -o0 "$md_inst/bin/Skyscraper" --flags unattend -p "$platform" --cache vacuum
   else
-    sudo -u "$user" stdbuf -o0 "$md_inst"/bin/Skyscraper --unattend -p "$platform" --cache purge:all
+    sudo -u "$user" stdbuf -o0 "$md_inst/bin/Skyscraper" --flags unattend -p "$platform" --cache purge:all
   fi
   sleep 5
 }
@@ -95,9 +93,9 @@ function _purge_platform_rgs-sr-skyscraper() {
 }
 
 function _get_ver_rgs-sr-skyscraper() {
-    if [[ -f "$md_inst/bin/Skyscraper" ]]; then
-        echo $("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper'  | cut -d' '  -f 3 | tr -d v 2>/dev/null)
-    fi
+  if [[ -f "$md_inst/bin/Skyscraper" ]]; then
+    echo $("$md_inst/bin/Skyscraper" -h | grep 'Running Skyscraper'  | cut -d' '  -f 3 | tr -d v 2>/dev/null)
+  fi
 }
 
 ##List Any Non-Empty Systems Found In The Rom Folder
@@ -168,17 +166,17 @@ function _init_config_rgs-sr-skyscraper() {
   [[ ! -f "$scraper_conf_dir/config.ini" ]] && cp "$md_inst/share/skyscraper/config.ini.example" "$scraper_conf_dir/config.ini"
 
   ##Copy Required Files
-  cp -rf "$md_inst/share/skyscraper/*" "$scraper_conf_dir"
+  cp -rf "$md_inst"/share/skyscraper/* "$scraper_conf_dir"
 
-    ##Create The Import Folders And Add The Sample Files
-    local folder
-    for folder in covers marquees screenshots textual videos wheels; do
-        mkUserDir "$scraper_conf_dir/import/$folder"
-    done
+  ##Create The Import Folders And Add The Sample Files
+  local folder
+  for folder in covers marquees screenshots textual videos wheels; do
+    mkUserDir "$scraper_conf_dir/import/$folder"
+  done
 
-    ##Create The Cache Folder And Add The Sample 'priorities.xml' File To It
-    mkdir -p "$scraper_conf_dir/cache"
-    cp -f "$md_inst/share/skyscraper/priorities.xml.example" "$scraper_conf_dir/cache"
+  ##Create The Cache Folder And Add The Sample 'priorities.xml' File To It
+  mkdir -p "$scraper_conf_dir/cache"
+  cp -f "$md_inst/share/skyscraper/cache/priorities.xml.example" "$scraper_conf_dir/cache"
 }
 
 ##Scrape One System Passed As Parameter
@@ -190,8 +188,8 @@ function _scrape_rgs-sr-skyscraper() {
   iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
   eval "$(_load_config_rgs-sr-skyscraper)"
 
-    local -a params=(-p "$system")
-    local flags="unattend,skipped,"
+  local -a params=(-p "$system")
+  local flags="unattend,skipped,"
 
   [[ "$download_videos" -eq 1 ]] && flags+="videos,"
 
@@ -210,11 +208,13 @@ function _scrape_rgs-sr-skyscraper() {
   [[ "$remove_brackets" -eq 1 ]] && flags+="nobrackets,"
 
   if [[ "$use_rom_folder" -eq 1 ]]; then
+    params+=(-i "$romdir/$system")
     params+=(-g "$romdir/$system")
     params+=(-o "$romdir/$system/media")
-    ##If We'Re Saving To The Rom Folder, Then Use Relative Paths In The Gamelist
+    ##If Saving To The Rom Folder, Then Use Relative Paths In The Gamelist
     flags+="relative,"
   else
+    params+=(-i "$romdir/$system")
     params+=(-g "$home/.emulationstation/gamelists/$system")
     params+=(-o "$home/.emulationstation/downloaded_media/$system")
   fi
@@ -232,11 +232,11 @@ function _scrape_rgs-sr-skyscraper() {
 
   params+=(--flags "$flags")
 
-  ##Trap CTRL+C And Return If Pressed (Rather Than Exiting Arch-Rgs)
+  ##Trap CTRL+C And Return If Pressed (Rather Than Exiting Arch-RGS)
   trap 'trap 2; return 1' INT
-  sudo -u "$user" stdbuf -o0 "$md_inst/bin/Skyscraper" "${params[@]}"
-  echo -e "\nCOMMAND LINE USED:\n $md_inst/bin/Skyscraper" "${params[@]}"
-  sleep 2
+    sudo -u "$user" stdbuf -o0 "$md_inst/bin/Skyscraper" "${params[@]}"
+    echo -e "\nCOMMAND LINE USED:\n $md_inst/bin/Skyscraper" "${params[@]}"
+    sleep 2
   trap 2
 }
 
@@ -309,19 +309,19 @@ function _generate_chosen_rgs-sr-skyscraper() {
 }
 
 function _load_config_rgs-sr-skyscraper() {
-    echo "$(loadModuleConfig \
-        'rom_name=0' \
-        'use_rom_folder=0' \
-        'download_videos=0' \
-        'cache_marquees=1' \
-        'cache_covers=1' \
-        'cache_wheels=1' \
-        'cache_screenshots=1' \
-        'scrape_source=screenscraper' \
-        'remove_brackets=0' \
-        'force_refresh=0' \
-        'only_missing=0'
-    )"
+  echo "$(loadModuleConfig \
+    'rom_name=0' \
+    'use_rom_folder=0' \
+    'download_videos=0' \
+    'cache_marquees=1' \
+    'cache_covers=1' \
+    'cache_wheels=1' \
+    'cache_screenshots=1' \
+    'scrape_source=screenscraper' \
+    'remove_brackets=0' \
+    'force_refresh=0' \
+    'only_missing=0'
+  )"
 }
 
 function _open_editor_rgs-sr-skyscraper() {
@@ -343,7 +343,6 @@ function _gui_advanced_rgs-sr-skyscraper() {
   )
 
   while true; do
-
     local cmd=(dialog --backtitle "$__backtitle" --help-button --colors --no-collapse --default-item "$default" --ok-label "Ok" --cancel-label "Back" --title "Advanced options" --menu "    EXPERT - edit configurations\n" 14 50 5)
     local options=()
 
@@ -386,13 +385,13 @@ function _gui_advanced_rgs-sr-skyscraper() {
 
 function gui_rgs-sr-skyscraper() {
   if pgrep "emulationstatio" >/dev/null; then
-    printMsgs "dialog" "This scraper must not be run while EmulationStation is running or the scraped data will be overwritten.\n\nPlease quit EmulationStation and run Arch-RGS from the terminal:\n\n sudo \$HOME/arch-rgs/archrgs_setup.sh"
+    printMsgs "dialog" "This scraper must not be run while EmulationStation is running or the scraped data will be overwritten.\n\nPlease quit EmulationStation and run Arch-RGS from the terminal."
     return
   fi
 
   iniConfig " = " '"' "$configdir/all/skyscraper.cfg"
   eval "$(_load_config_rgs-sr-skyscraper)"
-  chown "$user":"$user" "$configdir/all/skyscraper.cfg"
+  chown "$user:$user" "$configdir/all/skyscraper.cfg"
 
   local -a s_source
   local -a s_source_names
@@ -422,6 +421,7 @@ function gui_rgs-sr-skyscraper() {
     [11]="Import Folder"
   )
 
+  local ver
   ##Help Strings For This GUI
   help_strings=(
     [1]="Gather resources and cache them for the platforms found in \Zb$romdir\Zn.\nRuns the scraper to download the information and media from the selected gathering source."
@@ -433,9 +433,9 @@ function gui_rgs-sr-skyscraper() {
     [A]="Advanced options sub-menu."
   )
 
+  ver=$(_get_ver_rgs-sr-skyscraper)
   while true; do
-
-    local cmd=(dialog --backtitle "$__backtitle" --colors --cancel-label "Exit" --help-button --no-collapse --cr-wrap --default-item "$default" --menu "   Skyscraper: A Game Scraper by Lars Muldjord\\n \\n" 22 60 12)
+    local cmd=(dialog --backtitle "$__backtitle" --colors --cancel-label "Exit" --help-button --no-collapse --cr-wrap --default-item "$default" --menu "   Skyscraper: A Game Scraper by Lars Muldjord ($ver)\\n \\n" 22 60 12)
 
     local options=(
       "-" "GATHER and cache resources"
@@ -464,11 +464,9 @@ function gui_rgs-sr-skyscraper() {
     fi
 
     options+=(3 "Cache options and commands -->")
-
     options+=("-" "GAME LIST generation")
     options+=(4 "Generate game list(s)")
     options+=(5 "Generate options -->")
-
     options+=("-" "OTHER options")
 
     if [[ "$download_videos" -eq 1 ]]; then
@@ -725,7 +723,6 @@ function _gui_generate_rgs-sr-skyscraper() {
   )
 
   while true; do
-
     local cmd=(dialog --backtitle "$__backtitle" --help-button --colors --no-collapse --default-item "$default" --ok-label "Ok" --cancel-label "Back" --title "Game list generation options" --menu "\n\n" 13 60 5)
     local -a options
 
@@ -775,7 +772,6 @@ function _gui_generate_rgs-sr-skyscraper() {
         if [[ ! -z "${help_strings_gen[${default}]}" ]]; then
           dialog --colors --no-collapse --ok-label "Close" --msgbox "${help_strings_gen[${default}]}" 22 65 >&1
         fi
-        ;;
       esac
     else
       break

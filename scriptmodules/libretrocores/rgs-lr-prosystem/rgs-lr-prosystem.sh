@@ -6,7 +6,7 @@
 
 archrgs_module_id="rgs-lr-prosystem"
 archrgs_module_desc="Atari 7800 Libretro Core"
-archrgs_module_help="ROM Extensions: .a78 .bin .zip\n\nCopy your Atari 7800 roms to $romdir/atari7800\n\nCopy the optional BIOS file 7800 BIOS (U).rom to $biosdir"
+archrgs_module_help="ROM Extensions: .a78 .bin .zip\n\nCopy Your Atari 7800 ROMs to $romdir/atari7800\n\nCopy the optional BIOS file 7800 BIOS (U).rom to $biosdir"
 archrgs_module_licence="GPL2 https://raw.githubusercontent.com/libretro/prosystem-libretro/master/License.txt"
 archrgs_module_section="libretrocores"
 
