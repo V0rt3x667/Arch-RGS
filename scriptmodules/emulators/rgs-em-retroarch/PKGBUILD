@@ -1,6 +1,6 @@
 # Maintainer: V0rt3x667 <al-g0l@outlook.com>
 pkgname=rgs-em-retroarch
-pkgver=1.9.5
+pkgver=1.9.7
 pkgrel=1
 pkgdesc="Frontend for the Libretro API"
 arch=('x86_64')
@@ -40,11 +40,11 @@ source=(
   "03_revert_default_save_paths.patch"
 )
 sha256sums=(
-  '4ff819c31bc310a265bb52ea4db4562c25e7ba7d544147483e57e6117b35fa03'
-  '361ee8625902e90c9c3e1eeef41e94f0449f9be4d2a9689cd6846560ec6a8f1c'
-  '1658ccafdb609425be306bc024731a6737482b8c2240591511e17b8f5ee8bcb3'
-  '7e1c59ede744480149a103495a04ce24a2e2f5a3e4b35c6afd5112fc73dc0639'
-  'f508aa8b5355045aed6bafe8e4dd92b777267684ead05c66f57a52635c0544f7'
+  'a4a1791dbff796dccfb377f9a61bd4b1bea4f754ab6611f51fa1d0466babbc9e'
+  '027dc9efb075964dbd2c0df6ab4a3b68c7ac1ae905426ef3f1a6aee5b2a8b8a8'
+  'bde21cb72a614d6cf3f79e80aad35b26ac80d15e0997fe99e68d665c71f58025'
+  '44ed90547e36dad0d8891e1d13ac236cc6cb34d7ff03d9e5c6c93b8c4cfdbf34'
+  'da39da8ed681d4747bccb61db5badc626ffcf8964bb5b6ab36ca8100a21ed97c'
 )
 _installdir="/opt/archrgs/emulators/$pkgname"
 
